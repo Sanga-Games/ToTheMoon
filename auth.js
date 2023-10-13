@@ -46,7 +46,6 @@ var screenHeight = eachscreen_info.height || '';
 var screenWidth = eachscreen_info.width || '';
 var pixelDepth = eachscreen_info.pixelDepth || ''; 
 
-var fakeuid = "5646487"
 var deviceidObject = {
     mimeTypesLength,
     userAgentDigits,
@@ -58,12 +57,12 @@ var deviceidObject = {
 
 // Serialize the object as a JSON string
 var deviceidParams = JSON.stringify(deviceidObject);
+var encodedDeviceidParams = encodeURIComponent(deviceidParams);
 
 if(localSessionToken)
 {
 
-
-    requrl = AuthServerURL + `/?sessiontoken=${localSessionToken}&sessiondeviceid=${uid}`
+    requrl = AuthServerURL + `/?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`
 
     fetch(requrl)
         .then(res => res.json())
