@@ -97,6 +97,6 @@ if(localSessionToken)
 
 function UserSignout()
 {
-    requrl = AuthServerURL + `/signout?sessiontoken=${localSessionToken}&sessiondeviceid=${uid}`
+    requrl = AuthServerURL + `/signout?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`
     window.location.href = requrl;       
 }
