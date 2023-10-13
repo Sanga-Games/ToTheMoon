@@ -1,5 +1,18 @@
-<html>
-    <body>
-        <div>Test</div>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To The Moon</title>
+    <script src="script.js"> </script>
+</head>
+<body>
+    <a href="https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify" class="discord-button">Discord SignIn</a>
+    <a href="#SignOut" onclick="UserSignout()" class="discord-button">SignOut</a>
+    <img id="Profile_Avatar" alt="Avatar">
+    <p id="Profile_UserName">#name#</p>
+    <button id="Profile_RefreshButton">Refresh Profile</button>
+    <script src="auth.js"> </script>
+    <hr/>
+</body>
 </html>
