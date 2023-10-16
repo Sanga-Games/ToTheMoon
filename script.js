@@ -60,5 +60,18 @@ function AddMessage(msg)
     ele.innerHTML += "<br/>" + msg;
 }
 
+function AddBalance()
+{
+     // Your JSON message
+     const jsonMessage = {
+        action: 'AddBalance',
+        addedBalance: '100'
+        // Add other key-value pairs as needed
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+}
+
 
 
