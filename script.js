@@ -33,6 +33,7 @@ function InitWebsocketConnection()
     // Listen for messages from the server
     socket.addEventListener('message', (event) => {
         console.log('Message from server:', event.data);
+        ParseMessage(JSON.parse(event.data));
         AddMessage(event.data);
     });
 
@@ -65,7 +66,7 @@ function AddBalance()
      // Your JSON message
      const jsonMessage = {
         action: 'AddBalance',
-        addedBalance: '100'
+        addedBalance: 100
         // Add other key-value pairs as needed
     };
 
@@ -73,5 +74,22 @@ function AddBalance()
     socket.send(JSON.stringify(jsonMessage));
 }
 
+function ParseMessage(data)
+{
+    switch (data.type) {
+        case "Update_WalletBalance":
+            UpdateWalletBalance(data);
+            break;
+    
+        default:
+            break;
+    }
+}
+
+function UpdateWalletBalance(data)
+{
+    var ele = document.querySelector("#Profile_WalletBalance");
+    ele.innerHTML = data.value;
+}
 
 
