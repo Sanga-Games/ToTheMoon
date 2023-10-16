@@ -5,22 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To The Moon</title>
     <script src="script.js"> </script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <a href="https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify" class="discord-button">Discord SignIn</a>
+    <a href="https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify" class="discord-button">SignIn</a>
     <a href="#SignOut" onclick="UserSignout()" class="discord-button">SignOut</a>
+    <hr/>
     <img id="Profile_Avatar" alt="Avatar">
-    <p id="Profile_UserName">#name#</p>
+    <span id="Profile_UserName">UserName</span>
+    <hr/>
     <button id="Profile_RefreshButton">Refresh Profile</button>
     <script src="auth.js"> </script>
     <hr/>
+    <button onclick="AddBalance(100)">Add Balance</button>
+    <span id="Profile_WalletBalance">0</span>
+    <hr/>
+    <button onclick="CashOut()">Cash Out</button>
+    <button onclick="MakeBet()">Make Bet</button>
+    <input type="number" id="Game_BetAmountInput" value="0"/>
+    <input type="number" id="Game_CashOutMultiplierInput" value="2"/>
+    <input type="checkbox" id="Game_CashOutMultiplierCheck"/>
+    <hr>
     <button onclick="InitWebsocketConnection()">Start Connection</button>
     <button onclick="CloseWebSocketConnection()">Stop Connection</button>
-    <div id="MessageLog">
-        All Server Message are printed Here:
-    </div>
     <hr/>
-    <button onclick="AddBalance()">Add Balance</button>
-    <div id="Profile_WalletBalance">0</div>
+    <span id="Game_Multiplier">x1</span>
+    <hr/>
+    <span id="Game_WaitTime">10</span>
+    <hr>
+    <div id="MessageLog" class="log">---- Message Log ----</div>
+    <hr/>
 </body>
 </html>

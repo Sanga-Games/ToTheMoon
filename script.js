@@ -27,6 +27,7 @@ function InitWebsocketConnection()
     // Connection opened
     socket.addEventListener('open', (event) => {
         console.log('WebSocket connection opened:', event);
+        AddBalance(0);
         AddMessage("Connected");
     });
 
@@ -58,15 +59,15 @@ function CloseWebSocketConnection()
 function AddMessage(msg)
 {
     var ele = document.querySelector("#MessageLog");
-    ele.innerHTML += "<br/>" + msg;
+    ele.innerHTML += "<br/>\> " + msg;
 }
 
-function AddBalance()
+function AddBalance(amount)
 {
      // Your JSON message
      const jsonMessage = {
         action: 'AddBalance',
-        addedBalance: 100
+        addedBalance: amount
         // Add other key-value pairs as needed
     };
 
@@ -80,6 +81,10 @@ function ParseMessage(data)
         case "Update_WalletBalance":
             UpdateWalletBalance(data);
             break;
+
+        case "game_state":
+            GameStateChanged(data);
+            break;
     
         default:
             break;
@@ -90,6 +95,88 @@ function UpdateWalletBalance(data)
 {
     var ele = document.querySelector("#Profile_WalletBalance");
     ele.innerHTML = data.value;
+}
+
+var FuncIntervalID;
+function GameStateChanged(data)
+{
+    clearInterval(FuncIntervalID);
+    if(data.State == "OnGoing")
+    {
+        Multiplier = 1;
+        startTime = new Date();
+        FuncIntervalID = setInterval(UpdateMultiplier, 50);
+    }
+    else
+    {
+        startTime = new Date();
+        FuncIntervalID = setInterval(UpdateWaitTime, 50);
+        var ele = document.querySelector("#Game_Multiplier");
+        ele.innerHTML = "x" + parseFloat(data.BlastMultiplier).toFixed(2);
+    }
+}
+
+var Multiplier = 1;
+var startTime;
+function UpdateMultiplier()
+{
+    const currentTime = new Date();
+    const elapsedTime = (currentTime - startTime)/1000;
+    var ele = document.querySelector("#Game_Multiplier");
+    ele.innerHTML = "x" + calculateMultiplier(elapsedTime).toFixed(2);
+}
+
+function calculateMultiplier(waitTime) 
+{
+    const growthRate = 1.1;  
+    if (growthRate <= 1) {
+      throw new Error("Growth rate must be greater than 1");
+    }
+    // Solve for multiplier: multiplier = growthRate^waitTime
+    const multiplier = Math.pow(growthRate, waitTime);
+    return multiplier;
+}
+
+function UpdateWaitTime()
+{
+    const currentTime = new Date();
+    var elapsedTime = (currentTime - startTime)/1000;
+    var ele = document.querySelector("#Game_WaitTime");
+    elapsedTime = 10 - elapsedTime;
+    if(elapsedTime < 0)
+    {
+        elapsedTime = 0;
+    }
+    ele.innerHTML = "Wait Time: " + elapsedTime.toFixed(2) + "sec";
+
+}
+
+function MakeBet()
+{
+    // Your JSON message
+    const jsonMessage = {
+        action: 'MakeBet',
+        betAmount: document.querySelector("#Game_BetAmountInput").value,
+        AutoCashOut: document.querySelector("#Game_CashOutMultiplierCheck").value,
+        CashOutMultiplier: document.querySelector("#Game_CashOutMultiplierInput").value
+        // Add other key-value pairs as needed
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+
+}
+
+function CashOut()
+{
+    // Your JSON message
+    const jsonMessage = {
+        action: 'CashOut'
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+
 }
 
 

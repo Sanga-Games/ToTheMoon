@@ -65,7 +65,8 @@ if(localSessionToken)
                 avatarid = data.davatarid;
                 discordid = data.did;
                 document.getElementById('Profile_UserName').textContent = username;
-                document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${discordid}/${avatarid}`;     
+                document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${discordid}/${avatarid}`;
+                InitWebsocketConnection();     
             }
             else
             {
