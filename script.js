@@ -86,6 +86,10 @@ function ParseMessage(data)
             GameStateChanged(data);
             break;
         
+        case "game_bet":
+            BetStateChanged(data);
+            break;
+        
         case "Update_BetSuccess":
             AddBalance(0);
             break;
@@ -122,6 +126,7 @@ function GameStateChanged(data)
     }
     else
     {
+        ClearParticipants();
         startTime = new Date();
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
         var ele = document.querySelector("#Game_Multiplier");
@@ -192,4 +197,71 @@ function CashOut()
 
 }
 
+function BetStateChanged(data)
+{
+    AddParticipant(data);
+}
 
+function AddParticipant(data) {
+    var newDiv = document.createElement('div');
+    var newSpan = document.createElement('span');
+    newSpan.class = "c_username";
+    var newSpan2 = document.createElement('span');
+    var newImg = document.createElement('img');
+    //set newImg size to 30x30
+    newImg.width = 30;
+    newImg.height = 30;
+    var parentElement = document.querySelector("#Game_ParticipantsContainer");
+
+    newDiv.id = "user-" + data.userid;
+    newSpan2.innerHTML =  data.BetAmount + "," + data.CashOutMultiplier;
+
+    newDiv.appendChild(newImg);
+    newDiv.appendChild(newSpan);
+    newDiv.appendChild(newSpan2);
+    parentElement.appendChild(newDiv);
+    GetUserInfo(data.userid);
+}
+
+function RemoveParticipant(data) {
+  var elementToRemove = document.getElementById("user-" + data.userid);
+  if (elementToRemove) {
+    var parentElement = elementToRemove.parentNode;
+    parentElement.removeChild(elementToRemove);
+  } else {
+    console.error('Element with ID ' + elementId + ' not found.');
+  }
+}
+
+function ClearParticipants() {
+  var parentElement = document.querySelector("#Game_ParticipantsContainer");
+  parentElement.innerHTML = '';
+}
+
+async function GetUserInfo(userId) {
+    try {
+      // Make an API request
+      const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`);
+      
+      // Check if the request was successful (status code 200)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user details. Status: ${response.status}`);
+      }
+  
+      // Parse the JSON response
+      const userData = await response.json();
+  
+      // Get username and avatarURL from the response
+      const { username, avatar_url } = userData;
+  
+      // Update the specified div with the user details
+      const userDiv = document.getElementById("user-" + data.userid);
+      userDiv.querySelector(".c_username").textContent = username;
+      userDiv.querySelector("img").src = avatar_url;
+
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  }
+
+var dfaads = fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=a7c2cdbb-6999-11ee-9878-1deabb7a8fc6`);
