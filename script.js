@@ -205,7 +205,7 @@ function BetStateChanged(data)
 function AddParticipant(data) {
     var newDiv = document.createElement('div');
     var newSpan = document.createElement('span');
-    newSpan.class = "c_username";
+    newSpan.classList.add('c_username');
     var newSpan2 = document.createElement('span');
     var newImg = document.createElement('img');
     //set newImg size to 30x30
@@ -239,29 +239,31 @@ function ClearParticipants() {
 }
 
 async function GetUserInfo(userId) {
-    try {
-      // Make an API request
-      const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`);
-      
-      // Check if the request was successful (status code 200)
-      if (!response.ok) {
-        throw new Error(`Failed to fetch user details. Status: ${response.status}`);
-      }
-  
-      // Parse the JSON response
-      const userData = await response.json();
-  
-      // Get username and avatarURL from the response
-      const { username, avatar_url } = userData;
-  
-      // Update the specified div with the user details
-      const userDiv = document.getElementById("user-" + data.userid);
-      userDiv.querySelector(".c_username").textContent = username;
-      userDiv.querySelector("img").src = avatar_url;
-
-    } catch (error) {
-      console.error('Error:', error.message);
+    const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`, {
+    method: 'GET',
+    mode: 'cors',
+    });
+    
+    // Check if the request was successful (status code 200)
+    if (!response.ok) {
+    throw new Error(`Failed to fetch user details. Status: ${response.status}`);
     }
+
+    // Parse the JSON response
+    const userData = await response.json();
+
+    // Get username and avatarURL from the response
+    const { username, avatar_url } = userData;
+
+    console.log(username);
+    // Update the specified div with the user details
+    const userDiv = document.getElementById("user-" + userId);
+    console.log(userDiv.innerHTML);
+    userDiv.querySelector(".c_username").textContent = username;
+    userDiv.querySelector("img").src = avatar_url;
+
   }
 
-var dfaads = fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=a7c2cdbb-6999-11ee-9878-1deabb7a8fc6`);
+
+
+  

@@ -8,34 +8,52 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <a href="https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify" class="discord-button">SignIn</a>
-    <a href="#SignOut" onclick="UserSignout()" class="discord-button">SignOut</a>
-    <hr/>
-    <img id="Profile_Avatar" alt="Avatar">
-    <span id="Profile_UserName">UserName</span>
-    <hr/>
-    <button id="Profile_RefreshButton">Refresh Profile</button>
-    <script src="auth.js"> </script>
-    <hr/>
-    <button onclick="AddBalance(100)">Add Balance</button>
-    <span id="Profile_WalletBalance">0</span>
-    <hr/>
-    <button onclick="CashOut()">Cash Out</button>
-    <button onclick="MakeBet()">Make Bet</button>
-    <input type="number" id="Game_BetAmountInput" value="10"/>
-    <input type="number" id="Game_CashOutMultiplierInput" value="2"/>
-    <input type="checkbox" id="Game_CashOutMultiplierCheck"/>
-    <hr>
-    <button onclick="InitWebsocketConnection()">Start Connection</button>
-    <button onclick="CloseWebSocketConnection()">Stop Connection</button>
-    <hr/>
-    <span id="Game_Multiplier">x1</span>
-    <hr/>
-    <span id="Game_WaitTime">10</span>
-    <hr>
-    <div id="MessageLog" class="log">---- Message Log ----</div>
-    <hr/>
-    <div id="Game_ParticipantsContainer" style="display: block; position: fixed; width:30%; height:100%; right:0px; top:0px; background-color: #eee; padding:30px;">
+    <div id="ProfileArea">
+        <div id="PreLogin" style="display: block;">
+            <button class="ProfileBtns" onclick="window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify';"> Login</button>
+        </div>
+        <div id="PostLogin" style="display: none;">
+            <div id="walletContainer">
+                <img id="walletImg" src="https://cdn-icons-png.flaticon.com/512/272/272525.png" alt="Coins">
+                <span id="Profile_WalletBalance">0</span>
+            </div>
+            <div id="profileContainer">
+                <img id="Profile_Avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU" alt="Avatar">
+                <span id="Profile_UserName">UserName</span>
+                <!-- <button class="ProfileBtnsRound" onclick="AddBalance(100)">&#43;</button> -->
+                <button class="ProfileBtnsRound" href="#SignOut" onclick="UserSignout()">&#9932;</button>
+                <!-- <a href="https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify" class="discord-button">Login</a>
+                <a href="#SignOut" onclick="UserSignout()" class="discord-button">SignOut</a> -->
+                <!-- <button id="Profile_RefreshButton">Refresh Profile</button> -->
+            </div>
+            
+        </div>
+        <script src="auth.js"> </script>
+    </div>
+
+    <div id="GameArea">
+        <span id="Game_Multiplier">-</span>
+        <span id="Game_WaitTime"></span>
+    </div>
+
+    <div id="ParticipantsArea">
+        <!-- <div id="Game_ParticipantsContainer" style="display: block; position: fixed; width:30%; height:100%; right:0px; top:0px;  padding:30px;"></div> -->
+    </div>
+
+    <div id="BettingControlsArea">
+        <span class="ControlLabels">BET</span>
+        <button id="CashOut_btn" class="GameBtns" onclick="CashOut()">Cash Out</button>
+        <button id="MakeBet_btn" class="GameBtns" onclick="MakeBet()">Make Bet</button>
+        <input type="number" id="Game_BetAmountInput" value="10"/>
+        <span class="ControlLabels">&nbsp;&nbsp;&nbsp;&nbsp;Cash Out</span>
+        <input type="checkbox" id="Game_CashOutMultiplierCheck" onchange="document.getElementById('Game_CashOutMultiplierInput').disabled = !this.checked;"/>
+        <input type="number" id="Game_CashOutMultiplierInput" value="2" disabled/>
+    </div>
+
+    
+    <!-- <button onclick="InitWebsocketConnection()" >Start Connection</button>
+    <button onclick="CloseWebSocketConnection()" >Stop Connection</button> -->
+    <!-- <div id="MessageLog" class="log">---- Message Log ----</div> -->
 
     </div>
 </body>
