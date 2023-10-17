@@ -85,6 +85,14 @@ function ParseMessage(data)
         case "game_state":
             GameStateChanged(data);
             break;
+        
+        case "Update_BetSuccess":
+            AddBalance(0);
+            break;
+
+        case "Update_CashOutSuccess":
+            AddBalance(0);
+            break;
     
         default:
             break;
@@ -98,8 +106,13 @@ function UpdateWalletBalance(data)
 }
 
 var FuncIntervalID;
+var PrevState = "Idle";
+
 function GameStateChanged(data)
 {
+    if(PrevState == data.State)
+        return;
+    PrevState = data.State;
     clearInterval(FuncIntervalID);
     if(data.State == "OnGoing")
     {
@@ -157,7 +170,7 @@ function MakeBet()
     const jsonMessage = {
         action: 'MakeBet',
         betAmount: document.querySelector("#Game_BetAmountInput").value,
-        AutoCashOut: document.querySelector("#Game_CashOutMultiplierCheck").value,
+        AutoCashOut: document.querySelector("#Game_CashOutMultiplierCheck").checked,
         CashOutMultiplier: document.querySelector("#Game_CashOutMultiplierInput").value
         // Add other key-value pairs as needed
     };
