@@ -81,12 +81,12 @@ if(localSessionToken)
         
 
 
-    var refreshButton = document.getElementById('Profile_RefreshButton');
+    // var refreshButton = document.getElementById('Profile_RefreshButton');
 
-    refreshButton.addEventListener('click', function() {
-        requrl = AuthServerURL + `/refresh?sessiontoken=${localSessionToken}`
-        console.log('Button clicked');
-    });
+    // refreshButton.addEventListener('click', function() {
+    //     requrl = AuthServerURL + `/refresh?sessiontoken=${localSessionToken}`
+    //     console.log('Button clicked');
+    // });
 }
 
 

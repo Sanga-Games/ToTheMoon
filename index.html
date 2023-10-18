@@ -37,13 +37,38 @@
     </div>
 
     <div id="ParticipantsArea">
-        <!-- <div id="Game_ParticipantsContainer" style="display: block; position: fixed; width:30%; height:100%; right:0px; top:0px;  padding:30px;"></div> -->
+        <div style="display: flex; align-items: center; flex-direction: row;
+        justify-content: center; height:40px; width:auto; position: absolute; top:2px; left:0px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ">
+            <div style="width:12px; height:12px;background-color: greenyellow;border-radius: 50%;"></div>
+            <span id="Game_PlayerCount"  style="margin-left:10px;font-size:15px; font-weight: 500; color:rgba(255, 255, 255, 0.514);">0 PLAYING</span>
+        </div>
+        <div style="display: flex; align-items: center; flex-direction: row;
+        justify-content: center; height:40px; width:auto; position: absolute; top:0px; right:0px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ">
+            <img src="https://png.pngtree.com/png-vector/20230213/ourmid/pngtree-gold-coins-stack-concept-illustration-in-flat-style-isolated-png-image_6598445.png" style="width:30px; height:30px;margin-top:3px;"/>
+            <span id="Game_TotalBetAmount"  style="margin-left:5px;font-size:20px; font-weight: 700; color:rgba(255, 255, 255, 0.863);">0.0</span>
+        </div>
+        <div id="Game_ParticipantsContainer">
+            <div class="participant">
+                <img class="participant_avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU"/>
+                <span class="participant_name">username</span>
+                <img style="width:18px; height:18px;" src="https://cdn-icons-png.flaticon.com/512/272/272525.png" alt="Coins">
+                <span class="participant_betAmount">0</span>
+                <div class="participant_cashOutMultiplier">LIVE</div>
+            </div>
+            <div class="participant">
+                <img class="participant_avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU"/>
+                <span class="participant_name">username</span>
+                <img style="width:18px; height:18px;" src="https://cdn-icons-png.flaticon.com/512/272/272525.png" alt="Coins">
+                <span class="participant_betAmount">20</span>
+                <div class="participant_cashOutMultiplier">LIVE</div>
+            </div>
+        </div>
     </div>
 
     <div id="BettingControlsArea">
         <span class="ControlLabels">BET</span>
-        <button id="CashOut_btn" class="GameBtns" onclick="CashOut()">Cash Out</button>
-        <button id="MakeBet_btn" class="GameBtns" onclick="MakeBet()">Make Bet</button>
+        <button id="CashOut_btn" class="GameBtns" onclick="CashOut()">CASH OUT</button>
+        <button id="MakeBet_btn" class="GameBtns" onclick="MakeBet()">PLACE BET</button>
         <input type="number" id="Game_BetAmountInput" value="10"/>
         <span class="ControlLabels">&nbsp;&nbsp;&nbsp;&nbsp;Cash Out</span>
         <input type="checkbox" id="Game_CashOutMultiplierCheck" onchange="document.getElementById('Game_CashOutMultiplierInput').disabled = !this.checked;"/>

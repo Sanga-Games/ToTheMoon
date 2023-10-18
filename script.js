@@ -28,14 +28,13 @@ function InitWebsocketConnection()
     socket.addEventListener('open', (event) => {
         console.log('WebSocket connection opened:', event);
         AddBalance(0);
-        AddMessage("Connected");
+        GetGameState();
     });
 
     // Listen for messages from the server
     socket.addEventListener('message', (event) => {
-        console.log('Message from server:', event.data);
         ParseMessage(JSON.parse(event.data));
-        AddMessage(event.data);
+        console.log(event.data);
     });
 
     // Listen for any errors that occur
@@ -46,7 +45,7 @@ function InitWebsocketConnection()
     // Connection closed
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        AddMessage("Connection Closed");
+        InitWebsocketConnection();
     });
 }
 
@@ -56,18 +55,24 @@ function CloseWebSocketConnection()
     socket.close();
 }
 
-function AddMessage(msg)
-{
-    var ele = document.querySelector("#MessageLog");
-    ele.innerHTML += "<br/>\> " + msg;
-}
-
 function AddBalance(amount)
 {
      // Your JSON message
      const jsonMessage = {
         action: 'AddBalance',
         addedBalance: amount
+        // Add other key-value pairs as needed
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+}
+
+function GetGameState()
+{
+     // Your JSON message
+     const jsonMessage = {
+        action: 'GetGameState'
         // Add other key-value pairs as needed
     };
 
@@ -106,31 +111,34 @@ function ParseMessage(data)
 function UpdateWalletBalance(data)
 {
     var ele = document.querySelector("#Profile_WalletBalance");
-    ele.innerHTML = data.value;
+    ele.innerHTML = parseFloat(data.value.toFixed(2)) ;
 }
 
 var FuncIntervalID;
 var PrevState = "Idle";
 
+
 function GameStateChanged(data)
 {
-    if(PrevState == data.State)
-        return;
-    PrevState = data.State;
     clearInterval(FuncIntervalID);
     if(data.State == "OnGoing")
     {
         Multiplier = 1;
-        startTime = new Date();
+        startTime = new Date(data.StartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateMultiplier, 50);
+        document.querySelector("#Game_WaitTime").innerHTML = "";
     }
-    else
+    else if(data.State == "Betting")
     {
         ClearParticipants();
-        startTime = new Date();
+        startTime = new Date(data.BetStartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
-        var ele = document.querySelector("#Game_Multiplier");
-        ele.innerHTML = "x" + parseFloat(data.BlastMultiplier).toFixed(2);
+        document.querySelector("#Game_Multiplier").innerHTML = "-";
+    }
+    else if(data.State == "Concluded")
+    {
+        document.querySelector("#Game_Multiplier").innerHTML = "x" + parseFloat(data.BlastMultiplier).toFixed(2);
+        document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
     }
 }
 
@@ -138,7 +146,7 @@ var Multiplier = 1;
 var startTime;
 function UpdateMultiplier()
 {
-    const currentTime = new Date();
+    const currentTime = new Date().getTime();
     const elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_Multiplier");
     ele.innerHTML = "x" + calculateMultiplier(elapsedTime).toFixed(2);
@@ -146,7 +154,7 @@ function UpdateMultiplier()
 
 function calculateMultiplier(waitTime) 
 {
-    const growthRate = 1.1;  
+    const growthRate = 1.08;  
     if (growthRate <= 1) {
       throw new Error("Growth rate must be greater than 1");
     }
@@ -157,7 +165,7 @@ function calculateMultiplier(waitTime)
 
 function UpdateWaitTime()
 {
-    const currentTime = new Date();
+    const currentTime = new Date().getTime();
     var elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_WaitTime");
     elapsedTime = 10 - elapsedTime;
@@ -165,7 +173,7 @@ function UpdateWaitTime()
     {
         elapsedTime = 0;
     }
-    ele.innerHTML = "Wait Time: " + elapsedTime.toFixed(2) + "sec";
+    ele.innerHTML = "Place your Bets, Next Game starts in \"" + elapsedTime.toFixed(2) + "\" sec";
 
 }
 
