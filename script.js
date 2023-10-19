@@ -97,10 +97,20 @@ function ParseMessage(data)
         
         case "Update_BetSuccess":
             AddBalance(0);
+            document.querySelector("#MakeBet_btn").disabled = true;
+            break;
+
+        case "Update_BetFailed":
+            document.querySelector("#MakeBet_btn").disabled = false;
             break;
 
         case "Update_CashOutSuccess":
             AddBalance(0);
+            document.querySelector("#CashOut_btn").disabled = true;
+            break;
+        
+        case "Update_CashOutFailed":
+            document.querySelector("#CashOut_btn").disabled = false;
             break;
     
         default:
@@ -127,19 +137,28 @@ function GameStateChanged(data)
         startTime = new Date(data.StartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateMultiplier, 50);
         document.querySelector("#Game_WaitTime").innerHTML = "";
+        document.querySelector("#MakeBet_btn").style.display = "none";
+        document.querySelector("#CashOut_btn").style.display = "block";
     }
     else if(data.State == "Betting")
     {
-        ClearParticipants();
+        if(PrevState!="Betting")
+            ClearParticipants();
         startTime = new Date(data.BetStartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
         document.querySelector("#Game_Multiplier").innerHTML = "-";
+        document.querySelector("#MakeBet_btn").style.display = "block";
+        document.querySelector("#CashOut_btn").style.display = "none";
+        document.querySelector("#Game_TotalBetAmount").innerHTML = data.TotalBetAmount;
     }
     else if(data.State == "Concluded")
     {
         document.querySelector("#Game_Multiplier").innerHTML = "x" + parseFloat(data.BlastMultiplier).toFixed(2);
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
+        document.querySelector("#MakeBet_btn").style.display = "none";
+        document.querySelector("#CashOut_btn").style.display = "none";
     }
+    PrevState = data.State;
 }
 
 var Multiplier = 1;
@@ -179,6 +198,7 @@ function UpdateWaitTime()
 
 function MakeBet()
 {
+    document.querySelector("#MakeBet_btn").disabled = true;
     // Your JSON message
     const jsonMessage = {
         action: 'MakeBet',
@@ -195,6 +215,7 @@ function MakeBet()
 
 function CashOut()
 {
+    document.querySelector("#CashOut_btn").disabled = true;
     // Your JSON message
     const jsonMessage = {
         action: 'CashOut'
@@ -211,23 +232,19 @@ function BetStateChanged(data)
 }
 
 function AddParticipant(data) {
+    
     var newDiv = document.createElement('div');
-    var newSpan = document.createElement('span');
-    newSpan.classList.add('c_username');
-    var newSpan2 = document.createElement('span');
-    var newImg = document.createElement('img');
-    //set newImg size to 30x30
-    newImg.width = 30;
-    newImg.height = 30;
+    newDiv.classList.add('participant');
+    newDiv.id = 'user-' + data.userid;
+
+    cashOutDisplay = data.CashOutMultiplier == "0" ? "LIVE" : ("x"+ data.CashOutMultiplier)
+    
+    var content = '<img class="participant_avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU"/> <span class="participant_name">username</span> <img style="width:18px; height:18px;" src="https://cdn-icons-png.flaticon.com/512/272/272525.png" alt="Coins"> <span class="participant_betAmount">'+data.BetAmount+'</span> <div class="participant_cashOutMultiplier">'+cashOutDisplay+'</div>';
+    newDiv.innerHTML = content;
     var parentElement = document.querySelector("#Game_ParticipantsContainer");
 
-    newDiv.id = "user-" + data.userid;
-    newSpan2.innerHTML =  data.BetAmount + "," + data.CashOutMultiplier;
-
-    newDiv.appendChild(newImg);
-    newDiv.appendChild(newSpan);
-    newDiv.appendChild(newSpan2);
     parentElement.appendChild(newDiv);
+    document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
     GetUserInfo(data.userid);
 }
 
@@ -244,6 +261,7 @@ function RemoveParticipant(data) {
 function ClearParticipants() {
   var parentElement = document.querySelector("#Game_ParticipantsContainer");
   parentElement.innerHTML = '';
+  document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
 }
 
 async function GetUserInfo(userId) {
@@ -266,8 +284,7 @@ async function GetUserInfo(userId) {
     console.log(username);
     // Update the specified div with the user details
     const userDiv = document.getElementById("user-" + userId);
-    console.log(userDiv.innerHTML);
-    userDiv.querySelector(".c_username").textContent = username;
+    //userDiv.querySelector(".c_username").textContent = username;
     userDiv.querySelector("img").src = avatar_url;
 
 }
