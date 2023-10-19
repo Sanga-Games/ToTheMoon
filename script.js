@@ -45,7 +45,7 @@ function InitWebsocketConnection()
     // Connection closed
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        InitWebsocketConnection();
+        //InitWebsocketConnection();
     });
 }
 
@@ -270,7 +270,7 @@ async function GetUserInfo(userId) {
     userDiv.querySelector(".c_username").textContent = username;
     userDiv.querySelector("img").src = avatar_url;
 
-  }
+}
 
 
 

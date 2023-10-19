@@ -1,7 +1,7 @@
 
 var localSessionToken = localStorage.getItem('sessiontoken');
 var domainURL = "http://localhost:53134" 
-var AuthServerURL = "https://6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws"
+var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
 
 //Post-Signout CLeanup
 if(window.location.href == domainURL + "?action=signout")
