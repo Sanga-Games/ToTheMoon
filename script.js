@@ -133,7 +133,6 @@ function GameStateChanged(data)
     clearInterval(FuncIntervalID);
     if(data.State == "OnGoing")
     {
-        Multiplier = 1;
         startTime = new Date(data.StartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateMultiplier, 50);
         document.querySelector("#Game_WaitTime").innerHTML = "";
@@ -161,7 +160,6 @@ function GameStateChanged(data)
     PrevState = data.State;
 }
 
-var Multiplier = 1;
 var startTime;
 function UpdateMultiplier()
 {
