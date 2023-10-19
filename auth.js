@@ -4,7 +4,7 @@ var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
 
 //Post-Signout CLeanup
-if(window.location.href == domainURL + "?action=signout")
+if(window.location.href == domainURL + "/?action=signout")
 {
     localStorage.removeItem('sessiontoken');
     window.location.href = domainURL;
@@ -53,32 +53,33 @@ var encodedDeviceidParams = encodeURIComponent(deviceidParams);
 if(localSessionToken)
 {
 
-    requrl = AuthServerURL + `/?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`
-
-    fetch(requrl)
-        .then(res => res.json())
-        .then(data => {
-            
-            if(data.response)
-            {
-                username = data.dusername;
-                avatarid = data.davatarid;
-                discordid = data.did;
-                document.getElementById('Profile_UserName').textContent = username;
-                document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${discordid}/${avatarid}`;
-                document.getElementById('PreLogin').style.display = "none";
-                document.getElementById('PostLogin').style.display = "block";
-                InitWebsocketConnection(); 
-                   
-            }
-            else
-            {
+    (async () => {
+        const requrl = `${AuthServerURL}/?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`;
+    
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+    
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
                 localStorage.removeItem('sessiontoken');
                 window.location.href = domainURL;
+                throw new Error(`Failed to fetch user details. Status: ${response.status}, StatusText: ${response.statusText}`);
             }
+    
+            // Parse the JSON response
+            const userData = await response.json();
+            const { dusername, davatarid, did } = userData;
+            document.getElementById('Profile_UserName').textContent = dusername;
+            document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
+            document.getElementById('PreLogin').style.display = "none";
+            document.getElementById('PostLogin').style.display = "block";
+            InitWebsocketConnection();
+        } catch (error) {
+            console.error(error);
+        }
+    })();
+    
 
-        });
-        
 
 
     // var refreshButton = document.getElementById('Profile_RefreshButton');
