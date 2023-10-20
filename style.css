@@ -279,6 +279,16 @@ background-color: #ffffff25; /* or any color you prefer */
     margin-bottom: 4px;
 }
 
+.participant_cashedout
+{
+    background-color: rgba(0, 255, 106, 0.676);
+}
+
+.participant_blasted
+{
+    background-color: rgba(255, 0, 0, 0.733);
+}
+
 .participant_avatar
 {
     position: absolute;

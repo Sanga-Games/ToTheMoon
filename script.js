@@ -45,7 +45,7 @@ function InitWebsocketConnection()
     // Connection closed
     socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        //InitWebsocketConnection();
+        InitWebsocketConnection();
     });
 }
 
@@ -88,6 +88,7 @@ function ParseMessage(data)
             break;
 
         case "game_state":
+            AddBalance(0);
             GameStateChanged(data);
             break;
         
@@ -133,6 +134,10 @@ function GameStateChanged(data)
     clearInterval(FuncIntervalID);
     if(data.State == "OnGoing")
     {
+        if(PrevState!="OnGoing")
+        {
+            document.querySelector("#CashOut_btn").disabled = false;
+        }
         startTime = new Date(data.StartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateMultiplier, 50);
         document.querySelector("#Game_WaitTime").innerHTML = "";
@@ -142,7 +147,10 @@ function GameStateChanged(data)
     else if(data.State == "Betting")
     {
         if(PrevState!="Betting")
+        {
             ClearParticipants();
+            document.querySelector("#MakeBet_btn").disabled = false;
+        }
         startTime = new Date(data.BetStartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
         document.querySelector("#Game_Multiplier").innerHTML = "-";
@@ -156,6 +164,7 @@ function GameStateChanged(data)
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
         document.querySelector("#MakeBet_btn").style.display = "none";
         document.querySelector("#CashOut_btn").style.display = "none";
+        BlastAllParticipants();
     }
     PrevState = data.State;
 }
@@ -226,7 +235,22 @@ function CashOut()
 
 function BetStateChanged(data)
 {
-    AddParticipant(data);
+    var ele = document.getElementById('user-' + data.userid);
+    if(ele !== null)
+    {
+        //exists
+        if(data.BetState == "CashedOut")
+        {
+            ele.classList.add('participant_cashedout');
+            AddBalance(0);
+        }
+        cashOutDisplay = data.CashOutMultiplier == 0 ? "LIVE" : ("x"+ parseFloat(data.CashOutMultiplier).toFixed(2))
+        ele.querySelector(".participant_cashOutMultiplier").innerHTML = cashOutDisplay;
+    }
+    else
+    {
+        AddParticipant(data);
+    }
 }
 
 function AddParticipant(data) {
@@ -234,6 +258,11 @@ function AddParticipant(data) {
     var newDiv = document.createElement('div');
     newDiv.classList.add('participant');
     newDiv.id = 'user-' + data.userid;
+    if(data.BetState == "CashedOut")
+    {
+        newDiv.classList.add('participant_cashedout');
+    
+    }
 
     cashOutDisplay = data.CashOutMultiplier == "0" ? "LIVE" : ("x"+ data.CashOutMultiplier)
     
@@ -261,6 +290,20 @@ function ClearParticipants() {
   parentElement.innerHTML = '';
   document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
 }
+
+function BlastAllParticipants() {
+    var parentElement = document.querySelector("#Game_ParticipantsContainer");
+    
+    for (var i = 0; i < parentElement.children.length; i++) {
+      var child = parentElement.children[i];
+  
+      // Check if the element does not have the class "participant_cashedout"
+      if (!child.classList.contains('participant_cashedout')) {
+        child.classList.add('participant_blasted');
+      }
+    }
+  }
+  
 
 async function GetUserInfo(userId) {
     const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`, {

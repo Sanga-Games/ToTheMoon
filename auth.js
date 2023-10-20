@@ -93,6 +93,7 @@ if(localSessionToken)
 
 function UserSignout()
 {
+    localStorage.removeItem('sessiontoken');
     requrl = AuthServerURL + `/signout?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`
     window.location.href = requrl;       
 }
