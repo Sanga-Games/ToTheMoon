@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To The Moon</title>
+    <script src="code.jquery.com_jquery-3.7.1.min.js"></script>
+    <script src="rocket.js"></script>
     <script src="sync.js"> </script>
     <script src="script.js"> </script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="rocket.css">
 </head>
 <body>
     <div id="ProfileArea">
@@ -30,11 +33,6 @@
             
         </div>
         <script src="auth.js"> </script>
-    </div>
-
-    <div id="GameArea">
-        <span id="Game_Multiplier">-</span>
-        <span id="Game_WaitTime"></span>
     </div>
 
     <div id="ParticipantsArea">
@@ -67,5 +65,27 @@
     <!-- <div id="MessageLog" class="log">---- Message Log ----</div> -->
 
     </div>
+
+    <div class="Background">
+        <img class="BackgroundAtmosphere" src="BackgroundAtmosphere.png">
+        <div class="DivBackgroundEnvironment"></div>
+        <div class="DivBackgroundClouds"></div>
+    </div>
+
+    <div class="rocket">
+        <img class="rocketImage" src="rocket2.png">
+        <div class="RocketPlayerHolder">
+        </div>
+    </div>
+
+    <div id="GameArea">
+        <span id="Game_Multiplier">-</span>
+        <span id="Game_WaitTime"></span>
+    </div>
+
+    <div class="rocketExplosion">
+        <img src="Explosion.gif">
+    </div>
+
 </body>
 </html>

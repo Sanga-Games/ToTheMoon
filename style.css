@@ -2,7 +2,9 @@ body
 {
     margin:0px;
     padding:0px;
-    background:#111;
+    /* background:#111; */
+    background: #106ca1;
+    overflow: hidden;
 }
 
 /* WebKit */
@@ -31,6 +33,7 @@ background-color: #ffffff25; /* or any color you prefer */
     height:100%;
     left:0px;
     top:0px;
+    z-index: 100;
 }
 
 #ParticipantsArea

@@ -238,7 +238,21 @@ initializeGame();
 
 function Trigger_GameStateChanged(data)
 {
-
+    if(data.State == "OnGoing")
+    {
+        InitialLaunchRocket();
+        console.log("Dino Session Ongoing")
+    }
+    else if(data.State == "Betting")
+    {
+        console.log("Dino Session Betting")
+        ResetRocketGame2();
+    }
+    else if(data.State == "Concluded")
+    {
+        console.log("Dino Session Concluded")
+        BlastRocket();
+    }
 }
 
 

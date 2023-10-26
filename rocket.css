@@ -1,0 +1,68 @@
+.Background{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.BackgroundAtmosphere{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    left: 0px;
+    top: 0px;
+}
+
+.DivBackgroundClouds{
+    position: absolute;
+    width: 100%;
+    height: 14%;
+    top: 40%;
+    background-image: url('Clouds2.png');
+    background-repeat: repeat;
+    background-size: auto 100%;
+}
+
+.DivBackgroundEnvironment{
+    position: absolute;
+    width: 100%;
+    height: 23%;
+    bottom: 0px;
+    left: 0px;
+    background-image: url('BackgroundEnvironment2.png');
+    background-repeat: repeat;
+    background-size: auto 100%;
+}
+
+.rocket {
+    position: absolute;
+    height: 40%;
+    width: auto;
+    z-index: 3;
+    bottom: 25%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.rocketImage {
+    height: 100%;
+    width: 100%;
+}
+
+.RocketPlayerHolder {
+    position: absolute;
+    background-color: #ff0000;
+    z-index: 0;
+    bottom: 20%;
+    left: 30%;
+    width: 40%;
+    height: 55%;
+    border-radius: 20%;
+}
+
+.rocketExplosion {
+    opacity: 0;
+    position: absolute;
+    transform: translateY(-40%);
+}
