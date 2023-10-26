@@ -1,12 +1,137 @@
+// Create a WebSocket instance, replace 'ws://localhost:8080' with your WebSocket server URL
+let socket;
+
+function InitWebsocketConnection()
+{
+    // Replace 'ws://localhost:8080' with your WebSocket server URL
+    const socketUrl = 'wss://v5irfwsic0.execute-api.ap-south-1.amazonaws.com/production';
+
+    // Your custom headers
+    const sessionToken = localSessionToken;
+    const deviceID = encodedDeviceidParams;
+
+
+
+    // Replace these with your actual headers
+    const headers = {
+        'SessionToken': sessionToken,
+        'DeviceID': deviceID
+    };
+
+    // Construct the WebSocket URL with query parameters for headers
+    const urlWithHeaders = `${socketUrl}?${Object.entries(headers).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`;
+
+    // Create WebSocket instance
+    socket = new WebSocket(urlWithHeaders);
+
+    // Connection opened
+    socket.addEventListener('open', (event) => {
+        console.log('WebSocket connection opened:', event);
+        AddBalance(0);
+        GetGameState();
+    });
+
+    // Listen for messages from the server
+    socket.addEventListener('message', (event) => {
+        ParseMessage(JSON.parse(event.data));
+        console.log(event.data);
+    });
+
+    // Listen for any errors that occur
+    socket.addEventListener('error', (error) => {
+        console.error('WebSocket encountered an error:', error);
+    });
+
+    // Connection closed
+    socket.addEventListener('close', (event) => {
+        console.log('WebSocket connection closed:', event);
+        InitWebsocketConnection();
+    });
+}
+
+function CloseWebSocketConnection()
+{
+    // Close the connection when needed
+    socket.close();
+}
+
+function AddBalance(amount)
+{
+     // Your JSON message
+     const jsonMessage = {
+        action: 'AddBalance',
+        addedBalance: amount
+        // Add other key-value pairs as needed
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+}
+
+function GetGameState()
+{
+     // Your JSON message
+     const jsonMessage = {
+        action: 'GetGameState'
+        // Add other key-value pairs as needed
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+}
+
+function ParseMessage(data)
+{
+    switch (data.type) {
+        case "Update_WalletBalance":
+            UpdateWalletBalance(data);
+            break;
+
+        case "game_state":
+            AddBalance(0);
+            GameStateChanged(data);
+            break;
+        
+        case "game_bet":
+            BetStateChanged(data);
+            break;
+        
+        case "Update_BetSuccess":
+            AddBalance(0);
+            document.querySelector("#MakeBet_btn").disabled = true;
+            break;
+
+        case "Update_BetFailed":
+            document.querySelector("#MakeBet_btn").disabled = false;
+            break;
+
+        case "Update_CashOutSuccess":
+            AddBalance(0);
+            document.querySelector("#CashOut_btn").disabled = true;
+            break;
+        
+        case "Update_CashOutFailed":
+            document.querySelector("#CashOut_btn").disabled = false;
+            break;
+    
+        default:
+            break;
+    }
+}
+
+function UpdateWalletBalance(data)
+{
+    var ele = document.querySelector("#Profile_WalletBalance");
+    ele.innerHTML = parseFloat(data.value.toFixed(2)) ;
+}
+
 var FuncIntervalID;
 var PrevState = "Idle";
-var startTime;
-var GameID = 0;
+
 
 function GameStateChanged(data)
 {
     clearInterval(FuncIntervalID);
-    GameID = data.GameID;
     if(data.State == "OnGoing")
     {
         if(PrevState!="OnGoing")
@@ -44,6 +169,7 @@ function GameStateChanged(data)
     PrevState = data.State;
 }
 
+var startTime;
 function UpdateMultiplier()
 {
     const currentTime = new Date().getTime();
@@ -77,26 +203,39 @@ function UpdateWaitTime()
 
 }
 
-async function MakeBet()
+function MakeBet()
 {
     document.querySelector("#MakeBet_btn").disabled = true;
-    var temp_com = 0;
-    if(document.querySelector("#Game_CashOutMultiplierCheck").checked)
-        temp_com = document.querySelector("#Game_CashOutMultiplierInput").value
-    var result = await addPlayerBet(GameID,localSessionToken,document.querySelector("#Game_BetAmountInput").value,temp_com);
-    console.log(result);
+    // Your JSON message
+    const jsonMessage = {
+        action: 'MakeBet',
+        betAmount: document.querySelector("#Game_BetAmountInput").value,
+        AutoCashOut: document.querySelector("#Game_CashOutMultiplierCheck").checked,
+        CashOutMultiplier: document.querySelector("#Game_CashOutMultiplierInput").value
+        // Add other key-value pairs as needed
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+
 }
 
-async function CashOut()
+function CashOut()
 {
     document.querySelector("#CashOut_btn").disabled = true;
-    var result =  await cashOutPlayerBet(GameID,localSessionToken);
-    console.log(result);
+    // Your JSON message
+    const jsonMessage = {
+        action: 'CashOut'
+    };
+
+    // Send the JSON message as a string
+    socket.send(JSON.stringify(jsonMessage));
+
 }
 
 function BetStateChanged(data)
 {
-    var ele = document.getElementById('user-' + data.UserID);
+    var ele = document.getElementById('user-' + data.userid);
     if(ele !== null)
     {
         //exists
@@ -118,7 +257,7 @@ function AddParticipant(data) {
     
     var newDiv = document.createElement('div');
     newDiv.classList.add('participant');
-    newDiv.id = 'user-' + data.UserID;
+    newDiv.id = 'user-' + data.userid;
     if(data.BetState == "CashedOut")
     {
         newDiv.classList.add('participant_cashedout');
@@ -133,11 +272,11 @@ function AddParticipant(data) {
 
     parentElement.appendChild(newDiv);
     document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
-    GetUserInfo(data.UserID);
+    GetUserInfo(data.userid);
 }
 
 function RemoveParticipant(data) {
-  var elementToRemove = document.getElementById("user-" + data.UserID);
+  var elementToRemove = document.getElementById("user-" + data.userid);
   if (elementToRemove) {
     var parentElement = elementToRemove.parentNode;
     parentElement.removeChild(elementToRemove);
@@ -165,32 +304,20 @@ function BlastAllParticipants() {
     }
   }
   
-var cache = {};
-async function GetUserInfo(userId) {
-    var userData;
-    if (cache[userId]) {
-        userData = cache[userId];
-    }
-    else
-    {
-        const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`, {
-            method: 'GET',
-            mode: 'cors',
-        });
-        
-        // Check if the request was successful (status code 200)
-        if (!response.ok) {
-        throw new Error(`Failed to fetch user details. Status: ${response.status}`);
-        }
-    
-        // Parse the JSON response
-        userData = await response.json();
-        const { username, avatar_url } = userData;
-        checkCacheSize();
-        cache[userId] = { username, avatar_url };
 
-    }
+async function GetUserInfo(userId) {
+    const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`, {
+    method: 'GET',
+    mode: 'cors',
+    });
     
+    // Check if the request was successful (status code 200)
+    if (!response.ok) {
+    throw new Error(`Failed to fetch user details. Status: ${response.status}`);
+    }
+
+    // Parse the JSON response
+    const userData = await response.json();
 
     // Get username and avatarURL from the response
     const { username, avatar_url } = userData;
@@ -203,29 +330,6 @@ async function GetUserInfo(userId) {
 
 }
 
-function checkCacheSize() {
-    const currentCacheSize = Object.keys(cache).length;
-    if (currentCacheSize > 200) {
-        cache = {}
-        console.log('Cache cleared');
-    }
-}
 
 
-
-async function initializeGame() {
-
-    const initGameState = await getCurrentGameState();
-    GameStateChanged(initGameState.getCurrentGameState);
-    
-    const initPlayerBets = await getAllPlayerBets(initGameState.getCurrentGameState["GameID"]);
-    for (let bet of initPlayerBets.getAllPlayerBets) {
-        BetStateChanged(bet);
-    }
-
-    SubscribeToGameEvents();
-}
-
-// Call the async function
-initializeGame();
-
+  

@@ -1,6 +1,7 @@
 
 var localSessionToken = localStorage.getItem('sessiontoken');
-var domainURL = "https://sanga-games.github.io/ToTheMoon" 
+//var domainURL = "https://sanga-games.github.io/ToTheMoon" 
+var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
 
 //Post-Signout CLeanup
@@ -73,7 +74,7 @@ if(localSessionToken)
             document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
-            InitWebsocketConnection();
+            //initializeGame();
         } catch (error) {
             console.error(error);
         }
