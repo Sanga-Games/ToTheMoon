@@ -5,6 +5,9 @@ var GameID = 0;
 
 function GameStateChanged(data)
 {
+
+    Trigger_GameStateChanged(data);
+
     clearInterval(FuncIntervalID);
     GameID = data.GameID;
     if(data.State == "OnGoing")
@@ -96,6 +99,9 @@ async function CashOut()
 
 function BetStateChanged(data)
 {
+
+    Trigger_PlayerBetChanged(data);
+
     var ele = document.getElementById('user-' + data.UserID);
     if(ele !== null)
     {
@@ -228,4 +234,16 @@ async function initializeGame() {
 
 // Call the async function
 initializeGame();
+
+
+function Trigger_GameStateChanged(data)
+{
+
+}
+
+
+function Trigger_PlayerBetChanged(data)
+{
+
+}
 
