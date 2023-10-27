@@ -81,6 +81,7 @@ function ResetRocketGame2() {
 function BlastRocket() {
     $('.rocketExplosion').css({ opacity: 1 });
     ResetRocketGame();
+    EmptyAllPlayersList()
     // setTimeout(InitialLaunchRocket, 8000);
 };
 
@@ -224,12 +225,16 @@ function PopPlayerFromRocket(PlayerIndex) {
 }
 
 
+function EmptyAllPlayersList()
+{
+    AllPlayersList = [];
+}
+
 function RemoveAllVipPlayers() {
     PrevRocketPlayers = body.querySelectorAll('.VipPlayer')
 
     if (PrevRocketPlayers.length > 0) {
 
-        AllPlayersList = [];
         PrevRocketPlayers.forEach((PrevPlayer) => {
             PrevPlayer.remove();
         });
