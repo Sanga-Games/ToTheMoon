@@ -33,7 +33,7 @@ background-color: #ffffff25; /* or any color you prefer */
     height:100%;
     left:0px;
     top:0px;
-    z-index: 100;
+    z-index: 80;
 }
 
 #ParticipantsArea
