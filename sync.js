@@ -65,6 +65,19 @@ async function getAllPlayerBets(gameID) {
   return graphqlRequest(query, variables);
 }
 
+async function AddWalletBalance(AddedBalance) {
+  SessionToken = localSessionToken;
+  const query = `
+    query($SessionToken: String!, $AddedBalance: Float!) {
+      AddWalletBalance(SessionToken: $SessionToken, AddedBalance: $AddedBalance) 
+    }
+  `;
+
+  const variables = { SessionToken, AddedBalance };
+
+  return graphqlRequest(query, variables);
+}
+
 // GraphQL Mutations
 async function addPlayerBet(gameID, sessionToken, betAmount, cashOutMultiplier) {
   const mutation = `

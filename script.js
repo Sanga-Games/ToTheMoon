@@ -28,13 +28,13 @@ function GameStateChanged(data)
         {
             ClearParticipants();
             document.querySelector("#MakeBet_btn").disabled = false;
+            document.querySelector("#Game_TotalBetAmount").innerHTML = 0;
         }
         startTime = new Date(data.BetStartUTC+"Z").getTime();
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
         document.querySelector("#Game_Multiplier").innerHTML = "-";
         document.querySelector("#MakeBet_btn").style.display = "block";
         document.querySelector("#CashOut_btn").style.display = "none";
-        document.querySelector("#Game_TotalBetAmount").innerHTML = data.TotalBetAmount;
     }
     else if(data.State == "Concluded")
     {
@@ -87,6 +87,7 @@ async function MakeBet()
     if(document.querySelector("#Game_CashOutMultiplierCheck").checked)
         temp_com = document.querySelector("#Game_CashOutMultiplierInput").value
     var result = await addPlayerBet(GameID,localSessionToken,document.querySelector("#Game_BetAmountInput").value,temp_com);
+    AddBalance(0);
     console.log(result);
 }
 
@@ -94,6 +95,7 @@ async function CashOut()
 {
     document.querySelector("#CashOut_btn").disabled = true;
     var result =  await cashOutPlayerBet(GameID,localSessionToken);
+    AddBalance(0);
     console.log(result);
 }
 
@@ -140,6 +142,8 @@ function AddParticipant(data) {
     parentElement.appendChild(newDiv);
     document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
     GetUserInfo(data.UserID);
+
+    document.querySelector("#Game_TotalBetAmount").innerHTML = (parseFloat(document.querySelector("#Game_TotalBetAmount").innerHTML) + parseFloat(data.BetAmount)).toFixed(2);
 }
 
 function RemoveParticipant(data) {
@@ -209,6 +213,7 @@ async function GetUserInfo(userId) {
 
 }
 
+
 function checkCacheSize() {
     const currentCacheSize = Object.keys(cache).length;
     if (currentCacheSize > 200) {
@@ -238,6 +243,7 @@ initializeGame();
 
 function Trigger_GameStateChanged(data)
 {
+    AddBalance(0);
     if(data.State == "OnGoing")
     {
         InitialLaunchRocket();
@@ -259,5 +265,12 @@ function Trigger_GameStateChanged(data)
 function Trigger_PlayerBetChanged(data)
 {
 
+}
+
+async function AddBalance(amount)
+{
+    var new_balance = await AddWalletBalance(amount);
+    var ele = document.querySelector("#Profile_WalletBalance");
+    ele.innerHTML = parseFloat(new_balance.AddWalletBalance.toFixed(2)) ;
 }
 

@@ -69,11 +69,13 @@ if(localSessionToken)
     
             // Parse the JSON response
             const userData = await response.json();
+            console.log(userData);
             const { dusername, davatarid, did } = userData;
             document.getElementById('Profile_UserName').textContent = dusername;
             document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
+            AddBalance(0);
             //initializeGame();
         } catch (error) {
             console.error(error);
