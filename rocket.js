@@ -1,51 +1,51 @@
 
-    function InitialLaunchRocket() {
+var body = document.body;
 
-        //stars();
-        $('.Background').animate({ bottom: '-100%' }, 2000)
-        $('.rocket').animate({ bottom: '50%' }, 2000, function () {
+function InitialLaunchRocket() {
 
+    stars();
+    $('.Background').animate({ bottom: '-100%' }, 2000)
+    $('.rocket').animate({ bottom: '50%' }, 2000, function () {
+
+        LoopRocketMotion();
+    })
+}
+
+
+function LoopRocketMotion() {
+    $('.rocket').css({ bottom: '50%' });
+    $('.rocket').animate({ bottom: '45%' }, 500, 'linear', function () {
+        $('.rocket').animate({ bottom: '50%' }, 500, 'linear', function () {
             LoopRocketMotion();
-            // const randomDuration = Math.floor(Math.random() * (8000 - 2000 + 1)) + 2000;
-            // setTimeout(BlastRocket, randomDuration);
         })
-    }
+    })
+}
 
+function ResetRocketGame() {
+    deleteStars();
+    $('.rocket').stop();
+    $('.Background').stop();
+    $('.earth').stop();
+    $('.rocket').hide()
+    //DeleteAllPopoutPlayerFromRocket();
+    // setTimeout(ResetRocketGame2, 3000);
 
-    function LoopRocketMotion() {
-        $('.rocket').css({ bottom: '50%' });
-        $('.rocket').animate({ bottom: '45%' }, 800, 'linear', function () {
-            $('.rocket').animate({ bottom: '50%' }, 800, 'linear', function () {
-                LoopRocketMotion();
-            })
-        })
-    }
+}
 
-    function ResetRocketGame() {
-        //deleteStars();
-        $('.rocket').stop();
-        $('.Background').stop();
-        $('.earth').stop();
-        $('.rocket').hide()
-        //DeleteAllPopoutPlayerFromRocket();
-        // setTimeout(ResetRocketGame2, 3000);
+function ResetRocketGame2() {
+    //DeleteAllPopoutPlayerFromRocket();
+    $('.rocketExplosion').css({ opacity: 0 });
+    $('.rocket').show()
+    $('.rocket').css({ bottom: '25%' });
+    $('.Background').css({ bottom: '0%' });
+    // $('.earth').css({ bottom: '-50vh' });
+}
 
-    }
-
-    function ResetRocketGame2() {
-        //DeleteAllPopoutPlayerFromRocket();
-        $('.rocketExplosion').css({ opacity: 0 });
-        $('.rocket').show()
-        $('.rocket').css({ bottom: '25%' });
-        $('.Background').css({ bottom: '0%' });
-        // $('.earth').css({ bottom: '-50vh' });
-    }
-
-    function BlastRocket() {
-        $('.rocketExplosion').css({ opacity: 1 });
-        ResetRocketGame();
-        // setTimeout(InitialLaunchRocket, 8000);
-    };
+function BlastRocket() {
+    $('.rocketExplosion').css({ opacity: 1 });
+    ResetRocketGame();
+    // setTimeout(InitialLaunchRocket, 8000);
+};
 
 
 
@@ -192,13 +192,14 @@ function SpawnVipPlayer(Player) {
 
 
 function stars() {
-    let count = 40;
+    let count = 60;
 
     let i = 0;
 
     while (i < count) {
         // Create a new <i> element
         let star = document.createElement('i');
+        star.className = 'stars';
 
         let x = Math.floor(Math.random() * window.innerWidth);
         let duration = Math.random() * 2;
@@ -207,18 +208,18 @@ function stars() {
         // Set the styles for the newly created <i> element
         star.style.position = 'absolute';
         star.style.left = x + 'px';
-        star.style.width = '1px'; // Fix typo in 'width'
+        star.style.width = '1px';
         star.style.height = 40 + h + 'px';
         star.style.animationDuration = duration + 's';
 
-        scene.appendChild(star);
+        body.appendChild(star);
         i++;
     }
 }
 
 function deleteStars() {
-    let scene = document.querySelector('.scene');
-    let stars = scene.querySelectorAll('i');
+    //let scene = document.querySelector('.scene');
+    let stars = body.querySelectorAll('.stars');
 
     stars.forEach((star) => {
         star.remove();
