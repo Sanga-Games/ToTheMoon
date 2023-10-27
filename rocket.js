@@ -1,12 +1,49 @@
 
 var body = document.body;
 
+var AllPlayersList = [];
+
+var MaxVipPlayers = 10;
+
+
+function AddDataToAllPlayerList(data) {
+    // Check if the user ID is already present in the array
+    const existingUserIndex = AllPlayersList.findIndex(item => item.UserID === data.UserID);
+
+    if (existingUserIndex === -1 && data.BetState === "Pending") {
+        // User ID is not present in the array, add the data object
+        AllPlayersList.push(data);
+        // Sort the array based on BetAmount in descending order
+        AllPlayersList.sort((a, b) => b.BetAmount - a.BetAmount);
+
+        SpawnPlayersInsideRocket(AllPlayersList);
+
+    } else if (existingUserIndex !== -1) {
+        // User ID is already present, check the bet state
+        if (AllPlayersList[existingUserIndex].BetState === "Pending" && data.BetState === "CashedOut") {
+            // If the existing data has a pending bet state and the new data has a CashedOut state, remove the existing data
+
+            if (existingUserIndex > MaxVipPlayers - 1) {
+                PopPlayerFromRocket(-1);
+            }
+            else {
+                PopPlayerFromRocket(existingUserIndex);
+            }
+
+            AllPlayersList.splice(existingUserIndex, 1);
+
+        } // else if the bet state is pending in both cases, do nothing
+    }
+
+}
+
+
 function InitialLaunchRocket() {
 
-    stars();
+
     $('.Background').animate({ bottom: '-100%' }, 2000)
     $('.rocket').animate({ bottom: '50%' }, 2000, function () {
-
+        stars();
         LoopRocketMotion();
     })
 }
@@ -58,76 +95,204 @@ function DeleteAllPopoutPlayerFromRocket() {
 }
 
 
-function PopPlayerFromRocket(Player) {
-    RocketPlayerHolder = document.querySelector('.RocketPlayerHolder');
+// function PopPlayerFromRocket(PlayerIndex) {
+//     RocketPlayerHolder = document.querySelector('.RocketPlayerHolder');
 
-    PoppedPlayer = document.createElement('div');
-    PoppedplayerSuit = document.createElement('img');
-    PoppedPlayerImg = document.createElement('img');
-    PoppedplayerSuit.src = "astronaut.png";
-    if (Player) {
-        PoppedPlayerImg.src = Player + ".png";
+//     PoppedPlayer = document.createElement('div');
+//     PoppedplayerSuit = document.createElement('img');
+//     PoppedPlayerImg = document.createElement('img');
+//     PoppedplayerSuit.src = "astronaut.png";
+
+//     if (PlayerIndex > -1) {
+
+//         PoppedPlayerUserID = AllPlayersList[PlayerIndex].UserID;
+//         var poppedPlayerDiv = document.querySelector('.' + PoppedPlayerUserID);
+
+//         // Check if the div element exists
+//         if (poppedPlayerDiv) {
+//             // Select the image element inside the div
+//             var InsidePlayerImg = poppedPlayerDiv.querySelector('img');
+
+//             // Check if the image element exists
+//             if (InsidePlayerImg) {
+//                 // Get the src attribute of the image
+//                 var imgSrc = InsidePlayerImg.src;
+//                 // Now you can use imgSrc as needed
+//                 PoppedPlayerImg.src = imgSrc;
+//             }
+//         }
+//     }
+
+//     PoppedPlayer.className = 'PoppedPlayer';
+//     PoppedplayerSuit.style.position = 'absolute';
+//     PoppedplayerSuit.style.width = '100%';
+//     PoppedplayerSuit.style.height = '100%';
+
+//     PoppedPlayerImg.style.position = 'absolute';
+//     PoppedPlayerImg.style.width = '40%';
+//     PoppedPlayerImg.style.height = '40%';
+//     PoppedPlayerImg.style.left = '57%';
+//     PoppedPlayerImg.style.borderRadius = '50%';
+
+//     PoppedPlayer.appendChild(PoppedplayerSuit);
+//     if (PlayerIndex > -1) {
+//         PoppedPlayer.appendChild(PoppedPlayerImg);
+//     }
+
+//     var SpawnWidth = Math.floor(Math.random() * RocketPlayerHolder.clientWidth);
+//     var SpawnHeight = Math.floor(Math.random() * RocketPlayerHolder.clientHeight);
+
+//     PoppedPlayer.style.position = 'absolute';
+//     PoppedPlayer.style.width = '72px';
+//     PoppedPlayer.style.height = '72px';
+//     PoppedPlayer.style.left = SpawnWidth + 'px';
+//     PoppedPlayer.style.top = SpawnHeight + 'px';
+//     PoppedPlayer.style.zIndex = 10;
+//     PoppedPlayer.style.animationDuration = '25s';
+
+//     if (PlayerIndex > -1) {
+//         RemoveSingleVipPlayer(PlayerIndex);
+//     }
+
+//     RocketPlayerHolder.appendChild(PoppedPlayer);
+// }
+
+function PopPlayerFromRocket(PlayerIndex) {
+    var RocketPlayerHolder = $('.RocketPlayerHolder');
+
+    var PoppedPlayer = $('<div>');
+    var PoppedplayerSuit = $('<img>');
+    var PoppedPlayerImg = $('<img>');
+    PoppedplayerSuit.attr('src', 'Images/astronaut.png');
+
+    if (PlayerIndex > -1) {
+        var PoppedPlayerUserID = AllPlayersList[PlayerIndex].UserID;
+        var poppedPlayerDiv = $('.' + PoppedPlayerUserID);
+
+        if (poppedPlayerDiv.length) {
+            var InsidePlayerImg = poppedPlayerDiv.find('img');
+
+            if (InsidePlayerImg.length) {
+                var imgSrc = InsidePlayerImg.attr('src');
+                PoppedPlayerImg.attr('src', imgSrc);
+            }
+        }
     }
 
-    PoppedPlayer.className = 'PoppedPlayer';
-    PoppedplayerSuit.style.position = 'absolute';
-    PoppedplayerSuit.style.width = '100%';
-    PoppedplayerSuit.style.height = '100%';
+    PoppedPlayer.addClass('PoppedPlayer');
+    PoppedplayerSuit.css({
+        'position': 'absolute',
+        'width': '100%',
+        'height': '100%'
+    });
 
-    PoppedPlayerImg.style.position = 'absolute';
-    PoppedPlayerImg.style.width = '40%';
-    PoppedPlayerImg.style.height = '40%';
-    PoppedPlayerImg.style.left = '57%';
-    PoppedPlayerImg.style.borderRadius = '50%';
+    PoppedPlayerImg.css({
+        'position': 'absolute',
+        'width': '40%',
+        'height': '40%',
+        'left': '57%',
+        'border-radius': '50%'
+    });
 
-    PoppedPlayer.appendChild(PoppedplayerSuit);
-    if (Player) {
-        PoppedPlayer.appendChild(PoppedPlayerImg);
+    PoppedPlayer.append(PoppedplayerSuit);
+    PoppedPlayer.animate({ left: '+=0' }, 5000, function(){
+        console.log("popped player removed");
+        PoppedPlayer.remove();
+    });
+    if (PlayerIndex > -1) {
+        PoppedPlayer.append(PoppedPlayerImg);
     }
 
-    var SpawnWidth = Math.floor(Math.random() * RocketPlayerHolder.clientWidth);
-    var SpawnHeight = Math.floor(Math.random() * RocketPlayerHolder.clientHeight);
+    var SpawnWidth = Math.floor(Math.random() * RocketPlayerHolder.width());
+    var SpawnHeight = Math.floor(Math.random() * RocketPlayerHolder.height());
 
-    PoppedPlayer.style.position = 'absolute';
-    PoppedPlayer.style.width = '72px';
-    PoppedPlayer.style.height = '72px';
-    PoppedPlayer.style.left = SpawnWidth + 'px';
-    PoppedPlayer.style.top = SpawnHeight + 'px';
-    PoppedPlayer.style.zIndex = 10;
-    PoppedPlayer.style.animationDuration = '25s';
+    PoppedPlayer.css({
+        'position': 'absolute',
+        'width': '72px',
+        'height': '72px',
+        'left': SpawnWidth + 'px',
+        'top': SpawnHeight + 'px',
+        'z-index': 10,
+        'animation-duration': '25s'
+    });
 
-    if (Player) {
-        RemoveSingleVipPlayer(Player);
+    if (PlayerIndex > -1) {
+        RemoveSingleVipPlayer(PlayerIndex);
     }
 
-    RocketPlayerHolder.appendChild(PoppedPlayer);
+    RocketPlayerHolder.append(PoppedPlayer);
 }
+
 
 function RemoveAllVipPlayers() {
-    PrevRocketPlayers = scene.querySelectorAll('.VipPlayer')
+    PrevRocketPlayers = body.querySelectorAll('.VipPlayer')
 
-    PrevRocketPlayers.forEach((PrevPlayer) => {
-        PrevPlayer.remove();
-    });
+    if (PrevRocketPlayers.length > 0) {
+
+        AllPlayersList = [];
+        PrevRocketPlayers.forEach((PrevPlayer) => {
+            PrevPlayer.remove();
+        });
+    }
 }
 
-function RemoveSingleVipPlayer(Player) {
-    VipPlayer = scene.querySelector('.' + Player)
+function RemoveSingleVipPlayer(PlayerIndex) {
+    PoppedPlayerUserID = AllPlayersList[PlayerIndex].UserID;
+    VipPlayer = body.querySelector('.' + PoppedPlayerUserID);
     if (VipPlayer) {
         VipPlayer.remove();
     }
 }
 
-function SpawnVipPlayer(Player) {
+
+function SpawnPlayersInsideRocket(AllPlayersList) {
+
+    RemoveAllVipPlayers();
+
+    if (AllPlayersList.length > 10) {
+        for (let i = 0; i < MaxVipPlayers - 1; i++) {
+            SpawnVipPlayer(AllPlayersList[i]);
+        }
+    }
+    else {
+        for (let i = 0; i < AllPlayersList.length; i++) {
+            SpawnVipPlayer(AllPlayersList[i]);
+        }
+    }
+
+
+}
+
+async function GetAvatarByUserID(RocketPlayerImg, UserId) {
+    const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${UserId}`, {
+        method: 'GET',
+        mode: 'cors',
+    });
+
+    // Check if the request was successful (status code 200)
+    if (!response.ok) {
+        throw new Error(`Failed to fetch user details. Status: ${response.status}`);
+    }
+
+    // Parse the JSON response
+    userData = await response.json();
+    RocketPlayerImg.src = userData.avatar_url
+}
+
+function SpawnVipPlayer(data) {
+
     var RocketPlayerHolder = document.querySelector('.RocketPlayerHolder');
+
+    UserID = data.UserID;
 
     // Create a new image for each player
     var RocketPlayer = document.createElement('div');
     var RocketPlayerImg = document.createElement('img');
     var RocketPlayerHelmet = document.createElement('img');
-    RocketPlayerImg.src = Player + ".png";
-    RocketPlayerHelmet.src = "Helmet.png";
-    RocketPlayer.className = 'VipPlayer' + ' ' + Player;
+    //RocketPlayerImg.src = GetAvatarByUserID(UserID);
+    GetAvatarByUserID(RocketPlayerImg, UserID);
+    RocketPlayerHelmet.src = "Images/Helmet.png";
+    RocketPlayer.className = 'VipPlayer' + ' ' + UserID;
 
     RocketPlayer.appendChild(RocketPlayerImg);
     RocketPlayer.appendChild(RocketPlayerHelmet);
@@ -144,16 +309,16 @@ function SpawnVipPlayer(Player) {
     RocketPlayerHelmet.style.height = '100%';
 
     RocketPlayer.style.position = 'absolute';
-    RocketPlayer.style.width = '24px';
-    RocketPlayer.style.height = '24px';
+    RocketPlayer.style.width = '32px';
+    RocketPlayer.style.height = '32px';
 
     // Append the player to the container
     RocketPlayerHolder.appendChild(RocketPlayer);
 
     // Function to move the image smoothly to a random position
     function moveImage() {
-        var maxWidth = RocketPlayerHolder.clientWidth - 26; // Subtract image width
-        var maxHeight = RocketPlayerHolder.clientHeight - 26; // Subtract image height
+        var maxWidth = RocketPlayerHolder.clientWidth - 32; // Subtract image width
+        var maxHeight = RocketPlayerHolder.clientHeight - 32; // Subtract image height
 
         // Generate random positions for each player
         var newX = Math.floor(Math.random() * maxWidth);
@@ -180,8 +345,8 @@ function SpawnVipPlayer(Player) {
     }
 
     // Randomly set the initial position for each player
-    var initialX = Math.floor(Math.random() * (RocketPlayerHolder.clientWidth - 26));
-    var initialY = Math.floor(Math.random() * (RocketPlayerHolder.clientHeight - 26));
+    var initialX = Math.floor(Math.random() * (RocketPlayerHolder.clientWidth - 32)); //RocketPlayer Width and Height
+    var initialY = Math.floor(Math.random() * (RocketPlayerHolder.clientHeight - 32)); //RocketPlayer Width and Height
     RocketPlayer.style.left = initialX + 'px';
     RocketPlayer.style.top = initialY + 'px';
 

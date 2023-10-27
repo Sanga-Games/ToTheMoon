@@ -19,7 +19,7 @@
     width: 100%;
     height: 14%;
     top: 40%;
-    background-image: url('Clouds2.png');
+    background-image: url('Images/Clouds2.png');
     background-repeat: repeat;
     background-size: auto 100%;
 }
@@ -30,7 +30,7 @@
     height: 23%;
     bottom: 0px;
     left: 0px;
-    background-image: url('BackgroundEnvironment2.png');
+    background-image: url('Images/BackgroundEnvironment2.png');
     background-repeat: repeat;
     background-size: auto 100%;
 }
@@ -47,7 +47,7 @@
 
 .rocketImage {
     height: 100%;
-    width: 100%;
+    width: auto;
 }
 
 .RocketPlayerHolder {

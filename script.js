@@ -255,13 +255,17 @@ function Trigger_GameStateChanged(data)
     else if(data.State == "Concluded")
     {
         BlastRocket();
+        RemoveAllVipPlayers();
     }
 }
 
 
 function Trigger_PlayerBetChanged(data)
 {
+    console.log("DinoBetStateChanged");
+    console.log(data);
 
+    AddDataToAllPlayerList(data);
 }
 
 async function AddBalance(amount)
