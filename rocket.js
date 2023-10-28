@@ -42,7 +42,7 @@ function InitialLaunchRocket() {
 
 
     $('.Background').animate({ bottom: '-100%' }, 2000)
-    $('.rocket').animate({ bottom: '50%' }, 2000, function () {
+    $('.rocket').animate({ bottom: '22%',height:'60%' }, 3000, function () {
         stars();
         LoopRocketMotion();
     })
@@ -50,9 +50,9 @@ function InitialLaunchRocket() {
 
 
 function LoopRocketMotion() {
-    $('.rocket').css({ bottom: '50%' });
-    $('.rocket').animate({ bottom: '45%' }, 500, 'linear', function () {
-        $('.rocket').animate({ bottom: '50%' }, 500, 'linear', function () {
+    $('.rocket').css({ bottom: '22%' ,height:'60%'});
+    $('.rocket').animate({ bottom: '18%' ,height:'60%'}, 2000, 'linear', function () {
+        $('.rocket').animate({ bottom: '22%' ,height:'60%'}, 2000, 'linear', function () {
             LoopRocketMotion();
         })
     })
@@ -61,6 +61,7 @@ function LoopRocketMotion() {
 function ResetRocketGame() {
     deleteStars();
     $('.rocket').stop();
+    $('.RocketPlayerHolder').stop();
     $('.Background').stop();
     $('.earth').stop();
     $('.rocket').hide()
@@ -73,7 +74,7 @@ function ResetRocketGame2() {
     //DeleteAllPopoutPlayerFromRocket();
     $('.rocketExplosion').css({ opacity: 0 });
     $('.rocket').show()
-    $('.rocket').css({ bottom: '25%' });
+    $('.rocket').css({ bottom: '100px',height:'40%' });
     $('.Background').css({ bottom: '0%' });
     // $('.earth').css({ bottom: '-50vh' });
 }
