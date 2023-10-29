@@ -66,7 +66,7 @@ function ResetRocketGame() {
     $('.BackgroundAtmosphere').stop();
     $('.Background').stop();
     $('.earth').stop();
-    $('.rocket').animate({ bottom: '-50%'}, 500, 'linear', function () {
+    $('.rocket').animate({ bottom: '17%'}, 1000, 'linear', function () {
         $('.rocket').hide()
     })
 
