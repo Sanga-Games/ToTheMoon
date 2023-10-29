@@ -68,10 +68,24 @@
 
     </div>
 
+    <div class="BackgroundAtmosphere"></div>
+
     <div class="Background">
-        <img class="BackgroundAtmosphere" src="Images/BackgroundAtmosphere.png">
         <div class="DivBackgroundEnvironment"></div>
-        <div class="DivBackgroundClouds"></div>
+        <div class="DivBackgroundClouds">
+            <div class="cloud" style="width:300px; height:164px; bottom:15%; transform: scale(1.5);  background-position: -300px; animation-timeline: -1s;
+            animation-duration: 60s;"></div>
+            <div class="cloud" style="width:300px; height:164px; bottom:20%; transform: scale(2); z-index:5;  background-position: 0px; animation-delay: -14s;
+            animation-duration: 50s;"></div>
+            <div class="cloud" style="width:300px; height:164px; bottom:30%; transform: scale(1.8); z-index:5; background-position: -600px; animation-delay: -75s;
+            animation-duration: 40s;"></div>
+            <div class="cloud" style="width:300px; height:164px; bottom:40%; transform: scale(2);  background-position: -900px; animation-delay: -13s;
+            animation-duration: 55s;"></div>
+            <div class="cloud" style="width:300px; height:164px; bottom:50%; transform: scale(1.8);  background-position: 0px; animation-delay: -85s;
+            animation-duration: 60s;"></div>
+            <div class="cloud" style="width:300px; height:164px; bottom:57%; transform: scale(3); z-index:5; background-position: -300px; animation-delay: -125s;
+            animation-duration: 65s;"></div>
+        </div>
     </div>
 
     <div class="rocket">
@@ -90,9 +104,8 @@
         <span id="Game_WaitTime"></span>
     </div>
 
-    <div class="rocketExplosion">
-        <img src="Images/Explosion2.gif">
-    </div>
+    <!-- <div class="rocketExplosion">
+    </div> -->
 
 </body>
 <script src="rocket.js"></script>

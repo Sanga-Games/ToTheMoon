@@ -40,10 +40,11 @@ function AddDataToAllPlayerList(data) {
 
 function InitialLaunchRocket() {
 
-
-    $('.Background').animate({ bottom: '-100%' }, 2000)
+    $('.Background').animate({ bottom: '-300%' }, 6000)
+    setTimeout(stars,3000);
+    $('.BackgroundAtmosphere').animate({ bottom:'-500%'}, 6000)
     $('.rocket').animate({ bottom: '22%',height:'60%' }, 3000, function () {
-        stars();
+        //stars();
         LoopRocketMotion();
     })
 }
@@ -62,9 +63,14 @@ function ResetRocketGame() {
     deleteStars();
     $('.rocket').stop();
     $('.RocketPlayerHolder').stop();
+    $('.BackgroundAtmosphere').stop();
     $('.Background').stop();
     $('.earth').stop();
-    $('.rocket').hide()
+    $('.rocket').animate({ bottom: '-50%'}, 500, 'linear', function () {
+        $('.rocket').hide()
+    })
+
+    // $('.rocket').hide()
     //DeleteAllPopoutPlayerFromRocket();
     // setTimeout(ResetRocketGame2, 3000);
 
@@ -72,15 +78,35 @@ function ResetRocketGame() {
 
 function ResetRocketGame2() {
     //DeleteAllPopoutPlayerFromRocket();
-    $('.rocketExplosion').css({ opacity: 0 });
+    // $('.rocketExplosion').css({ opacity: 0 });
     $('.rocket').show()
-    $('.rocket').css({ bottom: '100px',height:'40%' });
+    $('.rocket').css({ bottom: '115px',height:'25%' });
+    $('.BackgroundAtmosphere').css({ bottom: '0%'});
     $('.Background').css({ bottom: '0%' });
     // $('.earth').css({ bottom: '-50vh' });
 }
 
 function BlastRocket() {
-    $('.rocketExplosion').css({ opacity: 1 });
+    var $rocket = $('.rocket');
+    var offset = $rocket.offset();
+    var centerY = offset.top + $rocket.outerHeight() / 2;
+    var centerX = offset.left + $rocket.outerWidth() / 2;
+
+    var $explosionDiv = $('<div class="explosion" style="margin-left: 0px; margin-top: 50px; top:'+centerY+'px; transform: translate(-50%, -50%) scale(1) rotate(175deg);"></div>');
+    $('body').append($explosionDiv);
+    setTimeout(function(){
+        $explosionDiv = $('<div class="explosion" style="margin-left: -50px; margin-top: -100px;top:'+centerY+'px; transform: translate(-50%, -50%) scale(0.8) rotate(0deg);"></div>');
+        $('body').append($explosionDiv);
+    }, 300);
+    setTimeout(function(){
+        $explosionDiv = $('<div class="explosion" style="margin-right: 0px; margin-bottom: -100px;top:'+centerY+'px; transform: translate(-50%, -50%) scale(0.7) rotate(-90deg);"></div>');
+        $('body').append($explosionDiv);
+    }, 500);
+
+    setTimeout(function(){
+        $('.explosion').remove();
+    }, 2500);
+
     ResetRocketGame();
     EmptyAllPlayersList()
     // setTimeout(InitialLaunchRocket, 8000);
