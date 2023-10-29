@@ -2,6 +2,7 @@ var FuncIntervalID;
 var PrevState = "Idle";
 var startTime;
 var GameID = 0;
+var GameState = "";
 
 function GameStateChanged(data)
 {
@@ -10,6 +11,7 @@ function GameStateChanged(data)
 
     clearInterval(FuncIntervalID);
     GameID = data.GameID;
+    GameState = data.State;
     if(data.State == "OnGoing")
     {
         if(PrevState!="OnGoing")

@@ -219,3 +219,18 @@
         transform: translateY(200vh);
     }
 }
+
+#GalaxyBG{
+    position: fixed;
+    width:100%;
+    height:100%;
+    left:0px;
+    top:0px;
+    background-image: url('Graphics/Stars.jpg');
+    background-repeat:repeat;
+    background-size: 1920px 1920px;
+    /* background-position: 0px 0px; */
+    z-index:2;
+    mix-blend-mode:hard-light;
+    opacity:0;
+}

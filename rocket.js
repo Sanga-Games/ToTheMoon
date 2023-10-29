@@ -47,6 +47,25 @@ function InitialLaunchRocket() {
         //stars();
         LoopRocketMotion();
     })
+    $('#GalaxyBG').css({ backgroundPositionY:'0%', opacity:0})
+    setTimeout(StartGalaxyAnim, 4000);
+}
+
+function StartGalaxyAnim()
+{
+    if(GameState != "OnGoing")
+        return;
+    $('#GalaxyBG').animate({ backgroundPositionY:'1920px',opacity:0.2},8000,'linear', function(){
+        GalaxyLoop();
+    })
+}
+
+function GalaxyLoop()
+{
+    $('#GalaxyBG').css({ backgroundPositionY:'0%', opacity:0.2})
+    $('#GalaxyBG').animate({ backgroundPositionY:'1920px', opacity:0.2},8000,'linear', function(){
+        GalaxyLoop();
+    })
 }
 
 
@@ -69,7 +88,7 @@ function ResetRocketGame() {
     $('.rocket').animate({ bottom: '17%'}, 1000, 'linear', function () {
         $('.rocket').hide()
     })
-
+    $('#GalaxyBG').stop();
     // $('.rocket').hide()
     //DeleteAllPopoutPlayerFromRocket();
     // setTimeout(ResetRocketGame2, 3000);
@@ -83,6 +102,7 @@ function ResetRocketGame2() {
     $('.rocket').css({ bottom: '115px',height:'25%' });
     $('.BackgroundAtmosphere').css({ bottom: '0%'});
     $('.Background').css({ bottom: '0%' });
+    $('#GalaxyBG').css({ backgroundPositionY:'0px', opacity:0})
     // $('.earth').css({ bottom: '-50vh' });
 }
 
@@ -389,6 +409,8 @@ function SpawnVipPlayer(data) {
 
 
 function stars() {
+    if(GameState != "OnGoing")
+        return;
     let count = 60;
 
     let i = 0;
