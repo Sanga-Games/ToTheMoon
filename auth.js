@@ -1,7 +1,7 @@
 
 var localSessionToken = localStorage.getItem('sessiontoken');
-//var domainURL = "https://sanga-games.github.io/ToTheMoon" 
-var domainURL = "http://localhost:53134"
+var domainURL = "https://sanga-games.github.io/ToTheMoon" 
+//var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
 
 //Post-Signout CLeanup
