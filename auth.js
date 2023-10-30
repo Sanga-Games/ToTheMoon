@@ -69,6 +69,14 @@ if(localSessionToken)
     
             // Parse the JSON response
             const userData = await response.json();
+
+            if (userData.msg == "Session token not valid")
+            {
+                localStorage.removeItem('sessiontoken');
+                window.location.href = domainURL;
+                throw new Error(`Failed to fetch user details. Status: ${response.status}, StatusText: ${response.statusText}`);
+            }
+            
             console.log(userData);
             const { dusername, davatarid, did } = userData;
             document.getElementById('Profile_UserName').textContent = dusername;
