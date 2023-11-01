@@ -30,7 +30,7 @@ function InitWebsocketConnection()
 
     // Listen for messages from the server
     socket.addEventListener('message', (event) => {
-        console.log(event.data);
+        //console.log(event.data);
     });
 
     // Listen for any errors that occur

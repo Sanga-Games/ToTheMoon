@@ -205,7 +205,7 @@ function subscribeToWebSocket(subscriptionQuery, callback) {
 
   websocket.addEventListener("message", (event) => {
     const message = JSON.parse(event.data);
-    console.log(message);
+    //console.log(message);
 
     switch (message.type) {
       case "connection_ack":
@@ -236,19 +236,19 @@ function SubscribeToGameEvents()
 {
   playerBetWebsocket = subscribeToWebSocket(playerBetSubscription, (data) => {
     // Handle player bet changes
-    console.log("Player Bet Change:", data);
+    //console.log("Player Bet Change:", data);
     BetStateChanged(data)
   });
   
   gameStateWebsocket = subscribeToWebSocket(gameStateSubscription, (data) => {
     // Handle game state changes
-    console.log("Game State Change:", data);
+    //console.log("Game State Change:", data);
     GameStateChanged(data);
   });
 
   voiceWebsocket = subscribeToWebSocket(voiceDataSubscription, (data) => {
     // Handle game state changes
-    console.log("Voice Data Change:", data);
+    //console.log("Voice Data Change:", data);
     PlayVoice(data.Data);
   });
 }
