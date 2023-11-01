@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To The Moon</title>
     <script src="code.jquery.com_jquery-3.7.1.min.js"></script>
+    <script src="lzma_worker.js"></script>
     
     <script src="sync.js"> </script>
     <script src="script.js"> </script>
-    <script src="AgoraRTC_N-4.19.2.js"></script>
-    <script src="voiceComms.js"> </script>
+    <!-- <script src="AgoraRTC_N-4.19.2.js"></script>
+    <script src="voiceComms.js"> </script> -->
+    <script src="SimpleVoiceComms.js"> </script>
+    <script src = "Connection.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="rocket.css">
 </head>
@@ -54,11 +58,11 @@
     <div id="BettingControlsArea">
         <span class="ControlLabels">BET</span>
         <button id="CashOut_btn" class="GameBtns" onclick="CashOut()">CASH OUT</button>
-        <button id="MakeBet_btn" class="GameBtns" onclick="MakeBet()">PLACE BET</button>
         <input type="number" id="Game_BetAmountInput" value="10"/>
         <span class="ControlLabels">&nbsp;&nbsp;&nbsp;&nbsp;Cash Out</span>
         <input type="checkbox" id="Game_CashOutMultiplierCheck" onchange="document.getElementById('Game_CashOutMultiplierInput').disabled = !this.checked;"/>
         <input type="number" id="Game_CashOutMultiplierInput" value="2" disabled/>
+        <button id="MakeBet_btn" onclick="MakeBet()">PLACE BET</button>
     </div>
 
     

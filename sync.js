@@ -162,6 +162,15 @@ const gameStateSubscription = `
   }
 `;
 
+const voiceDataSubscription = `
+  subscription OnVoiceDataChange {
+    onVoiceDataChange {
+      Identity
+      Data
+    }
+  }
+`;
+
 function startSubscription(websocket, subscriptionQuery) {
   const subscribeMessage = {
     id: window.crypto.randomUUID(),
@@ -219,8 +228,9 @@ function subscribeToWebSocket(subscriptionQuery, callback) {
 }
 
 // Usage
-var playerBetWebsocket 
-var gameStateWebsocket 
+var playerBetWebsocket; 
+var gameStateWebsocket;
+var voiceWebsocket; 
 
 function SubscribeToGameEvents()
 {
@@ -234,6 +244,12 @@ function SubscribeToGameEvents()
     // Handle game state changes
     console.log("Game State Change:", data);
     GameStateChanged(data);
+  });
+
+  voiceWebsocket = subscribeToWebSocket(voiceDataSubscription, (data) => {
+    // Handle game state changes
+    console.log("Voice Data Change:", data);
+    PlayVoice(data.Data);
   });
 }
 

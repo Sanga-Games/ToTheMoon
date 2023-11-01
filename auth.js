@@ -1,14 +1,14 @@
 
 var localSessionToken = localStorage.getItem('sessiontoken');
-var domainURL = "https://sanga-games.github.io/ToTheMoon" 
-//var domainURL = "http://localhost:53134"
+//var domainURL = "https://sanga-games.github.io/ToTheMoon" 
+var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
 
 //Post-Signout CLeanup
 if(window.location.href == domainURL + "/?action=signout")
 {
-    localStorage.removeItem('sessiontoken');
-    window.location.href = domainURL;
+    //localStorage.removeItem('sessiontoken');
+    //window.location.href = domainURL;
 }
 
 if (!localSessionToken) {
@@ -84,6 +84,8 @@ if(localSessionToken)
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
             AddBalance(0);
+            InitWebsocketConnection();
+            startCapturing();
             //initializeGame();
         } catch (error) {
             console.error(error);
