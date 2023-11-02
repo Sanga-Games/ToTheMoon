@@ -5,8 +5,7 @@ var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
 
 //Post-Signout CLeanup
-if(window.location.href == domainURL + "/?action=signout")
-{
+if (window.location.href == domainURL + "/?action=signout") {
     //localStorage.removeItem('sessiontoken');
     //window.location.href = domainURL;
 }
@@ -36,7 +35,7 @@ var userAgentDigits = eachnavigator_info.userAgent.replace(/\D+/g, '');
 var pluginsLength = eachnavigator_info.plugins.length;
 var screenHeight = eachscreen_info.height || '';
 var screenWidth = eachscreen_info.width || '';
-var pixelDepth = eachscreen_info.pixelDepth || ''; 
+var pixelDepth = eachscreen_info.pixelDepth || '';
 
 var deviceidObject = {
     mimeTypesLength,
@@ -45,38 +44,36 @@ var deviceidObject = {
     screenHeight,
     screenWidth,
     pixelDepth,
-    };
+};
 
 // Serialize the object as a JSON string
 var deviceidParams = JSON.stringify(deviceidObject);
 var encodedDeviceidParams = encodeURIComponent(deviceidParams);
 
-if(localSessionToken)
-{
+if (localSessionToken) {
 
     (async () => {
         const requrl = `${AuthServerURL}/?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`;
-    
+
         try {
             const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
-    
+
             // Check if the request was successful (status code 200)
             if (!response.ok) {
                 localStorage.removeItem('sessiontoken');
                 window.location.href = domainURL;
                 throw new Error(`Failed to fetch user details. Status: ${response.status}, StatusText: ${response.statusText}`);
             }
-    
+
             // Parse the JSON response
             const userData = await response.json();
 
-            if (userData.msg == "Session token not valid")
-            {
+            if (userData.msg == "Session token not valid") {
                 localStorage.removeItem('sessiontoken');
                 window.location.href = domainURL;
                 throw new Error(`Failed to fetch user details. Status: ${response.status}, StatusText: ${response.statusText}`);
             }
-            
+
             console.log(userData);
             const { dusername, davatarid, did } = userData;
             document.getElementById('Profile_UserName').textContent = dusername;
@@ -91,7 +88,7 @@ if(localSessionToken)
             console.error(error);
         }
     })();
-    
+
 
 
 
@@ -104,9 +101,44 @@ if(localSessionToken)
 }
 
 
-function UserSignout()
-{
+function UserSignout() {
     localStorage.removeItem('sessiontoken');
     requrl = AuthServerURL + `/signout?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`
-    window.location.href = requrl;       
+    window.location.href = requrl;
 }
+
+const AddVCointBTN = document.getElementById('AddVCointBTN');
+const balanceAdder = document.querySelector('.BalanceAdder');
+const addBalanceCancelButton = document.getElementById('AddBalanceCancelButton');
+
+const TenVCoinbutton = document.getElementById('TenVCoinButton');
+const FiftyVCoinButton = document.getElementById('FiftyVCoinButton');
+const HundredVCoinButton = document.getElementById('HundredVCoinButton');
+
+AddVCointBTN.addEventListener('click', function () {
+    balanceAdder.style.display = 'flex';
+    console.log("Add VCoin button clicked")
+});
+
+addBalanceCancelButton.addEventListener('click', function () {
+    balanceAdder.style.display = 'none';
+});
+
+
+TenVCoinbutton.addEventListener('click', function () {
+
+    window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=10`
+
+});
+
+FiftyVCoinButton.addEventListener('click', function () {
+
+    window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=50`
+
+});
+
+HundredVCoinButton.addEventListener('click', function () {
+
+    window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=100`
+
+});
