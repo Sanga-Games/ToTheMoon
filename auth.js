@@ -142,3 +142,340 @@ HundredVCoinButton.addEventListener('click', function () {
     window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=100`
 
 });
+
+
+const PurchaseRewardsBTN = document.getElementById('PurchaseRewardsBTN');
+const FeedbackBTN = document.getElementById('FeedbackBTN');
+const PaymentHistoryBTN = document.getElementById('PaymentHistoryBTN');
+
+const RewardsContainer = document.getElementById('RewardsContainer');
+const RewardsHolder = document.getElementById('RewardsHolder');
+const RewardsContainerCancelBTN = document.getElementById('RewardsContainerCancelBTN');
+
+const RewardsEmailContainer = document.getElementById('RewardsEmailContainer');
+const EmailContainerpayButton = document.getElementById('EmailContainerpayButton');
+const EmailContainercancelButton = document.getElementById('EmailContainercancelButton');
+const emailInput = document.getElementById('emailInput');
+
+const FeedbackContainer = document.getElementById('FeedbackContainer');
+const FeedbackSendButton = document.getElementById('FeedbackSendButton');
+const FeedbackcancelButton = document.getElementById('FeedbackcancelButton');
+const TopicInput = document.getElementById('TopicInput');
+const DescriptionInput = document.getElementById('DescriptionInput');
+
+var RewardID;
+
+const PaymentContainer = document.getElementById('PaymentContainer');
+const PaymentHolder = document.getElementById('PaymentHolder');
+const PaymentContainerCancelBTN = document.getElementById('PaymentContainerCancelBTN');
+
+var PaymentStartKey = '';
+
+const PaymentloadMoreBTN = document.getElementById('PaymentloadMoreBTN');
+
+EmailContainercancelButton.addEventListener('click', function () {
+
+    RewardsEmailContainer.style.display = 'none';
+
+});
+
+EmailContainerpayButton.addEventListener('click', function () {
+
+    console.log(emailInput.value);
+    console.log(RewardID);
+
+    (async () => {
+        const requrl = `https://hlvdx2iussr2ubtgteihlrys5e0zsjrq.lambda-url.ap-south-1.on.aws/PurchaseRewards/?sessiontoken=${localSessionToken}&RewardID=${RewardID}&EmailId=${emailInput.value}`
+
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
+                window.location.href = domainURL;
+            }
+
+            // Parse the JSON response
+            const RewardsData = await response.json();
+            console.log(RewardsData);
+        } catch (error) {
+            console.error(error);
+        }
+
+        RewardsEmailContainer.style.display = 'none';
+        RewardsContainer.style.display = 'none';
+
+    })();
+
+});
+
+PurchaseRewardsBTN.addEventListener('click', function () {
+
+    (async () => {
+        const requrl = "https://hlvdx2iussr2ubtgteihlrys5e0zsjrq.lambda-url.ap-south-1.on.aws/Rewards/";
+
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
+                window.location.href = domainURL;
+            }
+
+            AllRewardsContainerClass = document.querySelectorAll('.RewardsContainerClass')
+            if (AllRewardsContainerClass.length > 0) {
+
+                AllRewardsContainerClass.forEach((RewardsClass) => {
+                    RewardsClass.remove();
+                });
+            }
+
+            // Parse the JSON response
+            const RewardsData = await response.json();
+
+            RewardsData.forEach(reward => {
+                const divElement = document.createElement('div');
+                divElement.id = reward.id;
+                divElement.className = 'RewardsContainerClass'
+
+                const imgElement = document.createElement('img');
+                imgElement.src = reward.Image;
+                imgElement.alt = "Rewards";
+                imgElement.width = 150;
+                imgElement.height = 210;
+
+                const pElement = document.createElement('p');
+                pElement.textContent = reward.Name;
+
+                const buttonElement = document.createElement('button');
+                buttonElement.textContent = `${reward.Price} VCoin`;
+
+                buttonElement.onclick = function () {
+                    console.log(divElement.id);
+                    RewardID = divElement.id;
+                    RewardsEmailContainer.style.display = 'flex';
+                };
+
+                // Append the elements to the RewardsContainer
+                divElement.appendChild(imgElement);
+                divElement.appendChild(pElement);
+                divElement.appendChild(buttonElement);
+
+                RewardsHolder.appendChild(divElement);
+            });
+
+
+            console.log(RewardsData);
+        } catch (error) {
+            console.error(error);
+        }
+    })();
+
+
+    //RewardsContainer.style.display = 'grid';
+    RewardsContainer.style.display = 'flex';
+
+});
+
+RewardsContainerCancelBTN.addEventListener('click', function () {
+
+    RewardsContainer.style.display = 'none';
+
+});
+
+
+PaymentHistoryBTN.addEventListener('click', function () {
+
+    var PaymentParams = JSON.stringify(PaymentStartKey);
+    var encodedPaymentParams = encodeURIComponent(PaymentParams);
+
+    (async () => {
+
+        const requrl = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/RetrivePayments/?sessiontoken=${localSessionToken}&PaymentStartKey=${encodedPaymentParams}`
+
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
+                window.location.href = domainURL;
+            }
+
+            // Parse the JSON response
+            const PaymentsData = await response.json();
+            console.log(PaymentsData);
+            AllPaymentsRow = document.querySelectorAll('.PaymentDataRow');
+            if (AllPaymentsRow.length > 0) {
+
+                AllPaymentsRow.forEach((PaymentRow) => {
+                    PaymentRow.remove();
+                });
+            }
+            var PaymentTableBody = document.getElementById('PaymnetHolderTable');
+
+            for (var i = 0; i< PaymentsData.items.length; i++)
+            {
+                var rowcolor = "red";
+
+                if(PaymentsData.items[i].isTransferred == "True")
+                {
+                    rowcolor = "green";
+                }
+
+                var row = `<tbody class="PaymentDataRow" style="background-color: ${rowcolor};">
+                                <tr>
+                                    <td>${PaymentsData.items[i].PaymentIntent}</td>
+                                    <td>${PaymentsData.items[i].Quantity}</td>
+                                    <td>${PaymentsData.items[i].PaymentStatus}</td>
+                                    <td>${PaymentsData.items[i].isTransferred}</td>
+                                </tr>
+                            </tbody>`
+
+                PaymentTableBody.innerHTML += row;          
+            }
+            
+
+            PaymentStartKey = PaymentsData.lastEvaluatedKey
+
+            if (PaymentStartKey == null)
+            {
+                PaymentloadMoreBTN.style.display = 'none';
+            }
+            else
+            {
+                PaymentloadMoreBTN.style.display = 'flex';
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    })();
+
+    PaymentContainer.style.display = 'flex';
+
+});
+
+PaymentContainerCancelBTN.addEventListener('click', function () {
+
+    PaymentContainer.style.display = 'none';
+    PaymentStartKey=''
+
+});
+
+
+PaymentloadMoreBTN.addEventListener('click', function () {
+
+    var PaymentParams = JSON.stringify(PaymentStartKey);
+    var encodedPaymentParams = encodeURIComponent(PaymentParams);
+
+    (async () => {
+
+        const requrl = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/RetrivePayments/?sessiontoken=${localSessionToken}&PaymentStartKey=${encodedPaymentParams}`
+
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
+                window.location.href = domainURL;
+            }
+
+            // Parse the JSON response
+            const PaymentsData = await response.json();
+            console.log(PaymentsData);
+
+            var PaymentTableBody = document.getElementById('PaymnetHolderTable')
+
+            for (var i = 0; i< PaymentsData.items.length; i++)
+            {
+                var rowcolor = "red";
+
+                if(PaymentsData.items[i].isTransferred == "True")
+                {
+                    rowcolor = "green";
+                }
+
+                var row = `<tbody class="PaymentDataRow" style="background-color: ${rowcolor};">
+                                <tr>
+                                    <td>${PaymentsData.items[i].PaymentIntent}</td>
+                                    <td>${PaymentsData.items[i].Quantity}</td>
+                                    <td>${PaymentsData.items[i].PaymentStatus}</td>
+                                    <td>${PaymentsData.items[i].isTransferred}</td>
+                                </tr>
+                            </tbody>`
+
+                PaymentTableBody.innerHTML += row;          
+            }
+            
+
+            PaymentStartKey = PaymentsData.lastEvaluatedKey
+
+            if (PaymentStartKey == null)
+            {
+                PaymentloadMoreBTN.style.display = 'none';
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    })();    
+
+});
+
+
+FeedbackBTN.addEventListener('click', function () {
+
+    FeedbackContainer.style.display = 'flex';
+
+});
+
+FeedbackcancelButton.addEventListener('click', function () {
+
+    FeedbackContainer.style.display = 'none';
+
+});
+
+FeedbackSendButton.addEventListener('click', function () {
+
+
+
+    (async () => {
+
+        const requrl = `https://hlvdx2iussr2ubtgteihlrys5e0zsjrq.lambda-url.ap-south-1.on.aws/AddFeedback/?sessiontoken=${localSessionToken}&FeedbackTopic=${TopicInput.value}&FeedbackDescription=${DescriptionInput.value}`
+
+        if(TopicInput.value != null & DescriptionInput.value != null)
+        {
+
+            console.log("Both are valid value");
+
+            try {
+                const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+    
+                // Check if the request was successful (status code 200)
+                if (!response.ok) {
+                    window.location.href = domainURL;
+                }
+    
+                // Parse the JSON response
+                const FeedbackData = await response.json();
+                console.log(FeedbackData);
+
+                FeedbackContainer.style.display = 'none';
+
+                TopicInput.value = '';
+                DescriptionInput.value = '';
+    
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        else
+        {
+            console.log("Topic or description is empty");
+        }
+
+    })();    
+
+});

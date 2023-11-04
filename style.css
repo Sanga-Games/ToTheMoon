@@ -201,6 +201,159 @@ body {
     height: 22px;
 }
 
+#RewardsEmailContainer, #FeedbackContainer{
+    display: none;
+    background-color: #2e303300;
+    /* padding-right: 10px;
+    padding-left: 10px; */
+    width: 100%;
+    height: 100%;
+    /* padding-top: 20px;
+    padding-bottom: 20px; */
+    /* border-radius: 18px; */
+    text-align: center;
+    position: absolute;
+    /* Use flexbox */
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: center;
+    /* Center-align vertically */
+    z-index: 120;
+    /* left: 50%;
+    top: 50%; */
+    /* transform: translate(-50%, -50%); */
+}
+
+#RewardsEmailContainer2, #FeedbackContainer2{
+    display: flex;
+    width: auto;
+    height: auto;
+    background-color: rgba(6, 55, 129, 0.842);
+    text-align: center;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    left: 50%;
+    top: 50%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transform: translate(-50%, -50%);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-radius: 18px;
+    padding-right: 10px;
+    padding-left: 10px;
+
+}
+
+#RewardsContainer, #PaymentContainer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #222222cc;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 119;
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+.RewardsContainerClass{
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#RewardsHolder{
+    display: grid;
+    background-color: #fd010156;
+    width: 95%;
+    height: 80%;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    grid-gap: 2em;
+    padding: 2%;
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+#PaymentHolder{
+    width: 95%;
+    height: 80%;
+    padding: 2%;
+    background-color: #fd010156;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    align-items: center;
+    justify-content: center;
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+#PaymentloadMoreBTN{
+
+    display: none;
+}
+
+#PaymnetHolderTable{
+    width: 100%;
+    height: auto;
+    font-size: larger;
+    align-items: center;
+    justify-content: center;
+}
+
+#PaymnetHolderTable td{
+    border: 1px solid;
+    padding: 20px;
+}
+#PaymnetHolderTable tr{
+    
+    border-style: solid;
+}
+
+#RewardsButtonContainer{
+    
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    height: 35px;
+    border-radius: 20px;
+    background-color: #222222cc;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 118;
+    /* transform: translateX(-100%); */
+}
+
+#PurchaseRewardsBTN{
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    margin-left: 5px;
+}
+#FeedbackBTN{
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    margin-left: 5px;
+}
+#PaymentHistoryBTN{
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    margin-left: 5px;
+}
+
 #AddVCointBTN {
     position: relative;
     margin-left: 2px;
@@ -233,13 +386,13 @@ body {
     /* Stack items vertically */
     align-items: center;
     /* Center-align vertically */
-    z-index: 120;
+    z-index: 117;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
 }
 
-#AddBalanceCancelButton {
+#AddBalanceCancelButton, #RewardsContainerCancelBTN, #PaymentContainerCancelBTN {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -256,7 +409,7 @@ body {
 
 }
 
-#AddBalanceCancelButton:hover {
+#AddBalanceCancelButton:hover, #RewardsContainerCancelBTN:hover, #PaymentContainerCancelBTN:hover {
     background-color: #ce2525;
 }
 

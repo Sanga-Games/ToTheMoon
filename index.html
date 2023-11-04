@@ -37,9 +37,63 @@
                 <a href="#SignOut" onclick="UserSignout()" class="discord-button">SignOut</a> -->
                 <!-- <button id="Profile_RefreshButton">Refresh Profile</button> -->
             </div>
-            
         </div>
         
+    </div>
+
+    <div id="RewardsButtonContainer">
+        <button id="PurchaseRewardsBTN">
+            <img src="Images/gift.png" alt="Image" width="22" height="22">
+        </button>
+        <button id="FeedbackBTN">
+            <img src="Images/review.png" alt="Image" width="22" height="22">
+        </button>
+        <button id="PaymentHistoryBTN">
+            <img src="Images/invoice.png" alt="Image" width="22" height="22">
+        </button>
+    </div>
+
+    <div id="RewardsContainer">
+        <button id="RewardsContainerCancelBTN">X</button>
+        <div id="RewardsHolder">
+            
+        </div>
+    </div>
+
+    <div id="PaymentContainer">
+        <button id="PaymentContainerCancelBTN">X</button>
+        <div id="PaymentHolder">
+            <table id="PaymnetHolderTable">
+                <tr>
+                    <th>PaymentIntent</th>
+                    <th>Quantity</th>
+                    <th>PaymentStatus</th>
+                    <th>IsTransferred</th>
+                </tr>
+            </table>
+            <button id="PaymentloadMoreBTN">More..</button>
+            <!-- <select name="Feedback Status">
+                <option>Open</option>
+                <option>Archive</option>
+            </select> -->
+        </div>
+    </div>
+
+    <div id="RewardsEmailContainer">
+        <div id="RewardsEmailContainer2">
+            <input type="text" id="emailInput" placeholder="Enter your email">
+            <button id="EmailContainerpayButton">Pay</button>
+            <button id="EmailContainercancelButton">Cancel</button>
+        </div>
+    </div>
+
+    <div id="FeedbackContainer">
+        <div id="FeedbackContainer2">
+            <input type="text" id="TopicInput" placeholder="Topic ....">
+            <input type="text" id="DescriptionInput" placeholder="Description ....">
+            <button id="FeedbackSendButton">Send</button>
+            <button id="FeedbackcancelButton">Cancel</button>
+        </div>
     </div>
 
     <div class="BalanceAdder">
