@@ -245,7 +245,7 @@ body {
 
 }
 
-#RewardsContainer, #PaymentContainer{
+#RewardsContainer, #PaymentContainer, #RewardsHistoryContainer{
     position: absolute;
     top: 0;
     left: 0;
@@ -278,7 +278,7 @@ body {
     overflow: auto;
 }
 
-#PaymentHolder{
+#PaymentHolder, #RewardsHistoryHolder{
     width: 95%;
     height: 80%;
     padding: 2%;
@@ -291,12 +291,12 @@ body {
     overflow: auto;
 }
 
-#PaymentloadMoreBTN{
+#PaymentloadMoreBTN, #RewardsHistoryloadMoreBTN{
 
     display: none;
 }
 
-#PaymnetHolderTable{
+#PaymnetHolderTable, #RewardsHistoryHolderTable{
     width: 100%;
     height: auto;
     font-size: larger;
@@ -304,11 +304,11 @@ body {
     justify-content: center;
 }
 
-#PaymnetHolderTable td{
+#PaymnetHolderTable td, #RewardsHistoryHolderTable td{
     border: 1px solid;
     padding: 20px;
 }
-#PaymnetHolderTable tr{
+#PaymnetHolderTable tr, #RewardsHistoryHolderTable tr{
     
     border-style: solid;
 }
@@ -336,6 +336,12 @@ body {
 }
 
 #PurchaseRewardsBTN{
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    margin-left: 5px;
+}
+#RewardsHistoryBTN{
     background: transparent;
     cursor: pointer;
     border: none;
@@ -392,7 +398,7 @@ body {
     transform: translate(-50%, -50%);
 }
 
-#AddBalanceCancelButton, #RewardsContainerCancelBTN, #PaymentContainerCancelBTN {
+#AddBalanceCancelButton, #RewardsContainerCancelBTN, #PaymentContainerCancelBTN, #RewardsHistoryContainerCancelBTN {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -409,7 +415,7 @@ body {
 
 }
 
-#AddBalanceCancelButton:hover, #RewardsContainerCancelBTN:hover, #PaymentContainerCancelBTN:hover {
+#AddBalanceCancelButton:hover, #RewardsContainerCancelBTN:hover, #PaymentContainerCancelBTN:hover, #RewardsHistoryContainerCancelBTN:hover {
     background-color: #ce2525;
 }
 

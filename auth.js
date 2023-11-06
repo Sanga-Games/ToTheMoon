@@ -2,7 +2,7 @@
 var localSessionToken = localStorage.getItem('sessiontoken');
 //var domainURL = "https://sanga-games.github.io/ToTheMoon" 
 var domainURL = "http://localhost:53134"
-var AuthServerURL = "https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth"
+var AuthServerURL = "https://wov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws"
 
 //Post-Signout CLeanup
 if (window.location.href == domainURL + "/?action=signout") {
@@ -57,7 +57,7 @@ if (localSessionToken) {
 
         try {
             const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
-
+            console.log(response)
             // Check if the request was successful (status code 200)
             if (!response.ok) {
                 localStorage.removeItem('sessiontoken');
@@ -127,24 +127,25 @@ addBalanceCancelButton.addEventListener('click', function () {
 
 TenVCoinbutton.addEventListener('click', function () {
 
-    window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=10`
+    window.location.href = `https://kq7r6ttsuhnvxhgxzzreh4okya0tmmrr.lambda-url.sa-east-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=10`
 
 });
 
 FiftyVCoinButton.addEventListener('click', function () {
 
-    window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=50`
+    window.location.href = `https://kq7r6ttsuhnvxhgxzzreh4okya0tmmrr.lambda-url.sa-east-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=50`
 
 });
 
 HundredVCoinButton.addEventListener('click', function () {
 
-    window.location.href = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=100`
+    window.location.href = `https://kq7r6ttsuhnvxhgxzzreh4okya0tmmrr.lambda-url.sa-east-1.on.aws/?sessiontoken=${localSessionToken}&Quantity=100`
 
 });
 
 
 const PurchaseRewardsBTN = document.getElementById('PurchaseRewardsBTN');
+const RewardsHistoryBTN = document.getElementById('RewardsHistoryBTN');
 const FeedbackBTN = document.getElementById('FeedbackBTN');
 const PaymentHistoryBTN = document.getElementById('PaymentHistoryBTN');
 
@@ -168,14 +169,154 @@ var RewardID;
 const PaymentContainer = document.getElementById('PaymentContainer');
 const PaymentHolder = document.getElementById('PaymentHolder');
 const PaymentContainerCancelBTN = document.getElementById('PaymentContainerCancelBTN');
-
 var PaymentStartKey = '';
-
 const PaymentloadMoreBTN = document.getElementById('PaymentloadMoreBTN');
+
+const RewardsHistoryContainer = document.getElementById('RewardsHistoryContainer');
+const RewardsHistoryHolder = document.getElementById('RewardsHistoryHolder');
+const RewardsHistoryContainerCancelBTN = document.getElementById('RewardsHistoryContainerCancelBTN');
+var RewardHistoryStartKey = '';
+const RewardsHistoryloadMoreBTN = document.getElementById('RewardsHistoryloadMoreBTN');
+
+
+RewardsHistoryBTN.addEventListener('click', function () {
+
+    var RewardHistoryParams = JSON.stringify(RewardHistoryStartKey);
+    var encodedRewardHistoryParams = encodeURIComponent(RewardHistoryParams);
+
+    (async () => {
+
+        const requrl = `https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/RetriveRewards/?sessiontoken=${localSessionToken}&RewardsStartKey=${encodedRewardHistoryParams}`
+
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
+                window.location.href = domainURL;
+            }
+
+            // Parse the JSON response
+            const RewardsHistoryData = await response.json();
+            console.log(RewardsHistoryData);
+
+            AllRewardsHistoryRow = document.querySelectorAll('.RewardsHistoryDataRow');
+            if (AllRewardsHistoryRow.length > 0) {
+
+                AllRewardsHistoryRow.forEach((RewardsRow) => {
+                    RewardsRow.remove();
+                });
+            }
+
+            var RewardsHistoryHolderTable = document.getElementById('RewardsHistoryHolderTable');
+
+            for (var i = 0; i < RewardsHistoryData.items.length; i++) {
+                var rowcolor = "red";
+
+                if (RewardsHistoryData.items[i].Received == "True") {
+                    rowcolor = "green";
+                }
+
+                var row = `<tbody class="RewardsHistoryDataRow" style="background-color: ${rowcolor};">
+                            <tr>
+                                <td>${RewardsHistoryData.items[i].RewardName}</td>
+                                <td>${RewardsHistoryData.items[i].EmailId}</td>
+                                <td>${RewardsHistoryData.items[i].PaymentStatus}</td>
+                                <td>${RewardsHistoryData.items[i].Received}</td>
+                            </tr>
+                        </tbody>`
+
+                RewardsHistoryHolderTable.innerHTML += row;
+            }
+
+
+            RewardHistoryStartKey = RewardsHistoryData.lastEvaluatedKey
+
+            if (RewardHistoryStartKey == null) {
+                RewardsHistoryloadMoreBTN.style.display = 'none';
+            }
+            else {
+                RewardsHistoryloadMoreBTN.style.display = 'flex';
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    })();
+
+    RewardsHistoryContainer.style.display = 'flex';
+
+});
+
+RewardsHistoryContainerCancelBTN.addEventListener('click', function () {
+
+    RewardsHistoryContainer.style.display = 'none';
+    RewardHistoryStartKey = '';
+
+});
+
+RewardsHistoryloadMoreBTN.addEventListener('click', function () {
+
+    var RewardHistoryParams = JSON.stringify(RewardHistoryStartKey);
+    var encodedRewardHistoryParams = encodeURIComponent(RewardHistoryParams);
+
+    (async () => {
+
+        const requrl = `https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/RetriveRewards/?sessiontoken=${localSessionToken}&RewardsStartKey=${encodedRewardHistoryParams}`
+
+        try {
+            const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
+
+            // Check if the request was successful (status code 200)
+            if (!response.ok) {
+                window.location.href = domainURL;
+            }
+
+            // Parse the JSON response
+            const RewardsHistoryData = await response.json();
+            console.log(RewardsHistoryData);
+
+            var RewardsHistoryHolderTable = document.getElementById('RewardsHistoryHolderTable');
+
+            for (var i = 0; i < RewardsHistoryData.items.length; i++) {
+                var rowcolor = "red";
+
+                if (RewardsHistoryData.items[i].Received == "True") {
+                    rowcolor = "green";
+                }
+
+                var row = `<tbody class="RewardsHistoryDataRow" style="background-color: ${rowcolor};">
+                            <tr>
+                                <td>${RewardsHistoryData.items[i].RewardName}</td>
+                                <td>${RewardsHistoryData.items[i].EmailId}</td>
+                                <td>${RewardsHistoryData.items[i].PaymentStatus}</td>
+                                <td>${RewardsHistoryData.items[i].Received}</td>
+                            </tr>
+                        </tbody>`
+
+                RewardsHistoryHolderTable.innerHTML += row;
+            }
+
+
+            RewardHistoryStartKey = RewardsHistoryData.lastEvaluatedKey
+
+            if (RewardHistoryStartKey == null) {
+                RewardsHistoryloadMoreBTN.style.display = 'none';
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    })();
+
+});
 
 EmailContainercancelButton.addEventListener('click', function () {
 
     RewardsEmailContainer.style.display = 'none';
+    RewardID = '';
 
 });
 
@@ -185,7 +326,7 @@ EmailContainerpayButton.addEventListener('click', function () {
     console.log(RewardID);
 
     (async () => {
-        const requrl = `https://hlvdx2iussr2ubtgteihlrys5e0zsjrq.lambda-url.ap-south-1.on.aws/PurchaseRewards/?sessiontoken=${localSessionToken}&RewardID=${RewardID}&EmailId=${emailInput.value}`
+        const requrl = `https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/PurchaseRewards/?sessiontoken=${localSessionToken}&RewardID=${RewardID}&EmailId=${emailInput.value}`
 
         try {
             const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
@@ -198,6 +339,8 @@ EmailContainerpayButton.addEventListener('click', function () {
             // Parse the JSON response
             const RewardsData = await response.json();
             console.log(RewardsData);
+            emailInput.value = '';
+            RewardID = '';
         } catch (error) {
             console.error(error);
         }
@@ -212,7 +355,7 @@ EmailContainerpayButton.addEventListener('click', function () {
 PurchaseRewardsBTN.addEventListener('click', function () {
 
     (async () => {
-        const requrl = "https://hlvdx2iussr2ubtgteihlrys5e0zsjrq.lambda-url.ap-south-1.on.aws/Rewards/";
+        const requrl = "https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/Rewards/";
 
         try {
             const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
@@ -291,7 +434,7 @@ PaymentHistoryBTN.addEventListener('click', function () {
 
     (async () => {
 
-        const requrl = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/RetrivePayments/?sessiontoken=${localSessionToken}&PaymentStartKey=${encodedPaymentParams}`
+        const requrl = `https://kq7r6ttsuhnvxhgxzzreh4okya0tmmrr.lambda-url.sa-east-1.on.aws/RetrivePayments/?sessiontoken=${localSessionToken}&PaymentStartKey=${encodedPaymentParams}`
 
         try {
             const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
@@ -313,12 +456,10 @@ PaymentHistoryBTN.addEventListener('click', function () {
             }
             var PaymentTableBody = document.getElementById('PaymnetHolderTable');
 
-            for (var i = 0; i< PaymentsData.items.length; i++)
-            {
+            for (var i = 0; i < PaymentsData.items.length; i++) {
                 var rowcolor = "red";
 
-                if(PaymentsData.items[i].isTransferred == "True")
-                {
+                if (PaymentsData.items[i].isTransferred == "True") {
                     rowcolor = "green";
                 }
 
@@ -331,18 +472,16 @@ PaymentHistoryBTN.addEventListener('click', function () {
                                 </tr>
                             </tbody>`
 
-                PaymentTableBody.innerHTML += row;          
+                PaymentTableBody.innerHTML += row;
             }
-            
+
 
             PaymentStartKey = PaymentsData.lastEvaluatedKey
 
-            if (PaymentStartKey == null)
-            {
+            if (PaymentStartKey == null) {
                 PaymentloadMoreBTN.style.display = 'none';
             }
-            else
-            {
+            else {
                 PaymentloadMoreBTN.style.display = 'flex';
             }
 
@@ -359,7 +498,7 @@ PaymentHistoryBTN.addEventListener('click', function () {
 PaymentContainerCancelBTN.addEventListener('click', function () {
 
     PaymentContainer.style.display = 'none';
-    PaymentStartKey=''
+    PaymentStartKey = ''
 
 });
 
@@ -371,7 +510,7 @@ PaymentloadMoreBTN.addEventListener('click', function () {
 
     (async () => {
 
-        const requrl = `https://mvxk6s5hq4mqgwr3ynvumhyw4i0ujdus.lambda-url.ap-south-1.on.aws/RetrivePayments/?sessiontoken=${localSessionToken}&PaymentStartKey=${encodedPaymentParams}`
+        const requrl = `https://kq7r6ttsuhnvxhgxzzreh4okya0tmmrr.lambda-url.sa-east-1.on.aws/RetrivePayments/?sessiontoken=${localSessionToken}&PaymentStartKey=${encodedPaymentParams}`
 
         try {
             const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
@@ -387,12 +526,10 @@ PaymentloadMoreBTN.addEventListener('click', function () {
 
             var PaymentTableBody = document.getElementById('PaymnetHolderTable')
 
-            for (var i = 0; i< PaymentsData.items.length; i++)
-            {
+            for (var i = 0; i < PaymentsData.items.length; i++) {
                 var rowcolor = "red";
 
-                if(PaymentsData.items[i].isTransferred == "True")
-                {
+                if (PaymentsData.items[i].isTransferred == "True") {
                     rowcolor = "green";
                 }
 
@@ -405,14 +542,13 @@ PaymentloadMoreBTN.addEventListener('click', function () {
                                 </tr>
                             </tbody>`
 
-                PaymentTableBody.innerHTML += row;          
+                PaymentTableBody.innerHTML += row;
             }
-            
+
 
             PaymentStartKey = PaymentsData.lastEvaluatedKey
 
-            if (PaymentStartKey == null)
-            {
+            if (PaymentStartKey == null) {
                 PaymentloadMoreBTN.style.display = 'none';
             }
 
@@ -420,7 +556,7 @@ PaymentloadMoreBTN.addEventListener('click', function () {
             console.error(error);
         }
 
-    })();    
+    })();
 
 });
 
@@ -443,21 +579,20 @@ FeedbackSendButton.addEventListener('click', function () {
 
     (async () => {
 
-        const requrl = `https://hlvdx2iussr2ubtgteihlrys5e0zsjrq.lambda-url.ap-south-1.on.aws/AddFeedback/?sessiontoken=${localSessionToken}&FeedbackTopic=${TopicInput.value}&FeedbackDescription=${DescriptionInput.value}`
+        const requrl = `https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/AddFeedback/?sessiontoken=${localSessionToken}&FeedbackTopic=${TopicInput.value}&FeedbackDescription=${DescriptionInput.value}`
 
-        if(TopicInput.value != null & DescriptionInput.value != null)
-        {
+        if (TopicInput.value != null & DescriptionInput.value != null) {
 
             console.log("Both are valid value");
 
             try {
                 const response = await fetch(requrl, { method: 'GET', mode: 'cors' });
-    
+
                 // Check if the request was successful (status code 200)
                 if (!response.ok) {
                     window.location.href = domainURL;
                 }
-    
+
                 // Parse the JSON response
                 const FeedbackData = await response.json();
                 console.log(FeedbackData);
@@ -466,16 +601,15 @@ FeedbackSendButton.addEventListener('click', function () {
 
                 TopicInput.value = '';
                 DescriptionInput.value = '';
-    
+
             } catch (error) {
                 console.error(error);
             }
         }
-        else
-        {
+        else {
             console.log("Topic or description is empty");
         }
 
-    })();    
+    })();
 
 });

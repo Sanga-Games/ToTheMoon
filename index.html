@@ -20,7 +20,7 @@
 <body>
     <div id="ProfileArea">
         <div id="PreLogin" style="display: block;">
-            <button class="ProfileBtns" onclick="window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/discordauth&response_type=code&scope=identify';"> Login</button>
+            <button class="ProfileBtns" onclick="window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2Fwov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws&response_type=code&scope=identify';"> Login</button>
         </div>
         <div id="PostLogin" style="display: none;">
             <div id="walletContainer">
@@ -44,6 +44,9 @@
     <div id="RewardsButtonContainer">
         <button id="PurchaseRewardsBTN">
             <img src="Images/gift.png" alt="Image" width="22" height="22">
+        </button>
+        <button id="RewardsHistoryBTN">
+            <img src="Images/gift-card.png" alt="Image" width="22" height="22">
         </button>
         <button id="FeedbackBTN">
             <img src="Images/review.png" alt="Image" width="22" height="22">
@@ -72,10 +75,21 @@
                 </tr>
             </table>
             <button id="PaymentloadMoreBTN">More..</button>
-            <!-- <select name="Feedback Status">
-                <option>Open</option>
-                <option>Archive</option>
-            </select> -->
+        </div>
+    </div>
+
+    <div id="RewardsHistoryContainer">
+        <button id="RewardsHistoryContainerCancelBTN">X</button>
+        <div id="RewardsHistoryHolder">
+            <table id="RewardsHistoryHolderTable">
+                <tr>
+                    <th>RewardName</th>
+                    <th>EmailID</th>
+                    <th>PaymentStatus</th>
+                    <th>IsReceived</th>
+                </tr>
+            </table>
+            <button id="RewardsHistoryloadMoreBTN">More..</button>
         </div>
     </div>
 
