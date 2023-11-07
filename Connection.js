@@ -4,7 +4,7 @@ let VoiceWebSocket;
 function InitGameWebsocketConnection()
 {
     // Replace 'ws://localhost:8080' with your WebSocket server URL
-    const socketUrl = 'wss://mfdcr0vhb3.execute-api.sa-east-1.amazonaws.com/production/';
+    const socketUrl = 'wss://zmrxhgzk6h.execute-api.sa-east-1.amazonaws.com/production/';
 
     // Your custom headers
     const sessionToken = localSessionToken;
@@ -31,7 +31,7 @@ function InitGameWebsocketConnection()
 
     // Listen for messages from the server
     GameWebSocket.addEventListener('message', (event) => {
-        //console.log(event.data);
+        console.log(event.data);
     });
 
     // Listen for any errors that occur
@@ -42,7 +42,6 @@ function InitGameWebsocketConnection()
     // Connection closed
     GameWebSocket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        InitWebsocketConnection();
     });
 }
 
@@ -82,7 +81,8 @@ function InitVoiceWebsocketConnection()
 
     // Listen for messages from the server
     GameWebSocket.addEventListener('message', (event) => {
-        //console.log(event.data);
+        console.log(event.data);
+        GameMessageFromServer(event.data);
     });
 
     // Listen for any errors that occur
@@ -115,6 +115,19 @@ function SendVoiceDataToServer(compressedString)
     // Send the JSON message as a string
     VoiceWebSocket.send(JSON.stringify(jsonMessage));
 
+}
+
+
+function GameMessageFromServer(data)
+{
+    switch (data.type){
+        case "BetSuccess":
+            //bet success logic
+            break;
+        case "RewardHistory":
+            //bet success logic
+            break;
+    }
 }
 
 
