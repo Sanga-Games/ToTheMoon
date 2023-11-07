@@ -124,17 +124,9 @@ function GameMessageFromServer(data)
         case "BetSuccess":
             //bet success logic
             break;
-        case "RewardHistory":
-            //bet success logic
-            break;
+            
+        case "Rewards":
+            RewardsResponse(data);
+            break;    
     }
 }
-
-
-
-
-
-
-
-
-  
