@@ -1,6 +1,58 @@
-let socket;
+let GameWebSocket;
+let VoiceWebSocket;
 
-function InitWebsocketConnection()
+function InitGameWebsocketConnection()
+{
+    // Replace 'ws://localhost:8080' with your WebSocket server URL
+    const socketUrl = 'wss://mfdcr0vhb3.execute-api.sa-east-1.amazonaws.com/production/';
+
+    // Your custom headers
+    const sessionToken = localSessionToken;
+    const deviceID = encodedDeviceidParams;
+
+
+
+    // Replace these with your actual headers
+    const headers = {
+        'SessionToken': sessionToken,
+        'DeviceID': deviceID
+    };
+
+    // Construct the WebSocket URL with query parameters for headers
+    const urlWithHeaders = `${socketUrl}?${Object.entries(headers).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`;
+
+    // Create WebSocket instance
+    GameWebSocket = new WebSocket(urlWithHeaders);
+
+    // Connection opened
+    GameWebSocket.addEventListener('open', (event) => {
+        console.log('WebSocket connection opened:', event);
+    });
+
+    // Listen for messages from the server
+    GameWebSocket.addEventListener('message', (event) => {
+        //console.log(event.data);
+    });
+
+    // Listen for any errors that occur
+    GameWebSocket.addEventListener('error', (error) => {
+        console.error('WebSocket encountered an error:', error);
+    });
+
+    // Connection closed
+    GameWebSocket.addEventListener('close', (event) => {
+        console.log('WebSocket connection closed:', event);
+        InitWebsocketConnection();
+    });
+}
+
+function CloseGameWebSocketConnection()
+{
+    // Close the connection when needed
+    GameWebSocket.close();
+}
+
+function InitVoiceWebsocketConnection()
 {
     // Replace 'ws://localhost:8080' with your WebSocket server URL
     const socketUrl = 'wss://v5irfwsic0.execute-api.ap-south-1.amazonaws.com/production';
@@ -21,37 +73,35 @@ function InitWebsocketConnection()
     const urlWithHeaders = `${socketUrl}?${Object.entries(headers).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`;
 
     // Create WebSocket instance
-    socket = new WebSocket(urlWithHeaders);
+    GameWebSocket = new WebSocket(urlWithHeaders);
 
     // Connection opened
-    socket.addEventListener('open', (event) => {
+    GameWebSocket.addEventListener('open', (event) => {
         console.log('WebSocket connection opened:', event);
     });
 
     // Listen for messages from the server
-    socket.addEventListener('message', (event) => {
+    GameWebSocket.addEventListener('message', (event) => {
         //console.log(event.data);
     });
 
     // Listen for any errors that occur
-    socket.addEventListener('error', (error) => {
+    GameWebSocket.addEventListener('error', (error) => {
         console.error('WebSocket encountered an error:', error);
     });
 
     // Connection closed
-    socket.addEventListener('close', (event) => {
+    GameWebSocket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
         InitWebsocketConnection();
     });
 }
 
-function CloseWebSocketConnection()
+function CloseVoiceWebSocketConnection()
 {
     // Close the connection when needed
-    socket.close();
+    VoiceWebSocket.close();
 }
-
-
 
 function SendVoiceDataToServer(compressedString)
 {
@@ -63,7 +113,7 @@ function SendVoiceDataToServer(compressedString)
     };
 
     // Send the JSON message as a string
-    socket.send(JSON.stringify(jsonMessage));
+    VoiceWebSocket.send(JSON.stringify(jsonMessage));
 
 }
 

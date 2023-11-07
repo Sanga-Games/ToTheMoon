@@ -4,43 +4,73 @@ var startTime;
 var GameID = 0;
 var GameState = "";
 
+function WalletBalanceChanged(data)
+{
+    console.log(data)
+    return;
+}
+
 function GameStateChanged(data)
 {
+    for (var item of data["BatchData"])
+    {
+        var obj;
+        if (typeof item === 'string')
+            obj = JSON.parse(item);
+        else
+            obj = item
 
+        if(obj["Type"] == "GameState")
+        {
+            GameState_Handler(obj["Body"]);
+            console.log(obj.Body.State);
+        }
+        if(obj["Type"] == "GameHistory")
+        {
+            console.log(obj)
+        }
+    
+    }
+}
+
+function GameState_Handler(data)
+{
+    console.log(data);
     Trigger_GameStateChanged(data);
 
     clearInterval(FuncIntervalID);
     GameID = data.GameID;
     GameState = data.State;
-    if(data.State == "OnGoing")
+    if(data.State == "ONGOING")
     {
-        if(PrevState!="OnGoing")
+        if(PrevState!="ONGOING")
         {
             document.querySelector("#CashOut_btn").disabled = false;
         }
-        startTime = new Date(data.StartUTC+"Z").getTime();
+        startTime = data.GameStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateMultiplier, 50);
         document.querySelector("#Game_WaitTime").innerHTML = "";
         document.querySelector("#MakeBet_btn").style.display = "none";
         document.querySelector("#CashOut_btn").style.display = "block";
     }
-    else if(data.State == "Betting")
+    else if(data.State == "BETTING")
     {
-        if(PrevState!="Betting")
+        if(PrevState!="BETTING")
         {
             ClearParticipants();
             document.querySelector("#MakeBet_btn").disabled = false;
             document.querySelector("#Game_TotalBetAmount").innerHTML = 0;
         }
-        startTime = new Date(data.BetStartUTC+"Z").getTime();
+        startTime = data.BetStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
         document.querySelector("#Game_Multiplier").innerHTML = "-";
         document.querySelector("#MakeBet_btn").style.display = "block";
         document.querySelector("#CashOut_btn").style.display = "none";
     }
-    else if(data.State == "Concluded")
+    else if(data.State == "CONCLUDED")
     {
-        document.querySelector("#Game_Multiplier").innerHTML = "x" + parseFloat(data.BlastMultiplier).toFixed(2);
+        console.log(data.BlastMultiplier);
+        document.querySelector("#Game_Multiplier").innerHTML = "x" + (Math.floor(parseFloat(data.BlastMultiplier) * 100) / 100).toFixed(2);
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
         document.querySelector("#MakeBet_btn").style.display = "none";
         document.querySelector("#CashOut_btn").style.display = "none";
@@ -54,7 +84,7 @@ function UpdateMultiplier()
     const currentTime = new Date().getTime();
     const elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_Multiplier");
-    ele.innerHTML = "x" + calculateMultiplier(elapsedTime).toFixed(2);
+    ele.innerHTML = "x" + (Math.floor(calculateMultiplier(elapsedTime) * 100) / 100).toFixed(2);
 }
 
 function calculateMultiplier(waitTime) 
@@ -89,7 +119,6 @@ async function MakeBet()
     if(document.querySelector("#Game_CashOutMultiplierCheck").checked)
         temp_com = document.querySelector("#Game_CashOutMultiplierInput").value
     var result = await addPlayerBet(GameID,localSessionToken,document.querySelector("#Game_BetAmountInput").value,temp_com);
-    AddBalance(0);
     console.log(result);
 }
 
@@ -97,7 +126,6 @@ async function CashOut()
 {
     document.querySelector("#CashOut_btn").disabled = true;
     var result =  await cashOutPlayerBet(GameID,localSessionToken);
-    AddBalance(0);
     console.log(result);
 }
 
@@ -113,9 +141,8 @@ function BetStateChanged(data)
         if(data.BetState == "CashedOut")
         {
             ele.classList.add('participant_cashedout');
-            AddBalance(0);
         }
-        cashOutDisplay = data.CashOutMultiplier == 0 ? "LIVE" : ("x"+ parseFloat(data.CashOutMultiplier).toFixed(2))
+        cashOutDisplay = data.CashOutMultiplier == 0 ? "LIVE" : ("x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2))
         ele.querySelector(".participant_cashOutMultiplier").innerHTML = cashOutDisplay;
     }
     else
@@ -135,7 +162,7 @@ function AddParticipant(data) {
     
     }
 
-    cashOutDisplay = data.CashOutMultiplier == "0" ? "LIVE" : ("x"+ data.CashOutMultiplier)
+    cashOutDisplay = data.CashOutMultiplier == "0" ? "LIVE" : ("x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2))
     
     var content = '<img class="participant_avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU"/> <span class="participant_name">username</span> <img style="width:18px; height:18px;" src="https://cdn-icons-png.flaticon.com/512/272/272525.png" alt="Coins"> <span class="participant_betAmount">'+data.BetAmount+'</span> <div class="participant_cashOutMultiplier">'+cashOutDisplay+'</div>';
     newDiv.innerHTML = content;
@@ -240,21 +267,20 @@ async function initializeGame() {
 }
 
 // Call the async function
-initializeGame();
+// initializeGame();
 
 
 function Trigger_GameStateChanged(data)
 {
-    AddBalance(0);
-    if(data.State == "OnGoing")
+    if(data.State == "ONGOING")
     {
         InitialLaunchRocket();
     }
-    else if(data.State == "Betting")
+    else if(data.State == "BETTING")
     {
         ResetRocketGame2();
     }
-    else if(data.State == "Concluded")
+    else if(data.State == "CONCLUDED")
     {
         BlastRocket();
         RemoveAllVipPlayers();
@@ -270,10 +296,4 @@ function Trigger_PlayerBetChanged(data)
     AddDataToAllPlayerList(data);
 }
 
-async function AddBalance(amount)
-{
-    var new_balance = await AddWalletBalance(amount);
-    var ele = document.querySelector("#Profile_WalletBalance");
-    ele.innerHTML = parseFloat(new_balance.AddWalletBalance.toFixed(2)) ;
-}
 

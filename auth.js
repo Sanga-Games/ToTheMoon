@@ -3,6 +3,8 @@ var localSessionToken = localStorage.getItem('sessiontoken');
 //var domainURL = "https://sanga-games.github.io/ToTheMoon" 
 var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://wov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws"
+var UserID = ""
+var IsVoiceCommsEnabled = false;
 
 //Post-Signout CLeanup
 if (window.location.href == domainURL + "/?action=signout") {
@@ -21,6 +23,7 @@ if (!localSessionToken) {
         window.location.href = domainURL;
         //localSessionToken = urlSessionToken;
     } else {
+        SubscribeToGameEvents();
         // 'sessiontoken' is not in localStorage and not in URL, redirect to the login page
         //window.location.href = 'http://localhost:53134/'; // Replace with the actual login page URL
     }
@@ -75,14 +78,15 @@ if (localSessionToken) {
             }
 
             console.log(userData);
-            const { dusername, davatarid, did } = userData;
+            const { dusername, davatarid, did, userid } = userData;
+            UserID = userid;
             document.getElementById('Profile_UserName').textContent = dusername;
             document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
-            AddBalance(0);
-            InitWebsocketConnection();
-            startCapturing();
+            SubscribeToGameEvents();
+            // InitGameWebsocketConnection();
+            // startCapturing();
             //initializeGame();
         } catch (error) {
             console.error(error);
@@ -106,6 +110,7 @@ function UserSignout() {
     requrl = AuthServerURL + `/signout?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`
     window.location.href = requrl;
 }
+
 
 const AddVCointBTN = document.getElementById('AddVCointBTN');
 const balanceAdder = document.querySelector('.BalanceAdder');
