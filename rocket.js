@@ -53,7 +53,7 @@ function InitialLaunchRocket() {
 
 function StartGalaxyAnim()
 {
-    if(GameState != "OnGoing")
+    if(GameState != "ONGOING")
         return;
     $('#GalaxyBG').animate({ backgroundPositionY:'1920px',opacity:0.2},8000,'linear', function(){
         GalaxyLoop();
@@ -409,7 +409,7 @@ function SpawnVipPlayer(data) {
 
 
 function stars() {
-    if(GameState != "OnGoing")
+    if(GameState != "ONGOING")
         return;
     let count = 60;
 
