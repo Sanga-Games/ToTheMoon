@@ -10,7 +10,7 @@ function InitGameWebsocketConnection()
     const sessionToken = localSessionToken;
     const deviceID = encodedDeviceidParams;
 
-
+    
 
     // Replace these with your actual headers
     const headers = {
@@ -130,7 +130,11 @@ function GameMessageFromServer(data)
 
         case "Rewards":
             RewardsResponse(data);
-            break;    
+            break;   
+
+        case "Payments":
+            PaymentsResponse(data);
+            break;   
     }
 }
 

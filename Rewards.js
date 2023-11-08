@@ -45,7 +45,7 @@ RewardsHistoryContainerCancelBTN.addEventListener('click', function () {
 
 // Get Rewards
 PurchaseRewardsBTN.addEventListener('click', function () {
-
+    ToggleLoadingScreen(true);
     (async () => {
         const requrl = "https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/Rewards/";
 
@@ -55,8 +55,10 @@ PurchaseRewardsBTN.addEventListener('click', function () {
             // Check if the request was successful (status code 200)
             if (!response.ok) {
                 window.location.href = domainURL;
+                ToggleLoadingScreen(false);
             }
 
+            ToggleLoadingScreen(false);
             AllRewardsContainerClass = document.querySelectorAll('.RewardsContainerClass')
             if (AllRewardsContainerClass.length > 0) {
 
@@ -103,6 +105,7 @@ PurchaseRewardsBTN.addEventListener('click', function () {
             console.log(RewardsData);
         } catch (error) {
             console.error(error);
+            ToggleLoadingScreen(false);
         }
     })();
 
@@ -176,7 +179,8 @@ function OnRewardHistoryReceived(RewardsHistoryData)
                 RewardsHistoryloadMoreBTN.style.display = 'flex';
             }
 
-    RewardsHistoryContainer.style.display = 'flex';        
+    RewardsHistoryContainer.style.display = 'flex'; 
+    ToggleLoadingScreen(false);       
 
 }
 
@@ -209,6 +213,9 @@ function OnLoadMoreRewardsHistoryReceived(RewardsHistoryData)
             if (RewardHistoryStartKey == null) {
                 RewardsHistoryloadMoreBTN.style.display = 'none';
             }
+
+            ToggleLoadingScreen(false);
+
 }
 
 function OnPurchaseRewardReceived(data)
@@ -219,6 +226,7 @@ function OnPurchaseRewardReceived(data)
     RewardID = '';
     RewardsEmailContainer.style.display = 'none';
     RewardsContainer.style.display = 'none';
+    ToggleLoadingScreen(false);
 }
 
 ////////////// WEB SOCKET FUNCTIONS ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +246,7 @@ function GetRewardsHistory()
 
     // Send the JSON message as a string
     GameWebSocket.send(JSON.stringify(jsonMessage));
+    ToggleLoadingScreen(true);
 
 }
 
@@ -249,11 +258,11 @@ function PurchaseReward()
         subAction: 'PurchaseReward',
         RewardID: RewardID,
         EmailId: emailInput.value
-
     };
 
     // Send the JSON message as a string
     GameWebSocket.send(JSON.stringify(jsonMessage));
+    ToggleLoadingScreen(true);
 
 }
 
