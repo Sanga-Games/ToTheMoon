@@ -124,8 +124,8 @@ function GameMessageFromServer(data)
     console.log("GameMessageFromServer");
 
     switch (data.type){
-        case "BetSuccess":
-            //bet success logic
+        case "GameInitResult":
+            GameInit_Handler(data);
             break;
 
         case "Rewards":

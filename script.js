@@ -4,9 +4,22 @@ var startTime;
 var GameID = 0;
 var GameState = "";
 
+
+function GameInit_Handler(data)
+{
+
+}
+
 function WalletBalanceChanged(data)
 {
-    console.log(data)
+    let currentBalance = parseFloat(document.querySelector("#Profile_WalletBalance").innerHTML);
+    let updatedBalance = 0;
+    if(data.IsAdditive)
+        updatedBalance = currentBalance + data.Balance;
+    else
+        updatedBalance = data.Balance;
+
+    document.querySelector("#Profile_WalletBalance").innerHTML = (Math.floor(parseFloat(updatedBalance) * 100) / 100).toFixed(2)
     return;
 }
 
@@ -23,19 +36,22 @@ function GameStateChanged(data)
         if(obj["Type"] == "GameState")
         {
             GameState_Handler(obj["Body"]);
-            console.log(obj.Body.State);
         }
-        if(obj["Type"] == "GameHistory")
+        else if(obj["Type"] == "GameHistory")
         {
             console.log(obj)
         }
+        else if(obj["Type"] == "PlayerBet")
+        {
+            PlayerBet_Handler(obj["Body"]);
+        }
+
     
     }
 }
 
 function GameState_Handler(data)
 {
-    console.log(data);
     Trigger_GameStateChanged(data);
 
     clearInterval(FuncIntervalID);
@@ -121,7 +137,6 @@ async function MakeBet()
     }
 
 }
-
 async function CashOut()
 {
     if(localSessionToken)
@@ -131,7 +146,7 @@ async function CashOut()
     }
 }
 
-function BetStateChanged(data)
+function PlayerBet_Handler(data)
 {
 
     Trigger_PlayerBetChanged(data);
@@ -140,11 +155,15 @@ function BetStateChanged(data)
     if(ele !== null)
     {
         //exists
-        if(data.BetState == "CashedOut")
+        if(data.BetState == "SUCCESS")
         {
             ele.classList.add('participant_cashedout');
+            cashOutDisplay = "x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2);
         }
-        cashOutDisplay = data.CashOutMultiplier == 0 ? "LIVE" : ("x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2))
+        else
+        {
+            cashOutDisplay = data.IsAutoCashOut ? ("x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2)) : "LIVE";
+        }
         ele.querySelector(".participant_cashOutMultiplier").innerHTML = cashOutDisplay;
     }
     else
@@ -158,14 +177,16 @@ function AddParticipant(data) {
     var newDiv = document.createElement('div');
     newDiv.classList.add('participant');
     newDiv.id = 'user-' + data.UserID;
-    if(data.BetState == "CashedOut")
+    if(data.BetState == "SUCCESS")
     {
         newDiv.classList.add('participant_cashedout');
-    
+        cashOutDisplay = "x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2);
+    }
+    else
+    {
+        cashOutDisplay = data.IsAutoCashOut ? ("x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2)) : "LIVE";
     }
 
-    cashOutDisplay = data.CashOutMultiplier == "0" ? "LIVE" : ("x"+ (Math.floor(data.CashOutMultiplier * 100) / 100).toFixed(2))
-    
     var content = '<img class="participant_avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU"/> <span class="participant_name">username</span> <img style="width:18px; height:18px;" src="https://cdn-icons-png.flaticon.com/512/272/272525.png" alt="Coins"> <span class="participant_betAmount">'+data.BetAmount+'</span> <div class="participant_cashOutMultiplier">'+cashOutDisplay+'</div>';
     newDiv.innerHTML = content;
     var parentElement = document.querySelector("#Game_ParticipantsContainer");
@@ -214,7 +235,7 @@ async function GetUserInfo(userId) {
     }
     else
     {
-        const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${userId}`, {
+        const response = await fetch(`https://diky7svtssilljdjfe6fzkq4eq0ekkje.lambda-url.sa-east-1.on.aws/?uid=${userId}`, {
             method: 'GET',
             mode: 'cors',
         });
@@ -292,8 +313,8 @@ function Trigger_GameStateChanged(data)
 
 function Trigger_PlayerBetChanged(data)
 {
-    console.log("DinoBetStateChanged");
-    console.log(data);
+    // console.log("DinoBetStateChanged");
+    // console.log(data);
 
     AddDataToAllPlayerList(data);
 }
