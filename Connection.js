@@ -32,6 +32,7 @@ function InitGameWebsocketConnection()
     // Listen for messages from the server
     GameWebSocket.addEventListener('message', (event) => {
         console.log(event.data);
+        GameMessageFromServer(JSON.parse(event.data));
     });
 
     // Listen for any errors that occur
@@ -82,7 +83,6 @@ function InitVoiceWebsocketConnection()
     // Listen for messages from the server
     GameWebSocket.addEventListener('message', (event) => {
         console.log(event.data);
-        GameMessageFromServer(event.data);
     });
 
     // Listen for any errors that occur
@@ -120,11 +120,14 @@ function SendVoiceDataToServer(compressedString)
 
 function GameMessageFromServer(data)
 {
+
+    console.log("GameMessageFromServer");
+
     switch (data.type){
         case "BetSuccess":
             //bet success logic
             break;
-            
+
         case "Rewards":
             RewardsResponse(data);
             break;    
