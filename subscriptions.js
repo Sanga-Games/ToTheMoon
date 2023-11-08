@@ -116,22 +116,18 @@ function subscribeToWebSocket(subscriptions,callback) {
     switch (message.type) {
       case "connection_ack":
         console.log("connection_ack");
-        console.log(message);
         startSubscriptions(websocket, subscriptions);
         break;
       case "ka":
-        console.log("keep alive message received");
-        console.log(message);
+        console.log("keep alive");
         break;
       case "start_ack":
         console.log("start_ack");
         break;
       case "error":
-        console.error(message);
         console.error("WebSocket Error:", message.payload.errors);
         break;
       case "data":
-        console.log("Data received from Subscription");
         callback(message.payload.data);
         break;
     }
@@ -168,17 +164,16 @@ function SubscribeToGameEvents() {
   }
   SubscriptionWebSocket = subscribeToWebSocket(subscriptions, (data) => {
     let key = Object.keys(data)[0];
-    let value = JSON.parse(data[key].Data);
-
     switch (key){
       case "onGameStateChange":
+        let value = JSON.parse(data[key].Data);
         GameStateChanged(value);
         break;
       case "onVoiceDataChange":
         //PlayVoice(value);
         break;
       case "onWalletBalanceChange":
-        WalletBalanceChanged(value);
+        WalletBalanceChanged(data[key]);
         break;
     } 
 
