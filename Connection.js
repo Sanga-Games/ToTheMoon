@@ -73,27 +73,27 @@ function InitVoiceWebsocketConnection()
     const urlWithHeaders = `${socketUrl}?${Object.entries(headers).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`;
 
     // Create WebSocket instance
-    GameWebSocket = new WebSocket(urlWithHeaders);
+    VoiceWebSocket = new WebSocket(urlWithHeaders);
 
     // Connection opened
-    GameWebSocket.addEventListener('open', (event) => {
+    VoiceWebSocket.addEventListener('open', (event) => {
         console.log('WebSocket connection opened:', event);
     });
 
     // Listen for messages from the server
-    GameWebSocket.addEventListener('message', (event) => {
+    VoiceWebSocket.addEventListener('message', (event) => {
         console.log(event.data);
     });
 
     // Listen for any errors that occur
-    GameWebSocket.addEventListener('error', (error) => {
+    VoiceWebSocket.addEventListener('error', (error) => {
         console.error('WebSocket encountered an error:', error);
     });
 
     // Connection closed
-    GameWebSocket.addEventListener('close', (event) => {
+    VoiceWebSocket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-        InitWebsocketConnection();
+        
     });
 }
 
@@ -132,4 +132,27 @@ function GameMessageFromServer(data)
             RewardsResponse(data);
             break;    
     }
+}
+
+function SendPlaceBet(gameID,betAmount,cashOutMultiplier,isAutoCashOut)
+{
+    const jsonMessage = {
+        action: 'Bet',
+        SubAction: 'PlaceBet',
+        BetGameID:gameID,
+        BetAmount:betAmount,
+        CashOutMultiplier:cashOutMultiplier,
+        IsAutoCashOut:isAutoCashOut
+    };
+    GameWebSocket.send(JSON.stringify(jsonMessage));
+}
+
+function SendCashOut(gameID)
+{
+    const jsonMessage = {
+        action: 'Bet',
+        SubAction: 'LiveCashOut',
+        BetGameID:gameID
+    };
+    GameWebSocket.send(JSON.stringify(jsonMessage));
 }
