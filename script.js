@@ -114,19 +114,21 @@ function UpdateWaitTime()
 
 async function MakeBet()
 {
-    document.querySelector("#MakeBet_btn").disabled = true;
-    var temp_com = 0;
-    if(document.querySelector("#Game_CashOutMultiplierCheck").checked)
-        temp_com = document.querySelector("#Game_CashOutMultiplierInput").value
-    var result = await addPlayerBet(GameID,localSessionToken,document.querySelector("#Game_BetAmountInput").value,temp_com);
-    console.log(result);
+    if(localSessionToken)
+    {
+        document.querySelector("#MakeBet_btn").disabled = true;
+        SendPlaceBet(GameID,document.querySelector("#Game_BetAmountInput").value,document.querySelector("#Game_CashOutMultiplierInput").value,document.querySelector("#Game_CashOutMultiplierCheck").checked);
+    }
+
 }
 
 async function CashOut()
 {
-    document.querySelector("#CashOut_btn").disabled = true;
-    var result =  await cashOutPlayerBet(GameID,localSessionToken);
-    console.log(result);
+    if(localSessionToken)
+    {
+        document.querySelector("#CashOut_btn").disabled = true;
+        SendCashOut(GameID);
+    }
 }
 
 function BetStateChanged(data)

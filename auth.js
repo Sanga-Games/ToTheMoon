@@ -85,7 +85,7 @@ if (localSessionToken) {
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
             SubscribeToGameEvents();
-            // InitGameWebsocketConnection();
+            InitGameWebsocketConnection();
             // startCapturing();
             //initializeGame();
         } catch (error) {
