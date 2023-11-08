@@ -54,7 +54,8 @@ var deviceidParams = JSON.stringify(deviceidObject);
 var encodedDeviceidParams = encodeURIComponent(deviceidParams);
 
 if (localSessionToken) {
-
+    SubscribeToGameEvents();
+    InitGameWebsocketConnection();
     (async () => {
         const requrl = `${AuthServerURL}/?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`;
 
@@ -84,8 +85,6 @@ if (localSessionToken) {
             document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
-            SubscribeToGameEvents();
-            InitGameWebsocketConnection();
             // startCapturing();
             //initializeGame();
         } catch (error) {
