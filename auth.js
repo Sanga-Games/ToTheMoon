@@ -23,6 +23,7 @@ if (!localSessionToken) {
         window.location.href = domainURL;
         //localSessionToken = urlSessionToken;
     } else {
+        GetGameInit();
         SubscribeToGameEvents();
         // 'sessiontoken' is not in localStorage and not in URL, redirect to the login page
         //window.location.href = 'http://localhost:53134/'; // Replace with the actual login page URL
@@ -54,8 +55,6 @@ var deviceidParams = JSON.stringify(deviceidObject);
 var encodedDeviceidParams = encodeURIComponent(deviceidParams);
 
 if (localSessionToken) {
-    SubscribeToGameEvents();
-    InitGameWebsocketConnection();
     (async () => {
         const requrl = `${AuthServerURL}/?sessiontoken=${localSessionToken}&sessiondeviceid=${encodedDeviceidParams}`;
 
@@ -86,7 +85,9 @@ if (localSessionToken) {
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
             // startCapturing();
-            //initializeGame();
+            GetGameInit();
+            SubscribeToGameEvents();
+            InitGameWebsocketConnection();
         } catch (error) {
             console.error(error);
         }

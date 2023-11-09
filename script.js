@@ -5,9 +5,27 @@ var GameID = 0;
 var GameState = "";
 
 
-function GameInit_Handler(data)
+async function GetGameInit()
 {
+    const response = await fetch(`https://j2zyz42upr64kqijsjpnu5it240layxj.lambda-url.sa-east-1.on.aws/?uid=${UserID}`, {
+        method: 'GET',
+        mode: 'cors',
+    });
+    if (!response.ok) {
+    throw new Error(`Failed to fetch GameInit Data. Status: ${response.status}`);
+    }
 
+    // Parse the JSON response
+    gameInitData = await response.json();
+    //console.log(gameInitData);
+    GameState_Handler(gameInitData.game_state);
+    for (var item of gameInitData.player_bets)
+    {
+        PlayerBet_Handler(item);
+    }
+    WalletBalanceChanged({
+        "Balance":gameInitData.wallet_data.WalletBalance
+    });
 }
 
 function WalletBalanceChanged(data)
@@ -97,7 +115,7 @@ function GameState_Handler(data)
 
 function UpdateMultiplier()
 {
-    const currentTime = new Date().getTime();
+    const currentTime = getCurrentUTCSeconds();
     const elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_Multiplier");
     ele.innerHTML = "x" + (Math.floor(calculateMultiplier(elapsedTime) * 100) / 100).toFixed(2);
@@ -116,7 +134,7 @@ function calculateMultiplier(waitTime)
 
 function UpdateWaitTime()
 {
-    const currentTime = new Date().getTime();
+    const currentTime = getCurrentUTCSeconds();
     var elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_WaitTime");
     elapsedTime = 10 - elapsedTime;
@@ -124,7 +142,7 @@ function UpdateWaitTime()
     {
         elapsedTime = 0;
     }
-    ele.innerHTML = "Place your Bets, Next Game starts in \"" + elapsedTime.toFixed(2) + "\" sec";
+    ele.innerHTML = "Place your Bets, Next Game starts in \"" + elapsedTime.toFixed(1) + "\" sec";
 
 }
 

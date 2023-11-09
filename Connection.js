@@ -135,10 +135,6 @@ function GameMessageFromServer(data)
     console.log("GameMessageFromServer");
 
     switch (data.type){
-        case "GameInitResult":
-            GameInit_Handler(data);
-            break;
-
         case "Rewards":
             RewardsResponse(data);
             break;   
