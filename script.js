@@ -3,10 +3,14 @@ var PrevState = "Idle";
 var startTime;
 var GameID = 0;
 var GameState = "";
+var BettingWaitTime = 10;
+var UpdateReceivedAfterGameInit = 0;
 
 
 async function GetGameInit()
 {
+    if(UpdateReceivedAfterGameInit >= 2)
+        return;
     const response = await fetch(`https://j2zyz42upr64kqijsjpnu5it240layxj.lambda-url.sa-east-1.on.aws/?uid=${UserID}`, {
         method: 'GET',
         mode: 'cors',
@@ -26,6 +30,10 @@ async function GetGameInit()
     WalletBalanceChanged({
         "Balance":gameInitData.wallet_data.WalletBalance
     });
+
+    setTimeout(function(){
+        GetGameInit();
+    }, 3000);
 }
 
 function WalletBalanceChanged(data)
@@ -70,6 +78,12 @@ function GameStateChanged(data)
 
 function GameState_Handler(data)
 {
+    if(data.GameID < GameID)
+        return;
+
+    if(UpdateReceivedAfterGameInit < 2)
+        UpdateReceivedAfterGameInit++;
+
     Trigger_GameStateChanged(data);
 
     clearInterval(FuncIntervalID);
@@ -94,6 +108,7 @@ function GameState_Handler(data)
             ClearParticipants();
             document.querySelector("#MakeBet_btn").disabled = false;
             document.querySelector("#Game_TotalBetAmount").innerHTML = 0;
+            BettingWaitTime = data.BetDuration;
         }
         startTime = data.BetStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
@@ -137,7 +152,7 @@ function UpdateWaitTime()
     const currentTime = getCurrentUTCSeconds();
     var elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_WaitTime");
-    elapsedTime = 10 - elapsedTime;
+    elapsedTime = BettingWaitTime - elapsedTime;
     if(elapsedTime < 0)
     {
         elapsedTime = 0;
