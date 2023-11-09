@@ -17,6 +17,29 @@ const PaymentloadMoreBTN = document.getElementById('PaymentloadMoreBTN');
 var GreenColor = "rgb(117, 240, 2)";
 var RedColor = "rgb(255, 53, 3);";
 
+
+//////////// TIME STAMPS ///////////////////////////////////////////////////
+
+const utcTimestamp = "2023-11-09T14:20:21.639199";
+
+
+function Convert_UTC_To_LocalTime(Timestamp) {
+    const utcDate = new Date(Timestamp);
+
+    // Get the time zone offset in minutes
+    const offsetMinutes = utcDate.getTimezoneOffset();
+
+    // Convert UTC to local time by subtracting the offset
+    const localDate = new Date(utcDate.getTime() - offsetMinutes * 60000);
+
+    // Get month, date, hour, and minute in local format
+    const options = { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const localTimeString = new Intl.DateTimeFormat('en-US', options).format(localDate);
+
+    return localTimeString;
+}
+
+
 /////////////////// FUNCTIONS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function checkAndCallUpdateVCoinBalance() 
@@ -108,6 +131,7 @@ function OnUpdateVCoinBalanceReceived(data)
 
 function OnPaymentHistoryReceived(PaymentsData)
 {
+    console.log(PaymentsData);
     AllPaymentsRow = document.querySelectorAll('.PaymentDataRow');
     if (AllPaymentsRow.length > 0) {
 
@@ -126,7 +150,7 @@ function OnPaymentHistoryReceived(PaymentsData)
 
         var row = `<tbody class="PaymentDataRow">
                         <tr>
-                            <td>${PaymentsData.items[i].PaymentIntent}</td>
+                            <td>${Convert_UTC_To_LocalTime(PaymentsData.items[i].Timestamp)}</td>
                             <td>${PaymentsData.items[i].Quantity}</td>
                             <td>${PaymentsData.items[i].PaymentStatus}</td>
                             <td style="color: ${rowcolor}; font-weight: bolder;">${PaymentsData.items[i].isTransferred}</td>
@@ -164,7 +188,7 @@ function OnLoadMorePaymentsHistoryReceived(PaymentsData)
 
                 var row = `<tbody class="PaymentDataRow">
                                 <tr>
-                                    <td>${PaymentsData.items[i].PaymentIntent}</td>
+                                    <td>${Convert_UTC_To_LocalTime(PaymentsData.items[i].Timestamp)}</td>
                                     <td>${PaymentsData.items[i].Quantity}</td>
                                     <td>${PaymentsData.items[i].PaymentStatus}</td>
                                     <td style="color: ${rowcolor}; font-weight: bolder;">${PaymentsData.items[i].isTransferred}</td>
