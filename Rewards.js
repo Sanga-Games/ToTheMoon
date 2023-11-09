@@ -18,6 +18,9 @@ const RewardsHistoryContainerCancelBTN = document.getElementById('RewardsHistory
 var RewardHistoryStartKey = '';
 const RewardsHistoryloadMoreBTN = document.getElementById('RewardsHistoryloadMoreBTN');
 
+var GreenColor = "rgb(117, 240, 2)";
+var RedColor = "rgb(255, 53, 3);";
+
 ////////////// FUNCTIONS ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -151,18 +154,18 @@ function OnRewardHistoryReceived(RewardsHistoryData)
             var RewardsHistoryHolderTable = document.getElementById('RewardsHistoryHolderTable');
 
             for (var i = 0; i < RewardsHistoryData.items.length; i++) {
-                var rowcolor = "red";
+                var rowcolor = RedColor;
 
                 if (RewardsHistoryData.items[i].Received == "True") {
-                    rowcolor = "green";
+                    rowcolor = GreenColor;
                 }
 
-                var row = `<tbody class="RewardsHistoryDataRow" style="background-color: ${rowcolor};">
+                var row = `<tbody class="RewardsHistoryDataRow">
                             <tr>
                                 <td>${RewardsHistoryData.items[i].RewardName}</td>
                                 <td>${RewardsHistoryData.items[i].EmailId}</td>
                                 <td>${RewardsHistoryData.items[i].PaymentStatus}</td>
-                                <td>${RewardsHistoryData.items[i].Received}</td>
+                                <td style="color: ${rowcolor}; font-weight: bolder;">${RewardsHistoryData.items[i].Received}</td>
                             </tr>
                         </tbody>`
 
@@ -189,18 +192,18 @@ function OnLoadMoreRewardsHistoryReceived(RewardsHistoryData)
     var RewardsHistoryHolderTable = document.getElementById('RewardsHistoryHolderTable');
 
             for (var i = 0; i < RewardsHistoryData.items.length; i++) {
-                var rowcolor = "red";
+                var rowcolor = RedColor;
 
                 if (RewardsHistoryData.items[i].Received == "True") {
-                    rowcolor = "green";
+                    rowcolor = GreenColor;
                 }
 
-                var row = `<tbody class="RewardsHistoryDataRow" style="background-color: ${rowcolor};">
+                var row = `<tbody class="RewardsHistoryDataRow">
                             <tr>
                                 <td>${RewardsHistoryData.items[i].RewardName}</td>
                                 <td>${RewardsHistoryData.items[i].EmailId}</td>
                                 <td>${RewardsHistoryData.items[i].PaymentStatus}</td>
-                                <td>${RewardsHistoryData.items[i].Received}</td>
+                                <td style="color: ${rowcolor}; font-weight: bolder;">${RewardsHistoryData.items[i].Received}</td>
                             </tr>
                         </tbody>`
 

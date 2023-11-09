@@ -311,35 +311,82 @@ body {
     width: 95%;
     height: 80%;
     padding: 2%;
-    background-color: #fd010156;
+    background-color: #fd010100;
     flex-direction: column;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     align-items: center;
     justify-content: center;
     scroll-behavior: smooth;
     overflow: auto;
+    text-align: center;
 }
 
 #PaymentloadMoreBTN, #RewardsHistoryloadMoreBTN{
 
     display: none;
+    margin: 10px auto;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bolder;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-bottom: 0.2%;
+    background-color: rgb(17, 17, 17);
+    color: #ffffff;
+    text-align: center;
+}
+
+#PaymentloadMoreBTN:hover, #RewardsHistoryloadMoreBTN:hover {
+    background-color: rgb(53, 53, 53);
+    color: #50fd00;
 }
 
 #PaymnetHolderTable, #RewardsHistoryHolderTable{
+    margin: 0 auto;
     width: 100%;
     height: auto;
-    font-size: larger;
-    align-items: center;
-    justify-content: center;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 1.0em;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-#PaymnetHolderTable td, #RewardsHistoryHolderTable td{
-    border: 1px solid;
-    padding: 20px;
+#PaymnetHolderTable th , #RewardsHistoryHolderTable th{
+    background-color: rgb(17, 17, 17);
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
 }
-#PaymnetHolderTable tr, #RewardsHistoryHolderTable tr{
+
+#PaymnetHolderTable td , #RewardsHistoryHolderTable td{
+    color: #ffffff;
+    text-align: left;
+}
+
+#PaymnetHolderTable td, #PaymnetHolderTable th, #RewardsHistoryHolderTable td, #RewardsHistoryHolderTable th
+{
+    padding: 12px 15px;
+}
+
+#PaymnetHolderTable tbody tr, #RewardsHistoryHolderTable tbody tr
+{
+    /* border-bottom: 1px solid #dddddd; */
     
-    border-style: solid;
+}
+
+#PaymnetHolderTable tbody, #RewardsHistoryHolderTable tbody
+{
+    background-color: #2b2b2b;
+}
+
+#PaymnetHolderTable tbody:nth-of-type(odd), #RewardsHistoryHolderTable tbody:nth-of-type(odd)
+{
+    background-color: #1d1d1d;
 }
 
 #RewardsButtonContainer{

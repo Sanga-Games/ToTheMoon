@@ -14,6 +14,9 @@ const PaymentContainerCancelBTN = document.getElementById('PaymentContainerCance
 var PaymentStartKey = '';
 const PaymentloadMoreBTN = document.getElementById('PaymentloadMoreBTN');
 
+var GreenColor = "rgb(117, 240, 2)";
+var RedColor = "rgb(255, 53, 3);";
+
 /////////////////// FUNCTIONS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function checkAndCallUpdateVCoinBalance() 
@@ -115,18 +118,18 @@ function OnPaymentHistoryReceived(PaymentsData)
     var PaymentTableBody = document.getElementById('PaymnetHolderTable');
 
     for (var i = 0; i < PaymentsData.items.length; i++) {
-        var rowcolor = "red";
+        var rowcolor = RedColor;
 
         if (PaymentsData.items[i].isTransferred == "True") {
-            rowcolor = "green";
+            rowcolor = GreenColor;
         }
 
-        var row = `<tbody class="PaymentDataRow" style="background-color: ${rowcolor};">
+        var row = `<tbody class="PaymentDataRow">
                         <tr>
                             <td>${PaymentsData.items[i].PaymentIntent}</td>
                             <td>${PaymentsData.items[i].Quantity}</td>
                             <td>${PaymentsData.items[i].PaymentStatus}</td>
-                            <td>${PaymentsData.items[i].isTransferred}</td>
+                            <td style="color: ${rowcolor}; font-weight: bolder;">${PaymentsData.items[i].isTransferred}</td>
                         </tr>
                     </tbody>`
 
@@ -153,18 +156,18 @@ function OnLoadMorePaymentsHistoryReceived(PaymentsData)
     var PaymentTableBody = document.getElementById('PaymnetHolderTable')
 
             for (var i = 0; i < PaymentsData.items.length; i++) {
-                var rowcolor = "red";
+                var rowcolor = RedColor;
 
                 if (PaymentsData.items[i].isTransferred == "True") {
-                    rowcolor = "green";
+                    rowcolor = GreenColor;
                 }
 
-                var row = `<tbody class="PaymentDataRow" style="background-color: ${rowcolor};">
+                var row = `<tbody class="PaymentDataRow">
                                 <tr>
                                     <td>${PaymentsData.items[i].PaymentIntent}</td>
                                     <td>${PaymentsData.items[i].Quantity}</td>
                                     <td>${PaymentsData.items[i].PaymentStatus}</td>
-                                    <td>${PaymentsData.items[i].isTransferred}</td>
+                                    <td style="color: ${rowcolor}; font-weight: bolder;">${PaymentsData.items[i].isTransferred}</td>
                                 </tr>
                             </tbody>`
 
