@@ -1,5 +1,6 @@
 let GameWebSocket;
 let VoiceWebSocket;
+let gamereconnectAttempts = 0;
 
 function InitGameWebsocketConnection()
 {
@@ -27,6 +28,7 @@ function InitGameWebsocketConnection()
     // Connection opened
     GameWebSocket.addEventListener('open', (event) => {
         console.log('WebSocket connection opened:', event);
+        gamereconnectAttempts = 0;
     });
 
     // Listen for messages from the server
@@ -43,6 +45,15 @@ function InitGameWebsocketConnection()
     // Connection closed
     GameWebSocket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
+        if (gamereconnectAttempts < MAX_RECONNECT_ATTEMPTS) 
+        {
+            console.log('Game Reconnecting...');
+            gamereconnectAttempts++;
+            setTimeout(() => InitGameWebsocketConnection(), 2000); // 2 seconds delay before reconnecting
+        } 
+        else {
+            console.error('Max reconnection attempts reached. Unable to reconnect.');
+        }
     });
 }
 

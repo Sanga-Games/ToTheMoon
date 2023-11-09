@@ -10,7 +10,7 @@ function AddDataToAllPlayerList(data) {
     // Check if the user ID is already present in the array
     const existingUserIndex = AllPlayersList.findIndex(item => item.UserID === data.UserID);
 
-    if (existingUserIndex === -1 && data.BetState === "Pending") {
+    if (existingUserIndex === -1 && data.BetState === "PLACED") {
         // User ID is not present in the array, add the data object
         AllPlayersList.push(data);
         // Sort the array based on BetAmount in descending order
@@ -20,7 +20,7 @@ function AddDataToAllPlayerList(data) {
 
     } else if (existingUserIndex !== -1) {
         // User ID is already present, check the bet state
-        if (AllPlayersList[existingUserIndex].BetState === "Pending" && data.BetState === "CashedOut") {
+        if (AllPlayersList[existingUserIndex].BetState === "PLACED" && data.BetState === "SUCCESS") {
             // If the existing data has a pending bet state and the new data has a CashedOut state, remove the existing data
 
             if (existingUserIndex > MaxVipPlayers - 1) {
@@ -316,7 +316,7 @@ function SpawnPlayersInsideRocket(AllPlayersList) {
 }
 
 async function GetAvatarByUserID(RocketPlayerImg, UserId) {
-    const response = await fetch(`https://434m33avoi.execute-api.ap-south-1.amazonaws.com/Production/userinfo?uid=${UserId}`, {
+    const response = await fetch(`https://diky7svtssilljdjfe6fzkq4eq0ekkje.lambda-url.sa-east-1.on.aws/?uid=${UserId}`, {
         method: 'GET',
         mode: 'cors',
     });
