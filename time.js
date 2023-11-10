@@ -16,11 +16,14 @@ async function getTimeOffset() {
       const serverTimeUTC = new Date(serverTime.utc_datetime);
   
       TimeOffset = serverTimeUTC.getTime() - (localTime.getTime() + roundTripTime / 2);
+      console.log("Compensated for timeoffset");
     } catch (error) {
       console.error('Error:', error.message);
       return 0; // Return 0 if there's an error
     }
 }
+
+getTimeOffset();
   
 function getCurrentUTCSeconds() {
     const currentUTCTime = new Date(Date.now() + TimeOffset);
