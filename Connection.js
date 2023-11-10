@@ -88,7 +88,7 @@ function InitVoiceWebsocketConnection()
 
     // Connection opened
     VoiceWebSocket.addEventListener('open', (event) => {
-        console.log('WebSocket connection opened:', event);
+        console.log('voice WebSocket connection opened:', event);
     });
 
     // Listen for messages from the server
@@ -103,7 +103,7 @@ function InitVoiceWebsocketConnection()
 
     // Connection closed
     VoiceWebSocket.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed:', event);
+        console.log('VoiceWebsocket connection closed:', event);
         
     });
 }

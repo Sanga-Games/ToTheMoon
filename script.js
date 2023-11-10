@@ -38,6 +38,7 @@ async function GetGameInit()
 
 function WalletBalanceChanged(data)
 {
+    console.log(data);
     let currentBalance = parseFloat(document.querySelector("#Profile_WalletBalance").innerHTML);
     let updatedBalance = 0;
     if(data.IsAdditive)
@@ -94,6 +95,8 @@ function GameState_Handler(data)
         if(PrevState!="ONGOING")
         {
             document.querySelector("#CashOut_btn").disabled = false;
+            if(UserID)
+                InitVoiceWebsocketConnection();
         }
         startTime = data.GameStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateMultiplier, 50);

@@ -31,8 +31,8 @@ const gameStateSubscription = `
 `;
 
 const voiceDataSubscription = `
-  subscription OnVoiceDataChange {
-    onVoiceDataChange {
+  subscription OnVoiceDataChange($userId:String!) {
+    onVoiceDataChange(Identity: $userId) {
       Identity
       SequenceCode
       Data
@@ -169,8 +169,8 @@ function SubscribeToGameEvents() {
         let value = JSON.parse(data[key].Data);
         GameStateChanged(value);
         break;
-      case "onVoiceDataChange":
-        //PlayVoice(value);
+      case "onVoiceDataChange": 
+        PlayVoice(data[key]);
         break;
       case "onWalletBalanceChange":
         WalletBalanceChanged(data[key]);
