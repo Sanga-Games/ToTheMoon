@@ -56,6 +56,7 @@
 
     <div id="RewardsContainer">
         <button id="RewardsContainerCancelBTN">X</button>
+        <h1>REWARDS</h1>
         <div id="RewardsHolder">
         </div>
     </div>
@@ -94,17 +95,21 @@
     <div id="RewardsEmailContainer">
         <div id="RewardsEmailContainer2">
             <input type="text" id="emailInput" placeholder="Enter your email">
-            <button id="EmailContainerpayButton">Pay</button>
-            <button id="EmailContainercancelButton">Cancel</button>
+            <div style="flex-direction: column;">
+                <button id="EmailContainerpayButton">Pay</button>
+                <button id="EmailContainercancelButton">Cancel</button>
+            </div>
         </div>
     </div>
 
     <div id="FeedbackContainer">
         <div id="FeedbackContainer2">
-            <input type="text" id="TopicInput" placeholder="Topic ....">
+            <input type="text" id="TopicInput" placeholder="Topic ...." required="required">
             <input type="text" id="DescriptionInput" placeholder="Description ....">
-            <button id="FeedbackSendButton">Send</button>
-            <button id="FeedbackcancelButton">Cancel</button>
+            <div style="flex-direction: column;">
+                <button id="FeedbackSendButton">Send</button>
+                <button id="FeedbackcancelButton">Cancel</button>
+            </div>
         </div>
     </div>
 
