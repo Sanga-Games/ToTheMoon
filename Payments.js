@@ -32,8 +32,8 @@ function Convert_UTC_To_LocalTime(Timestamp) {
     // Convert UTC to local time by subtracting the offset
     const localDate = new Date(utcDate.getTime() - offsetMinutes * 60000);
 
-    // Get month, date, hour, and minute in local format
-    const options = { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    // Get year, month, date, hour, and minute in local format
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     const localTimeString = new Intl.DateTimeFormat('en-US', options).format(localDate);
 
     return localTimeString;

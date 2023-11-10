@@ -290,16 +290,62 @@ body {
 }
 
 .RewardsContainerClass{
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #111111;
+    margin: 10px; /* Adjust margin as needed */
+    border-radius: 6px;
+    width: 210px;
+    height: 280px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
-#RewardsHolder{
+.RewardsContainerClass img{
+    display: block;
+    border-radius: 5px;
+    width: 150px;
+    height: 210px;
+    object-fit: contain;
+    aspect-ratio: 3/2;
+}
+
+.RewardsContainerClass p{
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.RewardsContainerClass button{
+    margin-top: 10px; /*Adjust margin as needed */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffff;
+    background-color: #1d1d1d;
+    width: 98%;
+    height: auto;
+    border-radius: 5px;
+    font-size: 1.0em;
+    font-weight: bolder;
+    cursor: pointer;
+    padding: 2%;
+}
+
+.RewardsContainerClass button:hover{
+    background-color: #2e2e2e;
+    color: rgb(117, 240, 2);
+}
+
+#RewardsHolder {
     display: grid;
-    background-color: #fd010156;
+    background-color: #fd010100;
     width: 95%;
     height: 80%;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     grid-gap: 2em;
     padding: 2%;
