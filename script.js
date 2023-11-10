@@ -181,6 +181,8 @@ async function CashOut()
 
 function PlayerBet_Handler(data)
 {
+    if(data.BetGameID < GameID)
+        return;
 
     Trigger_PlayerBetChanged(data);
 

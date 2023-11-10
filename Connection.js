@@ -66,7 +66,7 @@ function CloseGameWebSocketConnection()
 function InitVoiceWebsocketConnection()
 {
     // Replace 'ws://localhost:8080' with your WebSocket server URL
-    const socketUrl = 'wss://v5irfwsic0.execute-api.ap-south-1.amazonaws.com/production';
+    const socketUrl = 'wss://6sogmqi7uh.execute-api.sa-east-1.amazonaws.com/production';
 
     // Your custom headers
     const sessionToken = localSessionToken;
@@ -120,6 +120,7 @@ function SendVoiceDataToServer(compressedString)
     // Your JSON message
     const jsonMessage = {
         action: 'Voice',
+        sequenceCode:0,
         voiceData: compressedString
     };
 

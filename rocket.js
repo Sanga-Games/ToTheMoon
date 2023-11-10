@@ -3,7 +3,7 @@ var body = document.body;
 
 var AllPlayersList = [];
 
-var MaxVipPlayers = 10;
+var MaxVipPlayers = 1;
 
 
 function AddDataToAllPlayerList(data) {
@@ -301,8 +301,8 @@ function SpawnPlayersInsideRocket(AllPlayersList) {
 
     RemoveAllVipPlayers();
 
-    if (AllPlayersList.length > 10) {
-        for (let i = 0; i < MaxVipPlayers - 1; i++) {
+    if (AllPlayersList.length > MaxVipPlayers) {
+        for (let i = 0; i < MaxVipPlayers; i++) {
             SpawnVipPlayer(AllPlayersList[i]);
         }
     }
