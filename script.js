@@ -77,6 +77,17 @@ function GameStateChanged(data)
     }
 }
 
+function CheckForVoiceCommsAccess()
+{
+    const top10Entries = AllPlayersList.slice(0, 10);
+
+    // Check if any entry in the top 10 has the specified UserID
+    const hasBet = top10Entries.some(entry => entry.UserID === UserID);
+  
+    if(hasBet)
+        InitVoiceWebsocketConnection();
+}
+
 function GameState_Handler(data)
 {
     if(data.GameID < GameID)
@@ -96,7 +107,7 @@ function GameState_Handler(data)
         {
             document.querySelector("#CashOut_btn").disabled = false;
             if(UserID)
-                InitVoiceWebsocketConnection();
+                CheckForVoiceCommsAccess();
         }
         startTime = data.GameStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateMultiplier, 50);

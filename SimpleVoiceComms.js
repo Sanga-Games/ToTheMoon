@@ -8,7 +8,8 @@ let audioWorkletNode;
 let voiceData = new Uint8Array();
 let timeStamp = new Date();
 let stream;
-let audioContext2 = new AudioContext();
+let audioContext2;
+let CurrentSequenceCode = 0;
 
 async function startCapturing() {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -69,29 +70,79 @@ function addToVoiceQueue(rawAudio) {
 
 function sendVoicePacket(int8VoiceData) {
     const base64Encoded = uint8ArrayToBase64(int8VoiceData);
-    SendVoiceDataToServer(base64Encoded);
-    //PlayVoice(base64Encoded);
+    const jsonVoiceMessage = {
+        action: 'Voice',
+        sequenceCode:CurrentSequenceCode,
+        voiceData: base64Encoded
+    };
+    //SendVoiceDataToServer(jsonVoiceMessage);
+    const TestVoiceMessage = {
+        Identity: UserID,
+        SequenceCode:CurrentSequenceCode,
+        Data: base64Encoded
+    };
+    PlayVoice(TestVoiceMessage);
+    CurrentSequenceCode++;
     return;
 }
 
 
 
-function PlayVoice(data)
-{
-    compressedAudio = data.Data;
-    var uint8Data = base64ToUint8Array(compressedAudio);
+// Create an object to store audio buffers for each user
+const userBuffers = {};
+
+function PlayVoice(data) {
+    if(!audioContext2)
+        audioContext2 = new AudioContext();
+    
+    const userId = data.Identity;
+    const sequenceCode = data.SequenceCode;
+    const compressedAudio = data.Data;
+
+    // Check if the user has an existing buffer
+    if (!userBuffers[userId]) {
+        userBuffers[userId] = [];
+    }
+
+    const buffers = userBuffers[userId];
+
+    // Convert base64 to Float32Array
+    const uint8Data = base64ToUint8Array(compressedAudio);
     const float32Data = new Float32Array(uint8Data.buffer);
+
+    // Create an audio buffer for the current chunk
     const audioBuffer = audioContext2.createBuffer(1, float32Data.length, audioContext2.sampleRate);
     audioBuffer.getChannelData(0).set(float32Data);
 
-    // Create a buffer source node and connect it to the audio context
-    const source = audioContext2.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext2.destination);
+    // Add the buffer to the user's buffer list and sort them by sequence code
+    buffers.push({ sequenceCode, buffer: audioBuffer });
+    buffers.sort((a, b) => a.sequenceCode - b.sequenceCode);
 
-    // Start playing the audio
-    source.start();
-    return;
+    // Play the buffers if the current sequence code matches the expected one
+    if (buffers.length > 0 && buffers[0].sequenceCode === sequenceCode) {
+        playNextBuffer(userId);
+    }
+}
+
+function playNextBuffer(userId) {
+    const buffers = userBuffers[userId];
+
+    if (buffers.length > 0) {
+        const { buffer, sequenceCode } = buffers.shift();
+
+        // Create a buffer source node and connect it to the audio context
+        const source = audioContext2.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext2.destination);
+
+        // Start playing the audio
+        source.start();
+
+        // Schedule the next buffer to play after the current one finishes
+        source.onended = function () {
+            playNextBuffer(userId);
+        };
+    }
 }
   
   
@@ -142,6 +193,7 @@ function onKeyDown(event) {
     if (VoiceWebSocket && VoiceWebSocket.readyState === WebSocket.OPEN) {
         if (event.key == "t") {
             console.log("AudioCaptureStarted");
+            CurrentSequenceCode = 0;
             isKeyPressed = true;
             startCapturing();
         }
@@ -154,5 +206,9 @@ function onKeyUp(event) {
         console.log("AudioCaptureStopped");
         isKeyPressed = false;
         stopCapturing();
+        setTimeout(function(){
+            sendVoicePacket(voiceData);
+            voiceData = new Uint8Array();
+        },500);
     }
 }

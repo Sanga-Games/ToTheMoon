@@ -98,7 +98,7 @@ function InitVoiceWebsocketConnection()
 
     // Listen for any errors that occur
     VoiceWebSocket.addEventListener('error', (error) => {
-        console.error('WebSocket encountered an error:', error);
+        console.error('VoiceWebsocket encountered an error:', error);
     });
 
     // Connection closed
@@ -114,16 +114,9 @@ function CloseVoiceWebSocketConnection()
     VoiceWebSocket.close();
 }
 
-function SendVoiceDataToServer(compressedString)
+function SendVoiceDataToServer(jsonMessage)
 {
-    document.querySelector("#CashOut_btn").disabled = true;
-    // Your JSON message
-    const jsonMessage = {
-        action: 'Voice',
-        sequenceCode:0,
-        voiceData: compressedString
-    };
-
+    //document.querySelector("#CashOut_btn").disabled = true;
     // Send the JSON message as a string
     VoiceWebSocket.send(JSON.stringify(jsonMessage));
 
