@@ -2,80 +2,92 @@
 // You can add it to your project using: npm install pako
 // Or include it from a CDN in your HTML file: <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
 
+let audioContext;
+let microphone;
+let audioWorkletNode;
+let voiceData = new Uint8Array();
+let timeStamp = new Date();
+let stream;
+let audioContext2 = new AudioContext();
 
+async function startCapturing() {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-// Initialize the audio context
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const bufferSize = 2048;
-const scriptNode = audioContext.createScriptProcessor(bufferSize, 1, 1);
-var lzma = LZMA_WORKER;
-scriptNode.connect(audioContext.destination);
-var timeStamp = new Date();
-var VoiceData = new Uint8Array();
+    audioContext = new AudioContext();
+    microphone = audioContext.createMediaStreamSource(stream);
 
-// Access the microphone and start streaming
-function startCapturing()
-{
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then((stream) => {
-      const microphone = audioContext.createMediaStreamSource(stream);
-      microphone.connect(scriptNode);
-  
-      scriptNode.onaudioprocess = (e) => {
-          AddToVoiceQueue(e.inputBuffer.getChannelData(0));
-      };
-    })
-    .catch((error) => console.error('Error accessing microphone:', error));
-  
+    audioContext.audioWorklet.addModule('AudioProcessor.js')
+        .then(() => {
+            audioWorkletNode = new AudioWorkletNode(audioContext, 'mic-processor');
+            microphone.connect(audioWorkletNode);
+            audioWorkletNode.connect(audioContext.destination);
+            audioWorkletNode.port.onmessage = (event) => {
+                addToVoiceQueue(event.data.audioData);
+            };
+        })
+        .catch((error) => console.error('Error loading audioworklet:', error));
+
 }
 
-function stopCapturing()
-{
-    navigator.mediaDevices.getUserMedia({ audio: false })
-  .then(function(stream) {
-    /* Handle the stream or do nothing */
-  })
-  .catch(function(err) {
-    console.error("Error: " + err);
-  });
+function stopCapturing() {
+    // Stop the stream.
+    stream.getTracks().forEach(track => track.stop());
+
+    if (microphone) {
+        microphone.disconnect();
+    }
+
+    if (audioWorkletNode) {
+        audioWorkletNode.disconnect();
+    }
+
+    // Optionally, close the AudioContext to release additional resources
+    if (audioContext) {
+        audioContext.close().then(() => {
+            console.log('AudioContext closed');
+        });
+    }
+    audioContext = null; // Reset the audioContext to null
+    audioWorkletNode = null; // Reset the audioWorkletNode to null
+    microphone = null; // Reset the microphone to null
 }
 
 
+function addToVoiceQueue(rawAudio) {
 
-function AddToVoiceQueue(rawAudio)
-{
-    var currentVoiceData = float32ArrayToUint8Array(rawAudio);
-    VoiceData = combineUint8Arrays(VoiceData,currentVoiceData);
+    const currentVoiceData = float32ArrayToUint8Array(rawAudio);
+    voiceData = combineUint8Arrays(voiceData, currentVoiceData);
 
-    var tempTimeStamp = new Date();
-    timeElapsed = tempTimeStamp - timeStamp;
-    if(timeElapsed >100)
-    {
+    const tempTimeStamp = new Date();
+    const timeElapsed = tempTimeStamp - timeStamp;
+    if (timeElapsed > 100) {
         timeStamp = tempTimeStamp;
-        SendVoicePacket(VoiceData);
-        VoiceData = new Uint8Array();
+        sendVoicePacket(voiceData);
+        voiceData = new Uint8Array();
     }
 }
 
-function SendVoicePacket(int8VoiceData)
-{
+function sendVoicePacket(int8VoiceData) {
     const base64Encoded = uint8ArrayToBase64(int8VoiceData);
     SendVoiceDataToServer(base64Encoded);
     //PlayVoice(base64Encoded);
     return;
 }
 
-function PlayVoice(compressedAudio)
+
+
+function PlayVoice(data)
 {
+    compressedAudio = data.Data;
     var uint8Data = base64ToUint8Array(compressedAudio);
     const float32Data = new Float32Array(uint8Data.buffer);
-    const audioBuffer = audioContext.createBuffer(1, float32Data.length, audioContext.sampleRate);
+    const audioBuffer = audioContext2.createBuffer(1, float32Data.length, audioContext2.sampleRate);
     audioBuffer.getChannelData(0).set(float32Data);
 
     // Create a buffer source node and connect it to the audio context
-    const source = audioContext.createBufferSource();
+    const source = audioContext2.createBufferSource();
     source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
+    source.connect(audioContext2.destination);
 
     // Start playing the audio
     source.start();
@@ -113,4 +125,34 @@ function combineUint8Arrays(arr1, arr2) {
 function float32ArrayToUint8Array(float32Array) {
     const uint8Array = new Uint8Array(float32Array.buffer);
     return uint8Array;
-  }
+}
+
+
+//Key handler
+document.addEventListener("keydown", onKeyDown);
+document.addEventListener("keyup", onKeyUp);
+
+
+
+let isKeyPressed = false;
+// Function to be called on key down
+function onKeyDown(event) {
+    if(isKeyPressed)
+        return;
+    if (VoiceWebSocket && VoiceWebSocket.readyState === WebSocket.OPEN) {
+        if (event.key == "t") {
+            console.log("AudioCaptureStarted");
+            isKeyPressed = true;
+            startCapturing();
+        }
+    }
+}
+
+// Function to be called on key up
+function onKeyUp(event) {
+    if (event.key == "t") {
+        console.log("AudioCaptureStopped");
+        isKeyPressed = false;
+        stopCapturing();
+    }
+}
