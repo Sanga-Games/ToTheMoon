@@ -81,8 +81,6 @@ PurchaseRewardsBTN.addEventListener('click', function () {
                 const imgElement = document.createElement('img');
                 imgElement.src = reward.Image;
                 imgElement.alt = "Rewards";
-                imgElement.width = 150;
-                imgElement.height = 210;
 
                 const pElement = document.createElement('p');
                 pElement.textContent = reward.Name;
@@ -162,6 +160,7 @@ function OnRewardHistoryReceived(RewardsHistoryData)
 
                 var row = `<tbody class="RewardsHistoryDataRow">
                             <tr>
+                                <td>${Convert_UTC_To_LocalTime(RewardsHistoryData.items[i].Timestamp)}</td>
                                 <td>${RewardsHistoryData.items[i].RewardName}</td>
                                 <td>${RewardsHistoryData.items[i].EmailId}</td>
                                 <td>${RewardsHistoryData.items[i].PaymentStatus}</td>
@@ -200,6 +199,7 @@ function OnLoadMoreRewardsHistoryReceived(RewardsHistoryData)
 
                 var row = `<tbody class="RewardsHistoryDataRow">
                             <tr>
+                                <td>${Convert_UTC_To_LocalTime(RewardsHistoryData.items[i].Timestamp)}</td>
                                 <td>${RewardsHistoryData.items[i].RewardName}</td>
                                 <td>${RewardsHistoryData.items[i].EmailId}</td>
                                 <td>${RewardsHistoryData.items[i].PaymentStatus}</td>
