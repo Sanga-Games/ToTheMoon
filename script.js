@@ -96,7 +96,8 @@ function GameState_Handler(data)
     if(UpdateReceivedAfterGameInit < 2)
         UpdateReceivedAfterGameInit++;
 
-    Trigger_GameStateChanged(data);
+    if(PrevState!=data.State)
+        Trigger_GameStateChanged(data);
 
     clearInterval(FuncIntervalID);
     GameID = data.GameID;
@@ -344,13 +345,16 @@ async function initializeGame() {
 
 function Trigger_GameStateChanged(data)
 {
+    CurrentGameStateObj = data;
     if(data.State == "ONGOING")
     {
         InitialLaunchRocket();
+        $('.explosion').remove();
     }
     else if(data.State == "BETTING")
     {
         ResetRocketGame2();
+        $('.explosion').remove();
     }
     else if(data.State == "CONCLUDED")
     {

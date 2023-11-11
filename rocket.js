@@ -5,6 +5,17 @@ var AllPlayersList = [];
 
 var MaxVipPlayers = 1;
 
+var CurrentGameStateObj = {
+    GameID: 0,
+    GameHash: "",
+    State: "STOPPED", 
+    BetStartUTC: 0, 
+    GameStartUTC: 0,
+    GameEndUTC: 0, 
+    BetDuration: 10, 
+    BlastMultiplier: 0 
+  };
+
 
 function AddDataToAllPlayerList(data) {
     // Check if the user ID is already present in the array
@@ -39,16 +50,22 @@ function AddDataToAllPlayerList(data) {
 
 
 function InitialLaunchRocket() {
-
+    ResetRocketGame2();
     $('.Background').animate({ bottom: '-300%' }, 6000)
-    setTimeout(stars,3000);
+    setTimeout(function(){
+        if(CurrentGameStateObj["State"] == "ONGOING")
+        stars();
+    },3000);
     $('.BackgroundAtmosphere').animate({ bottom:'-500%'}, 6000)
     $('.rocket').animate({ bottom: '22%',height:'60%' }, 3000, function () {
         //stars();
         LoopRocketMotion();
     })
     $('#GalaxyBG').css({ backgroundPositionY:'0%', opacity:0})
-    setTimeout(StartGalaxyAnim, 4000);
+    setTimeout(function(){
+        if(CurrentGameStateObj["State"] == "ONGOING")
+        StartGalaxyAnim();
+    },4000);
 }
 
 function StartGalaxyAnim()
@@ -56,7 +73,8 @@ function StartGalaxyAnim()
     if(GameState != "ONGOING")
         return;
     $('#GalaxyBG').animate({ backgroundPositionY:'1920px',opacity:0.2},8000,'linear', function(){
-        GalaxyLoop();
+        if(CurrentGameStateObj["State"] == "ONGOING")
+            GalaxyLoop();
     })
 }
 
@@ -64,7 +82,8 @@ function GalaxyLoop()
 {
     $('#GalaxyBG').css({ backgroundPositionY:'0%', opacity:0.2})
     $('#GalaxyBG').animate({ backgroundPositionY:'1920px', opacity:0.2},8000,'linear', function(){
-        GalaxyLoop();
+        if(CurrentGameStateObj["State"] == "ONGOING")
+            GalaxyLoop();
     })
 }
 
@@ -73,7 +92,8 @@ function LoopRocketMotion() {
     $('.rocket').css({ bottom: '22%' ,height:'60%'});
     $('.rocket').animate({ bottom: '18%' ,height:'60%'}, 2000, 'linear', function () {
         $('.rocket').animate({ bottom: '22%' ,height:'60%'}, 2000, 'linear', function () {
-            LoopRocketMotion();
+            if(CurrentGameStateObj["State"] == "ONGOING")
+                LoopRocketMotion();
         })
     })
 }
@@ -86,7 +106,8 @@ function ResetRocketGame() {
     $('.Background').stop();
     $('.earth').stop();
     $('.rocket').animate({ bottom: '17%'}, 1000, 'linear', function () {
-        $('.rocket').hide()
+        if(CurrentGameStateObj["State"] != "ONGOING")
+            $('.rocket').hide()
     })
     $('#GalaxyBG').stop();
     // $('.rocket').hide()
@@ -98,6 +119,13 @@ function ResetRocketGame() {
 function ResetRocketGame2() {
     //DeleteAllPopoutPlayerFromRocket();
     // $('.rocketExplosion').css({ opacity: 0 });
+    $('.rocket').stop();
+    $('.RocketPlayerHolder').stop();
+    $('.BackgroundAtmosphere').stop();
+    $('.Background').stop();
+    $('.earth').stop();
+    $('#GalaxyBG').stop();
+    
     $('.rocket').show()
     $('.rocket').css({ bottom: '115px',height:'25%' });
     $('.BackgroundAtmosphere').css({ bottom: '0%'});
@@ -107,6 +135,8 @@ function ResetRocketGame2() {
 }
 
 function BlastRocket() {
+    if(CurrentGameStateObj["State"] != "CONCLUDED")
+        return;
     var $rocket = $('.rocket');
     var offset = $rocket.offset();
     var centerY = offset.top + $rocket.outerHeight() / 2;
@@ -115,22 +145,29 @@ function BlastRocket() {
     var $explosionDiv = $('<div class="explosion" style="margin-left: 0px; margin-top: 50px; top:'+centerY+'px; transform: translate(-50%, -50%) scale(1) rotate(175deg);"></div>');
     $('body').append($explosionDiv);
     setTimeout(function(){
-        $explosionDiv = $('<div class="explosion" style="margin-left: -50px; margin-top: -100px;top:'+centerY+'px; transform: translate(-50%, -50%) scale(0.8) rotate(0deg);"></div>');
-        $('body').append($explosionDiv);
+        if(CurrentGameStateObj["State"] == "CONCLUDED")
+        {
+            $explosionDiv = $('<div class="explosion" style="margin-left: -50px; margin-top: -100px;top:'+centerY+'px; transform: translate(-50%, -50%) scale(0.8) rotate(0deg);"></div>');
+            $('body').append($explosionDiv);
+        }
     }, 300);
     setTimeout(function(){
-        $explosionDiv = $('<div class="explosion" style="margin-right: 0px; margin-bottom: -100px;top:'+centerY+'px; transform: translate(-50%, -50%) scale(0.7) rotate(-90deg);"></div>');
-        $('body').append($explosionDiv);
+        if(CurrentGameStateObj["State"] == "CONCLUDED")
+        {
+            $explosionDiv = $('<div class="explosion" style="margin-right: 0px; margin-bottom: -100px;top:'+centerY+'px; transform: translate(-50%, -50%) scale(0.7) rotate(-90deg);"></div>');
+            $('body').append($explosionDiv);
+        }
     }, 500);
 
-    setTimeout(function(){
-        $('.explosion').remove();
-    }, 2500);
+    // setTimeout(function(){
+    //     $('.explosion').remove();
+    // }, 2500);
 
     ResetRocketGame();
     EmptyAllPlayersList()
     // setTimeout(InitialLaunchRocket, 8000);
 };
+
 
 
 
