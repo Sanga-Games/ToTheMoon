@@ -96,6 +96,7 @@ HundredVCoinButton.addEventListener('click', function () {
 
 PaymentHistoryBTN.addEventListener('click', function () {
 
+    ToggleOptionsMenus();
     GetPaymentsHistory();
 
 });

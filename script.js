@@ -107,14 +107,14 @@ function GameState_Handler(data)
         if(PrevState!="ONGOING")
         {
             document.querySelector("#CashOut_btn").disabled = false;
+            document.querySelector("#BettingGroup").style.display = "none";
+            document.querySelector("#CashoutGroup").style.display = "block";
             if(UserID)
                 CheckForVoiceCommsAccess();
         }
         startTime = data.GameStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateMultiplier, 50);
         document.querySelector("#Game_WaitTime").innerHTML = "";
-        document.querySelector("#MakeBet_btn").style.display = "none";
-        document.querySelector("#CashOut_btn").style.display = "block";
     }
     else if(data.State == "BETTING")
     {
@@ -122,22 +122,25 @@ function GameState_Handler(data)
         {
             ClearParticipants();
             document.querySelector("#MakeBet_btn").disabled = false;
+            document.querySelector("#BettingGroup").style.display = "block";
+            document.querySelector("#CashoutGroup").style.display = "none";
             document.querySelector("#Game_TotalBetAmount").innerHTML = 0;
             BettingWaitTime = data.BetDuration;
         }
         startTime = data.BetStartUTC * 1000;
         FuncIntervalID = setInterval(UpdateWaitTime, 50);
         document.querySelector("#Game_Multiplier").innerHTML = "-";
-        document.querySelector("#MakeBet_btn").style.display = "block";
-        document.querySelector("#CashOut_btn").style.display = "none";
+        document.querySelector("#CashOut_btn").disabled = false;
     }
     else if(data.State == "CONCLUDED")
     {
+
+        document.querySelector("#BettingGroup").style.display = "none";
+        document.querySelector("#CashoutGroup").style.display = "block";
         console.log(data.BlastMultiplier);
         document.querySelector("#Game_Multiplier").innerHTML = "x" + (Math.floor(parseFloat(data.BlastMultiplier) * 100) / 100).toFixed(2);
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
-        document.querySelector("#MakeBet_btn").style.display = "none";
-        document.querySelector("#CashOut_btn").style.display = "none";
+        document.querySelector("#CashOut_btn").disabled = true;
         BlastAllParticipants();
     }
     PrevState = data.State;

@@ -84,6 +84,8 @@ if (localSessionToken) {
             document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
+            document.getElementById('BettingControlsArea').style.display = "block";
+
             // startCapturing();
             GetGameInit();
             SubscribeToGameEvents();

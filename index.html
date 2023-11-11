@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>To The Moon</title>
     <script src="code.jquery.com_jquery-3.7.1.min.js"></script>
     <script src="time.js"></script>
@@ -18,7 +19,7 @@
 <body>
     <div id="ProfileArea">
         <div id="PreLogin" style="display: block;">
-            <button class="ProfileBtns" onclick="window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2Fwov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws&response_type=code&scope=identify';"> Login</button>
+            <button class="ProfileBtns" style="margin-top:5px; background-color: rgb(250, 114, 3); color:white;border:1px solid black;" onclick="window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2Fwov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws&response_type=code&scope=identify';"> Login</button>
         </div>
         <div id="PostLogin" style="display: none;">
             <div id="walletContainer">
@@ -30,39 +31,55 @@
                 <img id="Profile_Avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU" alt="Avatar">
                 <span id="Profile_UserName">UserName</span>
                 <!-- <button class="ProfileBtnsRound" onclick="AddBalance(100)">&#43;</button> -->
-                <button class="ProfileBtnsRound" href="#SignOut" onclick="UserSignout()">&#9932;</button>
+                <button class="ProfileBtnsRound" href="#SignOut" style="display: none;" onclick="UserSignout()">&#9932;</button>
                 <!-- <a href="https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2F6dkyzuwzlgtq4gywvqu6hrdtce0ldart.lambda-url.ap-south-1.on.aws&response_type=code&scope=identify" class="discord-button">Login</a>
                 <a href="#SignOut" onclick="UserSignout()" class="discord-button">SignOut</a> -->
                 <!-- <button id="Profile_RefreshButton">Refresh Profile</button> -->
             </div>
         </div>
-        
     </div>
 
-    <div id="RewardsButtonContainer">
-        <button id="PurchaseRewardsBTN">
-            <img src="Images/gift.png" alt="Image" width="22" height="22">
-        </button>
-        <button id="RewardsHistoryBTN">
-            <img src="Images/gift-card.png" alt="Image" width="22" height="22">
-        </button>
-        <button id="FeedbackBTN">
-            <img src="Images/review.png" alt="Image" width="22" height="22">
-        </button>
-        <button id="PaymentHistoryBTN">
-            <img src="Images/invoice.png" alt="Image" width="22" height="22">
-        </button>
+    <script>
+        function ToggleOptionsMenus() {
+            var optionsButtonContainer = document.getElementById("OptionsButtonContainer");
+            if (optionsButtonContainer.style.display === "block") {
+                optionsButtonContainer.style.display = "none";
+            } else {
+                optionsButtonContainer.style.display = "block";
+        }
+    }
+    </script>
+    <div id="OptionsMenuBtn" onclick="ToggleOptionsMenus()">&#9776;</div>
+
+    <div id="OptionsButtonContainer">
+        <button id="PurchaseRewardsBTN" class="optionmenus">Get Rewards</button>
+        <button id="RewardsHistoryBTN" class="optionmenus">Claimed Rewards History</button>
+        <button id="FeedbackBTN" class="optionmenus">Provide Feedback</button>
+        <button id="PaymentHistoryBTN" class="optionmenus">Coin Purchase History</button>
+        <button class="optionmenus" onclick="UserSignout()">Sign Out</button>
     </div>
+
+    <script>
+        function OpenPlayerBetsUI() {
+            var PlayerBetsUI = document.getElementById("ParticipantsArea");
+            PlayerBetsUI.style.display = "block";
+        }
+        function ClosePlayerBetsUI() {
+            var PlayerBetsUI = document.getElementById("ParticipantsArea");
+            PlayerBetsUI.style.display = "none";
+        }
+    </script>
+    <div id="PlayerBetsLauncher" onclick="OpenPlayerBetsUI()">Player Bets</div>
 
     <div id="RewardsContainer">
-        <button id="RewardsContainerCancelBTN">X</button>
+        <button id="RewardsContainerCancelBTN">&#x2716;</button>
         <h1>REWARDS</h1>
         <div id="RewardsHolder">
         </div>
     </div>
 
     <div id="PaymentContainer">
-        <button id="PaymentContainerCancelBTN">X</button>
+        <button id="PaymentContainerCancelBTN">&#x2716;</button>
         <div id="PaymentHolder">
             <table id="PaymnetHolderTable">
                 <tr>
@@ -77,7 +94,7 @@
     </div>
 
     <div id="RewardsHistoryContainer">
-        <button id="RewardsHistoryContainerCancelBTN">X</button>
+        <button id="RewardsHistoryContainerCancelBTN">&#x2716;</button>
         <div id="RewardsHistoryHolder">
             <table id="RewardsHistoryHolderTable">
                 <tr>
@@ -104,6 +121,7 @@
 
     <div id="FeedbackContainer">
         <div id="FeedbackContainer2">
+            <span style="font-size: 20px; font-weight: 700; color: white;">Feedback</span>
             <input type="text" id="TopicInput" placeholder="Topic ...." required="required">
             <input type="text" id="DescriptionInput" placeholder="Description ....">
             <div style="flex-direction: column;">
@@ -117,7 +135,7 @@
         <button id="TenVCoinButton"> Add 10 VCoin</button>
         <button id="FiftyVCoinButton"> Add 50 VCoin</button>
         <button id="HundredVCoinButton"> Add 100 VCoin</button>
-        <button id="AddBalanceCancelButton">X</button>
+        <button id="AddBalanceCancelButton">&#x2716;</button>
     </div>
 
     <div id="LoadingScreenContainer">
@@ -131,33 +149,52 @@
     <script src = "Feedback.js"></script>
     
     <div id="ParticipantsArea">
+        <div id="ClosePlayerBetsUI" onclick="ClosePlayerBetsUI()">&#x2716;</div>
         <div style="display: flex; align-items: center; flex-direction: row;
-        justify-content: center; height:40px; width:auto; position: absolute; top:2px; left:0px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ">
+        justify-content: center; height:40px; width:auto; position: absolute; top:20px; left:20px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ">
             <div style="width:12px; height:12px;background-color: greenyellow;border-radius: 50%;"></div>
             <span id="Game_PlayerCount"  style="margin-left:10px;font-size:15px; font-weight: 500; color:rgba(255, 255, 255, 0.514);">0 PLAYING</span>
         </div>
         <div style="display: flex; align-items: center; flex-direction: row;
-        justify-content: center; height:40px; width:auto; position: absolute; top:0px; right:0px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ">
+        justify-content: center; height:40px; width:auto; position: absolute; top:20px; right:20px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; ">
             <img src="https://png.pngtree.com/png-vector/20230213/ourmid/pngtree-gold-coins-stack-concept-illustration-in-flat-style-isolated-png-image_6598445.png" style="width:30px; height:30px;margin-top:3px;"/>
             <span id="Game_TotalBetAmount"  style="margin-left:5px;font-size:20px; font-weight: 700; color:rgba(255, 255, 255, 0.863);">0.0</span>
         </div>
         <div id="Game_ParticipantsContainer"></div>
     </div>
 
-    <div id="BettingControlsArea">
-        <span class="ControlLabels">BET</span>
-        <button id="CashOut_btn" class="GameBtns" onclick="CashOut()">CASH OUT</button>
-        <input type="number" id="Game_BetAmountInput" value="10"/>
-        <span class="ControlLabels">&nbsp;&nbsp;&nbsp;&nbsp;Cash Out</span>
-        <input type="checkbox" id="Game_CashOutMultiplierCheck" onchange="document.getElementById('Game_CashOutMultiplierInput').disabled = !this.checked;"/>
-        <input type="number" id="Game_CashOutMultiplierInput" value="2" disabled/>
-        <button id="MakeBet_btn" onclick="MakeBet()">PLACE BET</button>
-    </div>
+    <div id="PushToTalkBtn" onmousedown="onMouseDown()" onmouseup="onMouseUp()">Push to Talk (Hold 'T')</div>
+    <script>
+        pushToTalkBtn = document.querySelector('#PushToTalkBtn');
+        
+        pushToTalkBtn.addEventListener('mousedown', onMouseDown);
+        pushToTalkBtn.addEventListener('touchstart', onMouseDown);
 
-    
-    <!-- <button onclick="InitWebsocketConnection()" >Start Connection</button>
-    <button onclick="CloseWebSocketConnection()" >Stop Connection</button> -->
-    <!-- <div id="MessageLog" class="log">---- Message Log ----</div> -->
+        pushToTalkBtn.addEventListener('mouseup', onMouseUp);
+        pushToTalkBtn.addEventListener('touchend', onMouseUp);
+    </script>
+
+    <div id="BettingControlsArea">
+        <div id="BettingGroup" class="ctrlGrp" >
+            <div style="display:inline-block;width:330px;">
+                <span class="ControlLabels">Bet Amount</span>
+                <input type="number" id="Game_BetAmountInput" value="10"/>
+            </div>
+            <br>
+            <div style="display:inline-block;">
+                <span class="ControlLabels">Enable Auto CashOut</span>
+                <input type="checkbox" id="Game_CashOutMultiplierCheck" onchange="document.getElementById('Game_CashOutMultiplierInput').disabled = !this.checked;"/>
+                <input type="number" id="Game_CashOutMultiplierInput" value="2" disabled/>
+            </div>
+            <br>
+            <hr style="opacity: 0.2;">
+            <button class="GameBtns" id="MakeBet_btn" onclick="MakeBet()">PLACE BET</button>
+        </div>
+        <div id="CashoutGroup" class="ctrlGrp" >
+            <button id="CashOut_btn" class="GameBtns" onclick="CashOut()">CASH OUT</button>
+        </div>
+        
+    </div>
 
     </div>
 
@@ -166,17 +203,17 @@
     <div class="Background">
         <div class="DivBackgroundEnvironment"></div>
         <div class="DivBackgroundClouds">
-            <div class="cloud" style="width:300px; height:164px; bottom:15%; transform: scale(1.5);  background-position: -300px; animation-timeline: -1s;
+            <div class="cloud" style="width:300px; height:164px; bottom:15%; transform: scale(1);  background-position: -300px; animation-timeline: -1s;
             animation-duration: 60s;"></div>
-            <div class="cloud" style="width:300px; height:164px; bottom:20%; transform: scale(2); z-index:5;  background-position: 0px; animation-delay: -14s;
+            <div class="cloud" style="width:300px; height:164px; bottom:20%; transform: scale(1.5); z-index:5;  background-position: 0px; animation-delay: -14s;
             animation-duration: 50s;"></div>
-            <div class="cloud" style="width:300px; height:164px; bottom:30%; transform: scale(1.8); z-index:5; background-position: -600px; animation-delay: -75s;
+            <div class="cloud" style="width:300px; height:164px; bottom:30%; transform: scale(1.2); z-index:5; background-position: -600px; animation-delay: -75s;
             animation-duration: 40s;"></div>
-            <div class="cloud" style="width:300px; height:164px; bottom:40%; transform: scale(2);  background-position: -900px; animation-delay: -13s;
+            <div class="cloud" style="width:300px; height:164px; bottom:40%; transform: scale(1.5);  background-position: -900px; animation-delay: -13s;
             animation-duration: 55s;"></div>
-            <div class="cloud" style="width:300px; height:164px; bottom:50%; transform: scale(1.8);  background-position: 0px; animation-delay: -85s;
+            <div class="cloud" style="width:300px; height:164px; bottom:50%; transform: scale(1.2);  background-position: 0px; animation-delay: -85s;
             animation-duration: 60s;"></div>
-            <div class="cloud" style="width:300px; height:164px; bottom:57%; transform: scale(3); z-index:5; background-position: -300px; animation-delay: -125s;
+            <div class="cloud" style="width:300px; height:164px; bottom:57%; transform: scale(2); z-index:5; background-position: -300px; animation-delay: -125s;
             animation-duration: 65s;"></div>
         </div>
     </div>

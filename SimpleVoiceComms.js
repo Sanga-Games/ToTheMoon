@@ -200,6 +200,18 @@ function onKeyDown(event) {
     }
 }
 
+function onMouseDown(event){
+    event.preventDefault();
+    if(isKeyPressed)
+        return;
+    if (VoiceWebSocket && VoiceWebSocket.readyState === WebSocket.OPEN) {
+        console.log("AudioCaptureStarted");
+        CurrentSequenceCode = 0;
+        isKeyPressed = true;
+        startCapturing();
+    }
+}
+
 // Function to be called on key up
 function onKeyUp(event) {
     if (event.key == "t") {
@@ -211,4 +223,15 @@ function onKeyUp(event) {
             voiceData = new Uint8Array();
         },500);
     }
+}
+
+function onMouseUp()
+{
+    console.log("AudioCaptureStopped");
+    isKeyPressed = false;
+    stopCapturing();
+    setTimeout(function(){
+        sendVoicePacket(voiceData);
+        voiceData = new Uint8Array();
+    },500);
 }

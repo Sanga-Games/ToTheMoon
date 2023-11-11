@@ -89,6 +89,7 @@ function InitVoiceWebsocketConnection()
     // Connection opened
     VoiceWebSocket.addEventListener('open', (event) => {
         console.log('voice WebSocket connection opened:', event);
+        document.querySelector('#PushToTalkBtn').style.display = 'block';
     });
 
     // Listen for messages from the server
@@ -104,7 +105,8 @@ function InitVoiceWebsocketConnection()
     // Connection closed
     VoiceWebSocket.addEventListener('close', (event) => {
         console.log('VoiceWebsocket connection closed:', event);
-        
+        onMouseUp();
+        document.querySelector('#PushToTalkBtn').style.display = 'none';
     });
 }
 
