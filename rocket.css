@@ -197,7 +197,7 @@
 }
 
 .PoppedPlayer {
-    animation: PoppedPlayerAnim;
+    /* animation: PoppedPlayerAnim; */
 }
 
 @keyframes PoppedPlayerAnim {
@@ -234,4 +234,105 @@
     mix-blend-mode:hard-light;
     opacity:0;
     overflow: hidden;
+}
+
+
+@keyframes PoppedPlayerAnim1 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(200vh) translateX(200vw) rotate(900deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim2 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(150vh) translateX(-250vw) rotate(720deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim3 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(300vh) translateX(100vw) rotate(1440deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim4 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(180vh) translateX(-280vw) rotate(1080deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim5 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(250vh) translateX(150vw) rotate(540deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim6 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(120vh) translateX(-320vw) rotate(360deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim7 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(280vh) translateX(80vw) rotate(720deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim8 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(200vh) translateX(-200vw) rotate(1800deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim9 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(150vh) translateX(250vw) rotate(1260deg);
+    }
+}
+
+@keyframes PoppedPlayerAnim10 {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(300vh) translateX(-100vw) rotate(900deg);
+    }
 }

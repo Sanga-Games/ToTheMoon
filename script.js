@@ -5,6 +5,7 @@ var GameID = 0;
 var GameState = "";
 var BettingWaitTime = 10;
 var UpdateReceivedAfterGameInit = 0;
+var isBetPlaced = false;
 
 
 async function GetGameInit()
@@ -106,7 +107,11 @@ function GameState_Handler(data)
     {
         if(PrevState!="ONGOING")
         {
-            document.querySelector("#CashOut_btn").disabled = false;
+            if(isBetPlaced)
+                document.querySelector("#CashOut_btn").disabled = false;
+            else
+                document.querySelector("#CashOut_btn").disabled = true;
+
             document.querySelector("#BettingGroup").style.display = "none";
             document.querySelector("#CashoutGroup").style.display = "block";
             if(UserID)
@@ -120,6 +125,7 @@ function GameState_Handler(data)
     {
         if(PrevState!="BETTING")
         {
+            isBetPlaced = false;
             ClearParticipants();
             document.querySelector("#MakeBet_btn").disabled = false;
             document.querySelector("#BettingGroup").style.display = "block";
@@ -141,7 +147,8 @@ function GameState_Handler(data)
         document.querySelector("#Game_Multiplier").innerHTML = "x" + (Math.floor(parseFloat(data.BlastMultiplier) * 100) / 100).toFixed(2);
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
         document.querySelector("#CashOut_btn").disabled = true;
-        BlastAllParticipants();
+        BlastAllParticipants(data.GameID);
+        isBetPlaced = false;
     }
     PrevState = data.State;
 }
@@ -223,7 +230,38 @@ function PlayerBet_Handler(data)
     {
         AddParticipant(data);
     }
+    SortPlayerBets();
 }
+
+function SortPlayerBets() {
+    var parentElement = document.querySelector("#Game_ParticipantsContainer");
+    var participantList = parentElement.querySelectorAll('.participant');
+
+    var sortedParticipants = Array.from(participantList).sort(function (a, b) {
+        var betAmountA = parseFloat(a.querySelector('.participant_betAmount').innerHTML);
+        var betAmountB = parseFloat(b.querySelector('.participant_betAmount').innerHTML);
+
+        if (a.classList.contains('participant_cashedout')) {
+            betAmountA += 1000000;
+        }
+
+        if (b.classList.contains('participant_cashedout')) {
+            betAmountB += 1000000;
+        }
+        return betAmountA - betAmountB;
+    });
+
+    // Remove all participants from the parent div
+    participantList.forEach(function (participant) {
+        participant.remove();
+    });
+
+    // Append the sorted participants back to the parent div
+    sortedParticipants.forEach(function (participant) {
+        parentElement.appendChild(participant);
+    });
+}
+
 
 function AddParticipant(data) {
     
@@ -267,17 +305,22 @@ function ClearParticipants() {
   document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
 }
 
-function BlastAllParticipants() {
-    var parentElement = document.querySelector("#Game_ParticipantsContainer");
-    
-    for (var i = 0; i < parentElement.children.length; i++) {
-      var child = parentElement.children[i];
-  
-      // Check if the element does not have the class "participant_cashedout"
-      if (!child.classList.contains('participant_cashedout')) {
-        child.classList.add('participant_blasted');
-      }
-    }
+function BlastAllParticipants(gid) {
+    setTimeout((gid) => {
+        if(gid == CurrentGameStateObj.GameID && CurrentGameStateObj.State == "CONCLUDED")
+        {
+            var parentElement = document.querySelector("#Game_ParticipantsContainer");
+            for (var i = 0; i < parentElement.children.length; i++) {
+            var child = parentElement.children[i];
+        
+            // Check if the element does not have the class "participant_cashedout"
+            if (!child.classList.contains('participant_cashedout')) {
+                child.classList.add('participant_blasted');
+            }
+            }
+        }
+        
+    }, 1500);
   }
   
 var cache = {};
