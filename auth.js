@@ -20,6 +20,11 @@ async function loadVoiceSettings()
             {
                 document.querySelector('#VoiceCommsCheckbox').checked = true;
             }
+            else
+            {
+                IsVoiceCommsEnabled = false;
+                localStorage.setItem('IsVoiceCommsEnabled', false);
+            }
 
        }
     }
