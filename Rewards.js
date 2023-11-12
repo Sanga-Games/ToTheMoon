@@ -139,6 +139,13 @@ EmailContainercancelButton.addEventListener('click', function () {
 
 });
 
+function OnChangeRewardsReceivedState(selectElement)
+{
+    console.log("Called");
+    RewardHistoryStartKey = '';
+    GetRewardsHistory();
+}
+
 
 function OnRewardHistoryReceived(RewardsHistoryData)
 {
@@ -181,7 +188,7 @@ function OnRewardHistoryReceived(RewardsHistoryData)
             else {
                 RewardsHistoryloadMoreBTN.style.display = 'flex';
             }
-
+    
     RewardsHistoryContainer.style.display = 'flex'; 
     ToggleLoadingScreen(false);       
 
@@ -245,7 +252,8 @@ function GetRewardsHistory()
     const jsonMessage = {
         action: 'Rewards',
         subAction: 'RewardHistory',
-        RewardsStartKey: encodedRewardHistoryParams
+        RewardsStartKey: encodedRewardHistoryParams,
+        RewardsReceivedState: document.getElementById('RewardsSelect').value
     };
 
     // Send the JSON message as a string
@@ -279,11 +287,13 @@ function RewardsResponse(data)
         case "RewardHistory":
             // Got all the rewards history for the specific user
                 OnLoadMoreRewardsHistoryReceived(data.value);
+                document.getElementById('RewardsSelect').value = data.RewardsReceivedState;
             break;
 
         case "FirstRewardHistory":
 
             OnRewardHistoryReceived(data.value);
+            document.getElementById('RewardsSelect').value = data.RewardsReceivedState;
             break;
 
         case "PurchaseReward":
