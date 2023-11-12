@@ -73,6 +73,7 @@
             }
             else{
                 localStorage.setItem('IsVoiceCommsEnabled', false);
+                location.reload();
                 try {
                     audioStream.getTracks().forEach(track => track.stop());
                 }
