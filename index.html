@@ -16,7 +16,18 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="rocket.css">
 </head>
-<body>
+<script>
+    function HandleBodyClick()
+    {
+        if(IsVoiceCommsEnabled)
+        {
+            if(!audioContext2)
+                audioContext2 = new AudioContext();
+        }
+        
+    }
+</script>
+<body onclick="HandleBodyClick()">
     <div id="ProfileArea">
         <div id="PreLogin" style="display: block;">
             <button class="ProfileBtns" style="margin-top:5px; background-color: rgb(250, 114, 3); color:white;border:1px solid black;" onclick="window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1159140031315849226&redirect_uri=https%3A%2F%2Fwov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws&response_type=code&scope=identify';"> Login</button>
@@ -60,6 +71,8 @@
             let checkbox = document.querySelector('#VoiceCommsCheckbox');
             if(checkbox.checked)
             {
+                if(!audioContext2)
+                    audioContext2 = new AudioContext();
                 localStorage.setItem('IsVoiceCommsEnabled', true);
                 audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 if(!audioStream)

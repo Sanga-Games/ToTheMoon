@@ -94,6 +94,7 @@ function sendVoicePacket(int8VoiceData) {
 const userBuffers = {};
 
 function PlayVoice(data) {
+    console.log("playing voice");
     if(!audioContext2)
         audioContext2 = new AudioContext();
     

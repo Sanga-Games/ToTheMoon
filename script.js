@@ -191,6 +191,11 @@ async function MakeBet()
 {
     if(localSessionToken)
     {
+        if(IsVoiceCommsEnabled)
+        {
+            if(!audioContext2)
+                audioContext2 = new AudioContext();
+        }
         document.querySelector("#MakeBet_btn").disabled = true;
         SendPlaceBet(GameID,document.querySelector("#Game_BetAmountInput").value,document.querySelector("#Game_CashOutMultiplierInput").value,document.querySelector("#Game_CashOutMultiplierCheck").checked);
     }
