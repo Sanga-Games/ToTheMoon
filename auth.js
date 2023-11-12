@@ -25,6 +25,8 @@ async function loadVoiceSettings()
     }
 }
 
+loadVoiceSettings();
+
 
 //Post-Signout CLeanup
 if (window.location.href == domainURL + "/?action=signout") {
