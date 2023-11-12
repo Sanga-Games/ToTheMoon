@@ -102,7 +102,12 @@
                     <th>RewardName</th>
                     <th>EmailID</th>
                     <th>PaymentStatus</th>
-                    <th>IsReceived</th>
+                    <th>IsReceived
+                        <select name="Rewards Option" id="RewardsSelect" onchange="OnChangeRewardsReceivedState(this)">
+                            <option>False</option>
+                            <option>True</option>
+                        </select>
+                    </th>
                 </tr>
             </table>
             <button id="RewardsHistoryloadMoreBTN">More..</button>
