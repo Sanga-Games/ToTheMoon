@@ -12,6 +12,7 @@ let CurrentSequenceCode = 0;
 
 async function startCapturing() {
     audioContext = new AudioContext();
+    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     microphone = audioContext.createMediaStreamSource(audioStream);
 
     audioContext.audioWorklet.addModule('AudioProcessor.js')
