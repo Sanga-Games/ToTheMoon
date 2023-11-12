@@ -7,16 +7,24 @@ var UserID = ""
 var IsVoiceCommsEnabled = false;
 let audioStream;
 
- var tmp = localStorage.getItem('IsVoiceCommsEnabled');
- if(tmp)
- {
-    IsVoiceCommsEnabled = localStorage.getItem('IsVoiceCommsEnabled') == 'true'?true:false;
-    if(IsVoiceCommsEnabled)
+async function loadVoiceSettings()
+{
+    var tmp = localStorage.getItem('IsVoiceCommsEnabled');
+    if(tmp)
     {
-        document.querySelector('#VoiceCommsCheckbox').checked = true;
-        audioStream = navigator.mediaDevices.getUserMedia({ audio: true });
+       IsVoiceCommsEnabled = localStorage.getItem('IsVoiceCommsEnabled') == 'true'?true:false;
+       if(IsVoiceCommsEnabled)
+       {
+            audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            if(audioStream)
+            {
+                document.querySelector('#VoiceCommsCheckbox').checked = true;
+            }
+
+       }
     }
- }
+}
+
 
 //Post-Signout CLeanup
 if (window.location.href == domainURL + "/?action=signout") {

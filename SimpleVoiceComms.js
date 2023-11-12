@@ -7,15 +7,12 @@ let microphone;
 let audioWorkletNode;
 let voiceData = new Uint8Array();
 let timeStamp = new Date();
-let stream;
 let audioContext2;
 let CurrentSequenceCode = 0;
 
 async function startCapturing() {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
     audioContext = new AudioContext();
-    microphone = audioContext.createMediaStreamSource(stream);
+    microphone = audioContext.createMediaStreamSource(audioStream);
 
     audioContext.audioWorklet.addModule('AudioProcessor.js')
         .then(() => {
@@ -33,7 +30,7 @@ async function startCapturing() {
 function stopCapturing() {
     // Stop the stream.
     try {
-        stream.getTracks().forEach(track => track.stop());
+        audioStream.getTracks().forEach(track => track.stop());
 
         if (microphone) {
             microphone.disconnect();

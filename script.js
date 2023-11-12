@@ -86,7 +86,7 @@ function CheckForVoiceCommsAccess()
     // Check if any entry in the top 10 has the specified UserID
     const hasBet = top10Entries.some(entry => entry.UserID === UserID);
   
-    if(hasBet)
+    if(hasBet & IsVoiceCommsEnabled)
         InitVoiceWebsocketConnection();
 }
 
