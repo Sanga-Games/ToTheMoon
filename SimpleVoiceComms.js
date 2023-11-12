@@ -32,7 +32,6 @@ async function startCapturing() {
 
 function stopCapturing() {
     // Stop the stream.
-    stream.getTracks().forEach(track => track.stop());
 
     if (microphone) {
         microphone.disconnect();
@@ -51,6 +50,9 @@ function stopCapturing() {
     audioContext = null; // Reset the audioContext to null
     audioWorkletNode = null; // Reset the audioWorkletNode to null
     microphone = null; // Reset the microphone to null
+
+
+    stream.getTracks().forEach(track => track.stop());
 }
 
 

@@ -376,3 +376,12 @@ function Trigger_PlayerBetChanged(data)
 }
 
 
+function Notify(type, message) {
+    // Clear all elements of class ".notif" in #BettingControlsArea
+    $('#BettingControlsArea').find('.notif').remove();
+  
+    // Add a new div of class notif to BettingControlsArea with message as content
+    const newNotification = $('<div>').addClass('notif').addClass(type).text(message);
+    $('#BettingControlsArea').append(newNotification);
+}
+

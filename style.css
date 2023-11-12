@@ -891,3 +891,38 @@ body,html {
     font-size: 18px;
     cursor:pointer;
 }
+
+.notif
+{
+    position: absolute;
+    left:50%;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    width:300px;
+    transform: translateX(-50%) translateY(0%);
+    animation-name: notifanim;
+    animation-duration: 2.5s;
+    text-align:center;
+    padding:5px;
+    border-radius: 10px;
+    top:500px;
+    border:1px solid #ccc6;
+}
+
+@keyframes notifanim {
+    0%   {top: 500px;}
+    10%  {top: -140px;}
+    90%  {top: -140px;}
+    100% {top: 500px;}
+}
+
+.success
+{
+    background-color: rgba(10, 211, 10, 0.526);
+}
+
+.failure
+{
+    background-color: rgba(211, 10, 64, 0.47);
+}

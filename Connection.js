@@ -131,6 +131,18 @@ function GameMessageFromServer(data)
     console.log("GameMessageFromServer");
 
     switch (data.type){
+        case "PlaceBetResult":
+            if(data.message == "Success")
+                Notify("success", data.message);
+            else
+                Notify("failure", data.message);
+            break;
+        case "LiveCashOutResult":
+            if(data.message == "Success")
+                Notify("success", data.message);
+            else
+                Notify("failure", data.message);
+            break;
         case "Rewards":
             RewardsResponse(data);
             break;   
