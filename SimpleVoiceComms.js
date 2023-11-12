@@ -32,27 +32,30 @@ async function startCapturing() {
 
 function stopCapturing() {
     // Stop the stream.
+    try {
+        stream.getTracks().forEach(track => track.stop());
 
-    if (microphone) {
-        microphone.disconnect();
+        if (microphone) {
+            microphone.disconnect();
+        }
+
+        if (audioWorkletNode) {
+            audioWorkletNode.disconnect();
+        }
+
+        // Optionally, close the AudioContext to release additional resources
+        if (audioContext) {
+            audioContext.close().then(() => {
+                console.log('AudioContext closed');
+            });
+        }
+        audioContext = null; // Reset the audioContext to null
+        audioWorkletNode = null; // Reset the audioWorkletNode to null
+        microphone = null; // Reset the microphone to null
+
+    } catch (error) {
+        
     }
-
-    if (audioWorkletNode) {
-        audioWorkletNode.disconnect();
-    }
-
-    // Optionally, close the AudioContext to release additional resources
-    if (audioContext) {
-        audioContext.close().then(() => {
-            console.log('AudioContext closed');
-        });
-    }
-    audioContext = null; // Reset the audioContext to null
-    audioWorkletNode = null; // Reset the audioWorkletNode to null
-    microphone = null; // Reset the microphone to null
-
-
-    stream.getTracks().forEach(track => track.stop());
 }
 
 
@@ -203,7 +206,8 @@ function onKeyDown(event) {
 }
 
 function onMouseDown(event){
-    event.preventDefault();
+    if(event)
+        event.preventDefault();
     if(isKeyPressed)
         return;
     if (VoiceWebSocket && VoiceWebSocket.readyState === WebSocket.OPEN) {

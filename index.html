@@ -44,8 +44,12 @@
             var optionsButtonContainer = document.getElementById("OptionsButtonContainer");
             if (optionsButtonContainer.style.display === "block") {
                 optionsButtonContainer.style.display = "none";
+                document.getElementById("OptionsMenuBtn").innerHTML = "&#9776;"
+                document.getElementById("OptionsMenuBtn").style.backgroundColor = "#222222cc";
             } else {
                 optionsButtonContainer.style.display = "block";
+                document.getElementById("OptionsMenuBtn").innerHTML = "&#x2716;"
+                document.getElementById("OptionsMenuBtn").style.backgroundColor = "#ff0000cc";
         }
     }
     </script>
@@ -55,6 +59,10 @@
         <button id="PurchaseRewardsBTN" class="optionmenus">Get Rewards</button>
         <button id="RewardsHistoryBTN" class="optionmenus">Claimed Rewards History</button>
         <button id="FeedbackBTN" class="optionmenus">Provide Feedback</button>
+        <div class="optionmenus">
+            <span>Enable Voice Comms</span>
+            <input type="checkbox" id="VoiceCommsCheckbox" style="width:20px;height:20px" onchange=""/>
+        </div>
         <button id="PaymentHistoryBTN" class="optionmenus">Coin Purchase History</button>
         <button class="optionmenus" onclick="UserSignout()">Sign Out</button>
     </div>

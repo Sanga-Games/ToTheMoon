@@ -6,6 +6,10 @@ body,html {
     /* background:#111; */
     background: #106ca1;
     overflow: hidden;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 /* WebKit */
@@ -912,17 +916,17 @@ body,html {
 
 @keyframes notifanim {
     0%   {top: 500px;}
-    10%  {top: -140px;}
-    90%  {top: -140px;}
+    10%  {top: -40px;}
+    90%  {top: -40px;}
     100% {top: 500px;}
 }
 
 .success
 {
-    background-color: rgba(10, 211, 10, 0.526);
+    background-color: rgba(2, 77, 2, 0.932);
 }
 
 .failure
 {
-    background-color: rgba(211, 10, 64, 0.47);
+    background-color: rgba(170, 31, 68, 0.932);
 }

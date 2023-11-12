@@ -298,6 +298,7 @@ function PopPlayerFromRocket(PlayerIndex) {
         'left': SpawnWidth + 'px',
         'top': SpawnHeight + 'px',
         'z-index': 10,
+        'animation':'PoppedPlayerAnim' + (Math.floor(Math.random() * 10) + 1),
         'animation-duration': '25s'
     });
 

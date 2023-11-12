@@ -105,8 +105,8 @@ function InitVoiceWebsocketConnection()
     // Connection closed
     VoiceWebSocket.addEventListener('close', (event) => {
         console.log('VoiceWebsocket connection closed:', event);
-        onMouseUp();
         document.querySelector('#PushToTalkBtn').style.display = 'none';
+        onMouseUp();
     });
 }
 
@@ -133,13 +133,23 @@ function GameMessageFromServer(data)
     switch (data.type){
         case "PlaceBetResult":
             if(data.message == "Success")
+            {
                 Notify("success", data.message);
+                isBetPlaced = true;
+                document.querySelector("#CashOut_btn").disabled = false;
+            }
             else
+            {
                 Notify("failure", data.message);
+                document.querySelector("#MakeBet_btn").disabled = false;
+            }
             break;
         case "LiveCashOutResult":
             if(data.message == "Success")
+            {
                 Notify("success", data.message);
+                CloseVoiceWebSocketConnection();
+            }
             else
                 Notify("failure", data.message);
             break;
