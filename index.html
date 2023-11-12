@@ -54,14 +54,31 @@
     }
     </script>
     <div id="OptionsMenuBtn" onclick="ToggleOptionsMenus()">&#9776;</div>
-
+    <script>
+        async function EnableDisableVoice()
+        {
+            let checkbox = document.querySelector('#VoiceCommsCheckbox');
+            if(checkbox.checked)
+            {
+                localStorage.setItem('IsVoiceCommsEnabled', true);
+                audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
+            else{
+                localStorage.setItem('IsVoiceCommsEnabled', false);
+                try {
+                    audioStream.getTracks().forEach(track => track.stop());
+                }
+                catch{}
+            }
+        }
+    </script>
     <div id="OptionsButtonContainer">
         <button id="PurchaseRewardsBTN" class="optionmenus">Get Rewards</button>
         <button id="RewardsHistoryBTN" class="optionmenus">Claimed Rewards History</button>
         <button id="FeedbackBTN" class="optionmenus">Provide Feedback</button>
         <div class="optionmenus">
             <span>Enable Voice Comms</span>
-            <input type="checkbox" id="VoiceCommsCheckbox" style="width:20px;height:20px" onchange=""/>
+            <input type="checkbox" id="VoiceCommsCheckbox" style="width:20px;height:20px" onchange="EnableDisableVoice()"/>
         </div>
         <button id="PaymentHistoryBTN" class="optionmenus">Coin Purchase History</button>
         <button class="optionmenus" onclick="UserSignout()">Sign Out</button>
