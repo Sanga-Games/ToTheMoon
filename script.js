@@ -24,6 +24,7 @@ async function GetGameInit()
     gameInitData = await response.json();
     //console.log(gameInitData);
     GameState_Handler(gameInitData.game_state);
+    console.log(gameInitData.player_bets);
     for (var item of gameInitData.player_bets)
     {
         PlayerBet_Handler(item);
@@ -147,7 +148,7 @@ function GameState_Handler(data)
         document.querySelector("#Game_Multiplier").innerHTML = "x" + (Math.floor(parseFloat(data.BlastMultiplier) * 100) / 100).toFixed(2);
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
         document.querySelector("#CashOut_btn").disabled = true;
-        BlastAllParticipants(data.GameID);
+        BlastAllParticipants();
         isBetPlaced = false;
     }
     PrevState = data.State;
@@ -264,7 +265,6 @@ function SortPlayerBets() {
 
 
 function AddParticipant(data) {
-    
     var newDiv = document.createElement('div');
     newDiv.classList.add('participant');
     newDiv.id = 'user-' + data.UserID;
@@ -305,10 +305,13 @@ function ClearParticipants() {
   document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
 }
 
-function BlastAllParticipants(gid) {
-    setTimeout((gid) => {
-        if(gid == CurrentGameStateObj.GameID && CurrentGameStateObj.State == "CONCLUDED")
+function BlastAllParticipants() {
+    console.log("blastParticipants1")
+    setTimeout(function() {
+        if(CurrentGameStateObj.State == "CONCLUDED")
         {
+            
+            console.log("blastParticipants2")
             var parentElement = document.querySelector("#Game_ParticipantsContainer");
             for (var i = 0; i < parentElement.children.length; i++) {
             var child = parentElement.children[i];
@@ -320,7 +323,7 @@ function BlastAllParticipants(gid) {
             }
         }
         
-    }, 1500);
+    }, 1000);
   }
   
 var cache = {};
