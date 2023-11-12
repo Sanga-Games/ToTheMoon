@@ -75,13 +75,13 @@ function sendVoicePacket(int8VoiceData) {
         sequenceCode:CurrentSequenceCode,
         voiceData: base64Encoded
     };
-    //SendVoiceDataToServer(jsonVoiceMessage);
-    const TestVoiceMessage = {
-        Identity: UserID,
-        SequenceCode:CurrentSequenceCode,
-        Data: base64Encoded
-    };
-    PlayVoice(TestVoiceMessage);
+    SendVoiceDataToServer(jsonVoiceMessage);
+    // const TestVoiceMessage = {
+    //     Identity: UserID,
+    //     SequenceCode:CurrentSequenceCode,
+    //     Data: base64Encoded
+    // };
+    // PlayVoice(TestVoiceMessage);
     CurrentSequenceCode++;
     return;
 }
