@@ -26,7 +26,7 @@ var RedColor = "rgb(255, 53, 3);";
 
 // Get User Owned Rewards
 RewardsHistoryBTN.addEventListener('click', function () {
-
+    ToggleOptionsMenus();
     GetRewardsHistory();
 
 });
@@ -48,6 +48,7 @@ RewardsHistoryContainerCancelBTN.addEventListener('click', function () {
 
 // Get Rewards
 PurchaseRewardsBTN.addEventListener('click', function () {
+    ToggleOptionsMenus();
     ToggleLoadingScreen(true);
     (async () => {
         const requrl = "https://ysj73qcubjs65az5qdpnrxnlbm0fdlvk.lambda-url.sa-east-1.on.aws/Rewards/";

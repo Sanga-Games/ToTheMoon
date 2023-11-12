@@ -10,6 +10,7 @@ const DescriptionInput = document.getElementById('DescriptionInput');
 
 FeedbackBTN.addEventListener('click', function () {
 
+    ToggleOptionsMenus();
     FeedbackContainer.style.display = 'flex';
 
 });

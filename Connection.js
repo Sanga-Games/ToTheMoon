@@ -89,6 +89,7 @@ function InitVoiceWebsocketConnection()
     // Connection opened
     VoiceWebSocket.addEventListener('open', (event) => {
         console.log('voice WebSocket connection opened:', event);
+        document.querySelector('#PushToTalkBtn').style.display = 'block';
     });
 
     // Listen for messages from the server
@@ -104,7 +105,8 @@ function InitVoiceWebsocketConnection()
     // Connection closed
     VoiceWebSocket.addEventListener('close', (event) => {
         console.log('VoiceWebsocket connection closed:', event);
-        
+        onMouseUp();
+        document.querySelector('#PushToTalkBtn').style.display = 'none';
     });
 }
 
@@ -129,6 +131,18 @@ function GameMessageFromServer(data)
     console.log("GameMessageFromServer");
 
     switch (data.type){
+        case "PlaceBetResult":
+            if(data.message == "Success")
+                Notify("success", data.message);
+            else
+                Notify("failure", data.message);
+            break;
+        case "LiveCashOutResult":
+            if(data.message == "Success")
+                Notify("success", data.message);
+            else
+                Notify("failure", data.message);
+            break;
         case "Rewards":
             RewardsResponse(data);
             break;   

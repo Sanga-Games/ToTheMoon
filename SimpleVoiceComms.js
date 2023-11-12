@@ -32,7 +32,6 @@ async function startCapturing() {
 
 function stopCapturing() {
     // Stop the stream.
-    stream.getTracks().forEach(track => track.stop());
 
     if (microphone) {
         microphone.disconnect();
@@ -51,6 +50,9 @@ function stopCapturing() {
     audioContext = null; // Reset the audioContext to null
     audioWorkletNode = null; // Reset the audioWorkletNode to null
     microphone = null; // Reset the microphone to null
+
+
+    stream.getTracks().forEach(track => track.stop());
 }
 
 
@@ -200,6 +202,18 @@ function onKeyDown(event) {
     }
 }
 
+function onMouseDown(event){
+    event.preventDefault();
+    if(isKeyPressed)
+        return;
+    if (VoiceWebSocket && VoiceWebSocket.readyState === WebSocket.OPEN) {
+        console.log("AudioCaptureStarted");
+        CurrentSequenceCode = 0;
+        isKeyPressed = true;
+        startCapturing();
+    }
+}
+
 // Function to be called on key up
 function onKeyUp(event) {
     if (event.key == "t") {
@@ -211,4 +225,15 @@ function onKeyUp(event) {
             voiceData = new Uint8Array();
         },500);
     }
+}
+
+function onMouseUp()
+{
+    console.log("AudioCaptureStopped");
+    isKeyPressed = false;
+    stopCapturing();
+    setTimeout(function(){
+        sendVoicePacket(voiceData);
+        voiceData = new Uint8Array();
+    },500);
 }

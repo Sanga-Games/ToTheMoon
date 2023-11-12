@@ -55,7 +55,7 @@
 }
 
 .rocket {
-    position: absolute;
+    position: fixed;
     height: 25%;
     width: 500px;
     z-index: 3;
@@ -233,4 +233,5 @@
     z-index:2;
     mix-blend-mode:hard-light;
     opacity:0;
+    overflow: hidden;
 }
