@@ -68,7 +68,7 @@ const subscriptions = [
 function startSubscriptions(websocket, subscriptions) {
   subscriptions.forEach((subscription) => {
 
-    if(subscription.type == 'GameState' || (subscription.type == 'VoiceData' && IsVoiceCommsEnabled) || (subscription.type == 'WalletBalance' && UserID!= ""))
+    if(subscription.type == 'GameState' || (subscription.type == 'VoiceData' && IsVoiceCommsEnabled) || (subscription.type == 'WalletBalance' && UserID.length > 10))
     {
       const subscribeMessage = {
         id: window.crypto.randomUUID(),

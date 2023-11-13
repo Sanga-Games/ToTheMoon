@@ -214,7 +214,7 @@ function PlayerBet_Handler(data)
         return;
 
     Trigger_PlayerBetChanged(data);
-    if(data.UserID = UserID && data.BetState == "SUCCESS")
+    if(data.UserID == UserID && data.BetState == "SUCCESS")
     {
         CloseVoiceWebSocketConnection();
     }
@@ -272,6 +272,7 @@ function SortPlayerBets() {
 
 
 function AddParticipant(data) {
+    console.log(data);
     var newDiv = document.createElement('div');
     newDiv.classList.add('participant');
     newDiv.id = 'user-' + data.UserID;
@@ -291,6 +292,7 @@ function AddParticipant(data) {
 
     parentElement.appendChild(newDiv);
     document.querySelector("#Game_PlayerCount").innerHTML = parentElement.children.length +" PLAYING";
+   
     GetUserInfo(data.UserID);
 
     document.querySelector("#Game_TotalBetAmount").innerHTML = (parseFloat(document.querySelector("#Game_TotalBetAmount").innerHTML) + parseFloat(data.BetAmount)).toFixed(2);

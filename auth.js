@@ -112,6 +112,8 @@ if (localSessionToken) {
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
             document.getElementById('BettingControlsArea').style.display = "block";
+            if(UserID.length < 10)
+                location.reload();
 
             // startCapturing();
             GetGameInit();
