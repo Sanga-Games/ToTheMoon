@@ -3,7 +3,7 @@ var body = document.body;
 
 var AllPlayersList = [];
 
-var MaxVipPlayers = 1;
+var MaxVipPlayers = 10;
 
 var CurrentGameStateObj = {
     GameID: 0,
