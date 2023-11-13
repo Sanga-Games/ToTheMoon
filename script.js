@@ -214,6 +214,10 @@ function PlayerBet_Handler(data)
         return;
 
     Trigger_PlayerBetChanged(data);
+    if(data.UserID = UserID && data.BetState == "SUCCESS")
+    {
+        CloseVoiceWebSocketConnection();
+    }
 
     var ele = document.getElementById('user-' + data.UserID);
     if(ele !== null)
