@@ -11,8 +11,12 @@ let audioContext2;
 let CurrentSequenceCode = 0;
 
 async function startCapturing() {
-    audioContext = new AudioContext();
-    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    var targetSampleRate = 16000;
+    audioContext = new AudioContext({sampleRate: VoiceSampleRate});
+    
+    // Set a custom sample rate
+    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true});
+    
     microphone = audioContext.createMediaStreamSource(audioStream);
 
     audioContext.audioWorklet.addModule('AudioProcessor.js')
@@ -25,8 +29,8 @@ async function startCapturing() {
             };
         })
         .catch((error) => console.error('Error loading audioworklet:', error));
-
 }
+
 
 function stopCapturing() {
     // Stop the stream.
@@ -62,29 +66,40 @@ function addToVoiceQueue(rawAudio) {
     const currentVoiceData = float32ArrayToUint8Array(rawAudio);
     voiceData = combineUint8Arrays(voiceData, currentVoiceData);
 
-    const tempTimeStamp = new Date();
-    const timeElapsed = tempTimeStamp - timeStamp;
-    if (timeElapsed > 100) {
-        timeStamp = tempTimeStamp;
-        sendVoicePacket(voiceData);
-        voiceData = new Uint8Array();
+    // const tempTimeStamp = new Date();
+    // const timeElapsed = tempTimeStamp - timeStamp;
+    // if (timeElapsed > 100) {
+    //     timeStamp = tempTimeStamp;
+    //     sendVoicePacket(voiceData);
+    //     console.log(voiceData.length);
+    //     voiceData = new Uint8Array();
+    // }
+    if (voiceData.length >20000)
+    {
+        const packetToSend = voiceData.subarray(0, 20000);
+        console.log(packetToSend.length);
+        sendVoicePacket(packetToSend);
+        voiceData = voiceData.subarray(20000);
     }
 }
 
 function sendVoicePacket(int8VoiceData) {
     const base64Encoded = uint8ArrayToBase64(int8VoiceData);
+
     const jsonVoiceMessage = {
         action: 'Voice',
         sequenceCode:CurrentSequenceCode,
         voiceData: base64Encoded
     };
     SendVoiceDataToServer(jsonVoiceMessage);
+
     // const TestVoiceMessage = {
     //     Identity: UserID,
     //     SequenceCode:CurrentSequenceCode,
     //     Data: base64Encoded
     // };
     // PlayVoice(TestVoiceMessage);
+
     CurrentSequenceCode++;
     return;
 }
@@ -97,7 +112,7 @@ const userBuffers = {};
 function PlayVoice(data) {
     console.log("playing voice");
     if(!audioContext2)
-        audioContext2 = new AudioContext();
+        audioContext2 = new AudioContext({sampleRate: VoiceSampleRate});
     
     const userId = data.Identity;
     const sequenceCode = data.SequenceCode;
@@ -115,16 +130,19 @@ function PlayVoice(data) {
     const float32Data = new Float32Array(uint8Data.buffer);
 
     // Create an audio buffer for the current chunk
-    const audioBuffer = audioContext2.createBuffer(1, float32Data.length, audioContext2.sampleRate);
-    audioBuffer.getChannelData(0).set(float32Data);
+    if(float32Data.length > 0)
+    {
+        const audioBuffer = audioContext2.createBuffer(1, float32Data.length, audioContext2.sampleRate);
+        audioBuffer.getChannelData(0).set(float32Data);
 
-    // Add the buffer to the user's buffer list and sort them by sequence code
-    buffers.push({ sequenceCode, buffer: audioBuffer });
-    buffers.sort((a, b) => a.sequenceCode - b.sequenceCode);
+        // Add the buffer to the user's buffer list and sort them by sequence code
+        buffers.push({ sequenceCode, buffer: audioBuffer });
+        buffers.sort((a, b) => a.sequenceCode - b.sequenceCode);
 
-    // Play the buffers if the current sequence code matches the expected one
-    if (buffers.length > 0 && buffers[0].sequenceCode === sequenceCode) {
-        playNextBuffer(userId);
+        // Play the buffers if the current sequence code matches the expected one
+        if (buffers.length > 0 && buffers[0].sequenceCode === sequenceCode) {
+            playNextBuffer(userId);
+        }
     }
 }
 
@@ -226,7 +244,7 @@ function onKeyUp(event) {
         setTimeout(function(){
             sendVoicePacket(voiceData);
             voiceData = new Uint8Array();
-        },500);
+        },100);
     }
 }
 
@@ -238,5 +256,5 @@ function onMouseUp()
     setTimeout(function(){
         sendVoicePacket(voiceData);
         voiceData = new Uint8Array();
-    },500);
+    },100);
 }

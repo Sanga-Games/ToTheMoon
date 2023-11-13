@@ -24,7 +24,6 @@ async function GetGameInit()
     gameInitData = await response.json();
     //console.log(gameInitData);
     GameState_Handler(gameInitData.game_state);
-    console.log(gameInitData.player_bets);
     for (var item of gameInitData.player_bets)
     {
         PlayerBet_Handler(item);
@@ -40,7 +39,6 @@ async function GetGameInit()
 
 function WalletBalanceChanged(data)
 {
-    console.log(data);
     let currentBalance = parseFloat(document.querySelector("#Profile_WalletBalance").innerHTML);
     let updatedBalance = 0;
     if(data.IsAdditive)
@@ -68,7 +66,7 @@ function GameStateChanged(data)
         }
         else if(obj["Type"] == "GameHistory")
         {
-            console.log(obj)
+            //console.log(obj)
         }
         else if(obj["Type"] == "PlayerBet")
         {
@@ -144,7 +142,7 @@ function GameState_Handler(data)
 
         document.querySelector("#BettingGroup").style.display = "none";
         document.querySelector("#CashoutGroup").style.display = "block";
-        console.log(data.BlastMultiplier);
+        //console.log(data.BlastMultiplier);
         document.querySelector("#Game_Multiplier").innerHTML = "x" + (Math.floor(parseFloat(data.BlastMultiplier) * 100) / 100).toFixed(2);
         document.querySelector("#Game_WaitTime").innerHTML = "BLAST!!!";
         document.querySelector("#CashOut_btn").disabled = true;
@@ -194,7 +192,7 @@ async function MakeBet()
         if(IsVoiceCommsEnabled)
         {
             if(!audioContext2)
-                audioContext2 = new AudioContext();
+                audioContext2 = new AudioContext({sampleRate: VoiceSampleRate});
         }
         document.querySelector("#MakeBet_btn").disabled = true;
         SendPlaceBet(GameID,document.querySelector("#Game_BetAmountInput").value,document.querySelector("#Game_CashOutMultiplierInput").value,document.querySelector("#Game_CashOutMultiplierCheck").checked);
@@ -311,12 +309,9 @@ function ClearParticipants() {
 }
 
 function BlastAllParticipants() {
-    console.log("blastParticipants1")
     setTimeout(function() {
         if(CurrentGameStateObj.State == "CONCLUDED")
         {
-            
-            console.log("blastParticipants2")
             var parentElement = document.querySelector("#Game_ParticipantsContainer");
             for (var i = 0; i < parentElement.children.length; i++) {
             var child = parentElement.children[i];
@@ -361,7 +356,6 @@ async function GetUserInfo(userId) {
     // Get username and avatarURL from the response
     const { username, avatar_url } = userData;
 
-    console.log(username);
     // Update the specified div with the user details
     const userDiv = document.getElementById("user-" + userId);
     //userDiv.querySelector(".c_username").textContent = username;

@@ -17,12 +17,13 @@
     <link rel="stylesheet" href="rocket.css">
 </head>
 <script>
+    var VoiceSampleRate = 8000;
     function HandleBodyClick()
     {
         if(IsVoiceCommsEnabled)
         {
             if(!audioContext2)
-                audioContext2 = new AudioContext();
+                audioContext2 = new AudioContext({sampleRate: VoiceSampleRate});
         }
         
     }
@@ -72,7 +73,7 @@
             if(checkbox.checked)
             {
                 if(!audioContext2)
-                    audioContext2 = new AudioContext();
+                    audioContext2 = new AudioContext({sampleRate: VoiceSampleRate});
                 localStorage.setItem('IsVoiceCommsEnabled', true);
                 audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 if(!audioStream)
