@@ -1,7 +1,7 @@
 
 var localSessionToken = localStorage.getItem('sessiontoken');
-//var domainURL = "https://sanga-games.github.io/ToTheMoon" 
-var domainURL = "http://localhost:53134"
+var domainURL = "https://sanga-games.github.io/ToTheMoon" 
+// var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://wov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws"
 var UserID = ""
 var IsVoiceCommsEnabled = false;
