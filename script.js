@@ -267,7 +267,7 @@ function SortPlayerBets() {
         if (b.classList.contains('participant_cashedout')) {
             betAmountB -= 1000000;
         }
-        return betAmountA - betAmountB;
+        return betAmountB - betAmountA;
     });
 
     // Remove all participants from the parent div
