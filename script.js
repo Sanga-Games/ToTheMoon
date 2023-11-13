@@ -216,7 +216,11 @@ function PlayerBet_Handler(data)
     Trigger_PlayerBetChanged(data);
     if(data.UserID == UserID && data.BetState == "SUCCESS")
     {
-        CloseVoiceWebSocketConnection();
+        try{
+            CloseVoiceWebSocketConnection();
+        }
+        catch
+        {}
     }
 
     var ele = document.getElementById('user-' + data.UserID);
