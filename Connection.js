@@ -147,6 +147,12 @@ function GameMessageFromServer(data)
         case "LiveCashOutResult":
             if(data.message == "Success")
             {
+                var ele = document.getElementById('user-' + UserID);
+                if(ele !== null)
+                {
+                    ele.classList.add('participant_cashedout');
+                }
+
                 Notify("success", data.message);
                 CloseVoiceWebSocketConnection();
             }

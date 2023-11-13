@@ -75,6 +75,7 @@ function GameStateChanged(data)
 
     
     }
+    SortPlayerBets();
 }
 
 function CheckForVoiceCommsAccess()
@@ -113,7 +114,7 @@ function GameState_Handler(data)
 
             document.querySelector("#BettingGroup").style.display = "none";
             document.querySelector("#CashoutGroup").style.display = "block";
-            if(UserID)
+            if(UserID.length > 10)
                 CheckForVoiceCommsAccess();
         }
         startTime = data.GameStartUTC * 1000;
@@ -157,7 +158,14 @@ function UpdateMultiplier()
     const currentTime = getCurrentUTCSeconds();
     const elapsedTime = (currentTime - startTime)/1000;
     var ele = document.querySelector("#Game_Multiplier");
-    ele.innerHTML = "x" + (Math.floor(calculateMultiplier(elapsedTime) * 100) / 100).toFixed(2);
+    var val = (Math.floor(calculateMultiplier(elapsedTime) * 100) / 100).toFixed(2);
+    if(val > 100000)
+    {
+        ele.innerHTML = "Disconnected" ;
+    }
+    else{
+        ele.innerHTML = "x" + (Math.floor(calculateMultiplier(elapsedTime) * 100) / 100).toFixed(2);
+    }
 }
 
 function calculateMultiplier(waitTime) 
@@ -242,7 +250,6 @@ function PlayerBet_Handler(data)
     {
         AddParticipant(data);
     }
-    SortPlayerBets();
 }
 
 function SortPlayerBets() {
@@ -254,11 +261,11 @@ function SortPlayerBets() {
         var betAmountB = parseFloat(b.querySelector('.participant_betAmount').innerHTML);
 
         if (a.classList.contains('participant_cashedout')) {
-            betAmountA += 1000000;
+            betAmountA -= 1000000;
         }
 
         if (b.classList.contains('participant_cashedout')) {
-            betAmountB += 1000000;
+            betAmountB -= 1000000;
         }
         return betAmountA - betAmountB;
     });
