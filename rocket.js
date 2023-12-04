@@ -366,7 +366,16 @@ async function GetAvatarByUserID(RocketPlayerImg, UserId) {
 
     // Parse the JSON response
     userData = await response.json();
-    RocketPlayerImg.src = userData.avatar_url
+
+    if (userData.avatar_url == null)
+    {
+        RocketPlayerImg.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU";
+    }
+    else
+    {
+        RocketPlayerImg.src = userData.avatar_url
+    }
+    
 }
 
 function SpawnVipPlayer(data) {

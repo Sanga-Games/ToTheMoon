@@ -1,7 +1,7 @@
 
 var localSessionToken = localStorage.getItem('sessiontoken');
-var domainURL = "https://crash.sangagames.com" 
-// var domainURL = "http://localhost:53134"
+// var domainURL = "https://crash.sangagames.com" 
+var domainURL = "http://localhost:53134"
 var AuthServerURL = "https://wov4kdp5cnsniwc66aoyk5imse0nhrpj.lambda-url.sa-east-1.on.aws"
 var UserID = ""
 var IsVoiceCommsEnabled = false;
@@ -108,7 +108,14 @@ if (localSessionToken) {
             const { dusername, davatarid, did, userid } = userData;
             UserID = userid;
             document.getElementById('Profile_UserName').textContent = dusername;
-            document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
+            if (davatarid == null)
+            {
+                document.getElementById('Profile_Avatar').src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU";
+            }
+            else
+            {
+                document.getElementById('Profile_Avatar').src = `https://cdn.discordapp.com/avatars/${did}/${davatarid}`;
+            }
             document.getElementById('PreLogin').style.display = "none";
             document.getElementById('PostLogin').style.display = "block";
             document.getElementById('BettingControlsArea').style.display = "block";

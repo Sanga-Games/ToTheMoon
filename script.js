@@ -380,7 +380,14 @@ async function GetUserInfo(userId) {
     // Update the specified div with the user details
     const userDiv = document.getElementById("user-" + userId);
     //userDiv.querySelector(".c_username").textContent = username;
-    userDiv.querySelector("img").src = avatar_url;
+    if (avatar_url == null)
+    {
+        userDiv.querySelector("img").src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyD3SI8Qdekp6twYtnVVcpKfHw7WVQGy9Yfd32EiXPZI30cEgXJ-XhquB0ObTnutlwQrM&usqp=CAU";
+    }
+    else
+    {
+        userDiv.querySelector("img").src = avatar_url;
+    }
 
 }
 
